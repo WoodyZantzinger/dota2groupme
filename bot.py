@@ -58,17 +58,18 @@ def last_game(msg, user):
 		
 	api.set_api_key(key)
 	
-	# Get all the most recent match played by the player 'acidfoo'
+	# Get all the most recent match played by the player
 	account_id = int(api.get_steam_id(GroupMetoSteam[user])["response"]["steamid"])
-
+	print "Got Account ID"
 	# Get a list of recent matches for the player
 	matches = api.get_match_history(account_id=account_id)["result"]["matches"]
 
 	#Get the full details for a match
 	match = api.get_match_details(matches[0]["match_id"])
-	
+	print "Got Match Details"
 	for x in match["result"]["players"]:
 		if int(x["account_id"]) == GroupMetoDOTA[user]:
+			print "Got User Data"
 			send_message ("As " + data.get_hero_name(x["hero_id"])["localized_name"] + " you went " + str(x["kills"]) + ":" + str(x["deaths"]) + " with " + str(x["gold_per_min"]) + " GPM")
 	return 'OK'
 
