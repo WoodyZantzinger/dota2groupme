@@ -48,6 +48,8 @@ def set_dota(msg, user):
 
 def last_game(msg, user):
 	
+	print "Starting"
+	
 	if not GroupMetoSteam.has_key(user):
 		send_message("I don't know your SteamID! Set it with '#set ID'")
 		return 'OK'
@@ -56,8 +58,10 @@ def last_game(msg, user):
 		send_message("I don't know your DOTA ID! Set it with '#setDota ID'")
 		return 'OK'
 		
+	print "Setting Key"	
 	api.set_api_key(key)
 	
+	print "Getting Data"	
 	# Get all the most recent match played by the player
 	account_id = int(api.get_steam_id(GroupMetoSteam[user])["response"]["steamid"])
 	print "Got Account ID"
@@ -76,11 +80,16 @@ def last_game(msg, user):
 def current_online(msg, user):
 	return send_message("No one is online!")
 
+def status(msg, user):
+	return send_message("Currently listening...")
+
+
 
 options = {"#last" : last_game,
            "#now" : current_online,
            "#setSteam" : set_steam,
            "#setDOTA" : set_dota,
+           "#status" : status,
 }
 
 @app.route('/message/', methods=['POST'])
