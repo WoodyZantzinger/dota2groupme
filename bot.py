@@ -1,6 +1,7 @@
 import os
 import urllib2
 import urllib
+import traceback
 from flask import Flask, request
 from dota2py import api
 from dota2py import data
@@ -102,9 +103,9 @@ def message():
 		
 		try:
 			options[body.partition(' ')[0]](body.partition(' ')[2], sender)
-		except:
-			print "Unexpected error:", sys.exc_info()[0]
-    		raise
+		except BaseException as e:
+			print repr(e)
+    		traceback.print_exc()
 	return 'OK'
 
 @app.route("/")
