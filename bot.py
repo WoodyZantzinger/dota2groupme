@@ -75,7 +75,7 @@ def last_game(msg, user):
 	for x in match["result"]["players"]:
 		if int(x["account_id"]) == GroupMetoDOTA[user]:
 			print "Got User Data"
-			send_message ("As " + data.get_hero_name(x["hero_id"])["localized_name"] + " you went " + str(x["kills"]) + ":" + str(x["deaths"]) + " with " + str(x["gold_per_min"]) + " GPM")
+			send_message ("As " + data.get_hero_name(x["hero_id"])["localized_name"] + " you went " + str(x["kills"]) + ":" + str(x["deaths"]) + ":" + str(x["assists"]) + " with " + str(x["gold_per_min"]) + " GPM")
 	return 'OK'
 
 def current_online(msg, user):
