@@ -2,6 +2,18 @@ import os
 import urllib2
 import urllib
 from flask import Flask, request
+from dota2py import api
+from dota2py import data
+
+GroupMetoSteam = {
+      'Woody Zantzinger' : 'Azohko',
+}
+
+GroupMetoDOTA = {
+	'Woody Zantzinger' : 30075956
+}
+
+key =  "63760574A669369C2117EA4A30A4768B"
 
 app = Flask(__name__)
 #
@@ -19,17 +31,55 @@ def send_message(msg):
 	data = urllib.urlencode(values)
 	req = urllib2.Request(url, data, header)
 	response = urllib2.urlopen(req)
+	#print "msg"
 	return response
+	#return 'Win'
+	
+def set_steam(msg, user):
+	print "Got here"
+	GroupMetoSteam[user] = msg
+	return send_message("I set your Steam ID to: " + msg )
+	
+def set_dota(msg, user):
+	print "Got here"
+	GroupMetoDOTA[user] = msg
+	return send_message("I set your Dota ID to: " + msg )
 	
 
-def last_game():
-	return
+def last_game(msg, user):
+	
+	if not GroupMetoSteam.has_key(user):
+		send_message("I don't know your SteamID! Set it with '#set ID'")
+		return 'OK'
+		
+	if not GroupMetoDOTA.has_key(user):
+		send_message("I don't know your DOTA ID! Set it with '#setDota ID'")
+		return 'OK'
+		
+	api.set_api_key(key)
+	
+	# Get all the most recent match played by the player 'acidfoo'
+	account_id = int(api.get_steam_id(GroupMetoSteam[user])["response"]["steamid"])
 
-def current_online():
+	# Get a list of recent matches for the player
+	matches = api.get_match_history(account_id=account_id)["result"]["matches"]
+
+	#Get the full details for a match
+	match = api.get_match_details(matches[0]["match_id"])
+	
+	for x in match["result"]["players"]:
+		if int(x["account_id"]) == GroupMetoDOTA[user]:
+			send_message ("As " + data.get_hero_name(x["hero_id"])["localized_name"] + " you went " + str(x["kills"]) + ":" + str(x["deaths"]) + " with " + str(x["gold_per_min"]) + " GPM")
+	return 'OK'
+
+def current_online(msg, user):
 	return send_message("No one is online!")
+
 
 options = {"#last" : last_game,
            "#now" : current_online,
+           "#setSteam" : set_steam,
+           "#setDOTA" : set_dota,
 }
 
 @app.route('/message/', methods=['POST'])
@@ -38,9 +88,10 @@ def message():
 	sender = new_message["name"]
 	body = new_message["text"]
 	if body.startswith("#"):
-		options[body]()
+		# print "Calling: " + body.partition(' ')[0] + " With " + body.partition(' ')[2]
+		options[body.partition(' ')[0]](body.partition(' ')[2], sender)
 	
-	return 
+	return 'OK'
 
 @app.route("/")
 def hello():
@@ -49,3 +100,4 @@ def hello():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+    #app.run(host='0.0.0.0', port=port, debug=True)
