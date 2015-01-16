@@ -2,6 +2,7 @@ import os
 import urllib2
 import urllib
 import traceback
+import random
 from flask import Flask, request
 from dota2py import api
 from dota2py import data
@@ -35,7 +36,9 @@ help_dict = {"#last" : "Shows your personel stats from the last game, add a user
            "#setSteam" : "Set your SteamID if not hardcoded in yet. This is you Steam (Not Dota) username.",
            "#setDOTA" : "This is your Dota ID number. Find this as the last number in your DotaBuff URL",
            "#status" : "See if sUN bot is up",
-           "#help" : "You are reading the help now..."
+           "#help" : "You are reading the help now...",
+           "#next" : "Picks a random hero to play...",
+           "#nextItem" : "Picks a random item to buy...",
 }
 
 app = Flask(__name__)
@@ -111,6 +114,21 @@ def help(msg, user):
 def status(msg, user):
 	return send_message("Currently listening...")
 
+def next(msg, user):
+	next_hero = data.get_hero_name(random.randint(1, 107))
+	if next_hero is not None:
+		return send_message("You will play " + str(next_hero["localized_name"]))
+	else:
+		return next(msg, user)
+	
+def nextItem(msg, user):
+	next_item = data.get_item_name(random.randint(1, 212))
+	if next_item is not None:
+		return send_message("You will buy " + str(next_item["name"]))
+	else:
+		return next_item(msg, user)
+		
+
 
 options = {"#last" : last_game,
            "#now" : current_online,
@@ -118,6 +136,8 @@ options = {"#last" : last_game,
            "#setDOTA" : set_dota,
            "#status" : status,
            "#help" : help,
+           "#next" : next,
+           "#nextItem" : nextItem,
 }
 
 
