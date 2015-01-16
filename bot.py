@@ -8,15 +8,23 @@ from dota2py import data
 
 
 GroupMetoSteam = {
-      'Woody Zantzinger' : 'Azohko',
-      'Andy Esposito' : 'Espo',
-      'Sty' : 'Wink91'
+      'Woody Zantzinger' : 76561197990341684,
+      'Andy Esposito' : 76561198044654320,
+      'Sty' : 76561198038745659,
+      'Armadilldo' : 76561198067289145,
+      'Matthew' : 76561198079784406,
+      'Kevin' : 76561198097020021,
+      'Jonny G' : 76561198025357651,
 }
 
 GroupMetoDOTA = {
 	'Woody Zantzinger' : 30075956,
 	'Andy Esposito' : 84388592,
-	'Sty' : 78479931
+	'Sty' : 78479931,
+	'Armadilldo' : 107023417,
+	'Matthew' : 119518678,
+	'Kevin' : 136754293,
+	'Jonny G' : 65091923,
 }
 
 key =  "63760574A669369C2117EA4A30A4768B"
@@ -73,12 +81,11 @@ def last_game(msg, user):
 		send_message("I don't know your DOTA ID! Set it with '#setDota ID'")
 		return 'OK'
 		
-	print "Setting Key"	
+	print "Setting Key & Account ID"	
 	api.set_api_key(key)
+
+	account_id = int(GroupMetoSteam[user])
 	
-	print "Getting Data"	
-	# Get all the most recent match played by the player
-	account_id = int(api.get_steam_id(GroupMetoSteam[user])["response"]["steamid"])
 	print "Got Account ID"
 	# Get a list of recent matches for the player
 	matches = api.get_match_history(account_id=account_id)["result"]["matches"]
