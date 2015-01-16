@@ -6,15 +6,29 @@ from flask import Flask, request
 from dota2py import api
 from dota2py import data
 
+
 GroupMetoSteam = {
       'Woody Zantzinger' : 'Azohko',
+      'Andy Esposito' : 'Espo',
+      'Sty' : 'Wink91'
 }
 
 GroupMetoDOTA = {
-	'Woody Zantzinger' : 30075956
+	'Woody Zantzinger' : 30075956,
+	'Andy Esposito' : 84388592,
+	'Sty' : 78479931
 }
 
 key =  "63760574A669369C2117EA4A30A4768B"
+
+
+help_dict = {"#last" : "Shows your personel stats from the last game, add a user argument to find someone elses stats",
+           "#now" : "Shows who is currently online (NOT IMPLEMENTE YET)",
+           "#setSteam" : "Set your SteamID if not hardcoded in yet. This is you Steam (Not Dota) username.",
+           "#setDOTA" : "This is your Dota ID number. Find this as the last number in your DotaBuff URL",
+           "#status" : "See if sUN bot is up",
+           "#help" : "You are reading the help now..."
+}
 
 app = Flask(__name__)
 #
@@ -81,9 +95,14 @@ def last_game(msg, user):
 def current_online(msg, user):
 	return send_message("No one is online!")
 
+def help(msg, user):
+	send_message("Fuck you " + str(user) + "... This shit isn't that hard")
+	for command, help_text in help_dict.iteritems():
+		send_message(command + ": " + help_text)
+	return 'OK'
+
 def status(msg, user):
 	return send_message("Currently listening...")
-
 
 
 options = {"#last" : last_game,
@@ -91,7 +110,10 @@ options = {"#last" : last_game,
            "#setSteam" : set_steam,
            "#setDOTA" : set_dota,
            "#status" : status,
+           "#help" : help,
 }
+
+
 
 @app.route('/message/', methods=['POST'])
 def message():
