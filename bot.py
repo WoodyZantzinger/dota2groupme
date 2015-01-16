@@ -99,8 +99,12 @@ def message():
 	body = new_message["text"]
 	if body.startswith("#"):
 		print "Calling: " + body.partition(' ')[0] + " With " + body.partition(' ')[2]
-		options[body.partition(' ')[0]](body.partition(' ')[2], sender)
-	
+		
+		try:
+			options[body.partition(' ')[0]](body.partition(' ')[2], sender)
+		except:
+			print "Unexpected error:", sys.exc_info()[0]
+    		raise
 	return 'OK'
 
 @app.route("/")
