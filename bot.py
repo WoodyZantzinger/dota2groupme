@@ -8,9 +8,11 @@ import sys
 from flask import Flask, request
 from dota2py import api
 from dota2py import data
-from local_data import GroupMetoSteam, GroupMetoDOTA
+import random
 
 DEBUG = False
+
+INSULT_THRESHOLD = 0.005
 
 key =  "63760574A669369C2117EA4A30A4768B"
 
@@ -68,13 +70,13 @@ def send_message(msg):
 
 def set_steam(msg, user):
     print "Got here"
-    GroupMetoSteam[user] = msg
+    local_data.GroupMetoSteam[user] = msg
     return send_message("I set your Steam ID to: " + msg)
 
 
 def set_dota(msg, user):
     print "Got here"
-    GroupMetoDOTA[user] = msg
+    local_data.GroupMetoDOTA[user] = msg
     return send_message("I set your Dota ID to: " + msg)
 
 
@@ -109,7 +111,14 @@ def last_game(msg, user):
 
             #Stats?
             print player_num
-            send_message("As " + data.get_hero_name(x["hero_id"])["localized_name"] + " you went " + str(x["kills"]) + ":" + str(x["deaths"]) + ":" + str(x["assists"]) + " with " + str(x["gold_per_min"]) + " GPM finishing at level " + str(x["level"]))
+            msg = local_data.match_performance_template.format(hero=data.get_hero_name(x["hero_id"])["localized_name"],
+                                                        k=str(x["kills"]),
+                                                        d=str(x["deaths"]),
+                                                        a=str(x["assists"]),
+                                                        GPM=str(x["gold_per_min"]),
+                                                        level=str(x["level"])
+                                                        )
+            send_message(msg)
 
             #Items?
             finalItems = "Your items: "
@@ -151,18 +160,28 @@ def nextItem(msg, user):
 
 
 def nextTeam(msg, user):
-    return send_message("The best team ever: " + random_hero() + ", " + random_hero() + ", " + random_hero() + ", " + random_hero() + ", " + random_hero())
+    # makes a list of 5 random heroes
+    heroes = [random_hero() for _ in range(5)]
+    return send_message(local_data.team_template.format(*heroes))
 
 
-options = {"#last" : last_game,
-           "#now" : current_online,
-           "#setSteam" : set_steam,
-           "#setDOTA" : set_dota,
-           "#status" : status,
-           "#help" : show_help,
-           "#next" : nextHero,
-           "#nextItem" : nextItem,
-           "#nextTeam" : nextTeam,
+def send_burn(msg, user):
+    return send_message(random.choice(local_data.burn_responses))
+
+
+def send_insult():
+    return send_message("No, you {}".format(random.choice(local_data.mean_names)))
+
+options = {"#last": last_game,
+           "#now": current_online,
+           "#setsteam": set_steam,
+           "#setdota": set_dota,
+           "#status": status,
+           "#help": show_help,
+           "#next": nextHero,
+           "#nextitem": nextItem,
+           "#nextteam": nextTeam,
+           "#sunstrike": send_burn,
 }
 
 
@@ -173,13 +192,18 @@ def message():
     sender = new_message["name"]
     body = new_message["text"]
     if body.startswith("#"):
-        print "Calling: " + body.partition(' ')[0] + " With " + body.partition(' ')[2]
+        insult_chance = random.random()
+        if insult_chance < INSULT_THRESHOLD:
+            print("Sending insult")
+            send_insult()
+        else:
+            print "Calling: " + body.partition(' ')[0] + " With " + body.partition(' ')[2]
 
-        try:
-            options[body.partition(' ')[0]](body.partition(' ')[2], sender)
-        except BaseException as e:
-            print repr(e)
-            traceback.print_exc()
+            try:
+                options[(body.partition(' ')[0]).lower()](body.partition(' ')[2], sender)
+            except BaseException as e:
+                print repr(e)
+                traceback.print_exc()
     return 'OK'
 
 
