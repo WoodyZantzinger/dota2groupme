@@ -3,31 +3,13 @@ import urllib2
 import urllib
 import traceback
 import random
+import local_data
+import sys
 from flask import Flask, request
 from dota2py import api
 from dota2py import data
 
 DEBUG = False
-
-GroupMetoSteam = {
-      'Woody Zantzinger' : 76561197990341684,
-      'Andy Esposito' : 76561198044654320,
-      'Sty' : 76561198038745659,
-      'Armadilldo' : 76561198067289145,
-      'Matthew' : 76561198079784406,
-      'Kevin' : 76561198097020021,
-      'Jonny G' : 76561198025357651,
-}
-
-GroupMetoDOTA = {
-	'Woody Zantzinger' : 30075956,
-	'Andy Esposito' : 84388592,
-	'Sty' : 78479931,
-	'Armadilldo' : 107023417,
-	'Matthew' : 119518678,
-	'Kevin' : 136754293,
-	'Jonny G' : 65091923,
-}
 
 key =  "63760574A669369C2117EA4A30A4768B"
 
@@ -96,18 +78,18 @@ def last_game(msg, user):
 	
 	print "Starting"
 	
-	if not GroupMetoSteam.has_key(user):
+	if not local_data.has_steamID(user):
 		send_message("I don't know your SteamID! Set it with '#set ID'")
 		return 'OK'
 		
-	if not GroupMetoDOTA.has_key(user):
+	if not local_data.has_dotaID(user):
 		send_message("I don't know your DOTA ID! Set it with '#setDota ID'")
 		return 'OK'
 		
 	print "Setting Key & Account ID"	
 	api.set_api_key(key)
 
-	account_id = int(GroupMetoSteam[user])
+	account_id = local_data.name_to_steamID(user)
 	
 	print "Got Account ID"
 	# Get a list of recent matches for the player
@@ -118,16 +100,17 @@ def last_game(msg, user):
 	print "Got Match Details"
 	player_num = 0
 	for x in match["result"]["players"]:
-		if int(x["account_id"]) == GroupMetoDOTA[user]:
+		if int(x["account_id"]) == local_data.name_to_dotaID(user):
 			print "Got User Data"
 			
 			#Stats?
+			print player_num
 			send_message("As " + data.get_hero_name(x["hero_id"])["localized_name"] + " you went " + str(x["kills"]) + ":" + str(x["deaths"]) + ":" + str(x["assists"]) + " with " + str(x["gold_per_min"]) + " GPM finishing at level " + str(x["level"]))
 			
 			#Items?
 			finalItems = "Your items: "
 			for itemNum in range(0, 6):
-				if x["item_" + str(itemNum)] != 0:
+				if x["item_" + str(itemNum)] != 0 and x["item_" + str(itemNum)] is not None:
 					finalItems += str(data.get_item_name(x["item_" + str(itemNum)])["name"]) + ", "
 			send_message(finalItems)
 			
@@ -194,8 +177,12 @@ def hello():
 	return "Hello world!"
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    if DEBUG:
-    	app.run(host='0.0.0.0', port=port)
-    else:
-    	app.run(host='0.0.0.0', port=port, debug=True)
+	if len(sys.argv) > 1:
+		if sys.argv[1] == "debug":
+			DEBUG = True
+			
+	port = int(os.environ.get("PORT", 5000))
+	if not DEBUG:
+		app.run(host='0.0.0.0', port=port)
+	else:
+		app.run(host='0.0.0.0', port=port, debug=True)
