@@ -130,6 +130,8 @@ def last_game(msg, user):
             #Win?
             if player_num < 5 and match["result"]["radiant_win"]:
                 send_message("You Won!")
+            else if player_num > 4 and not match["result"]["radiant_win"]:
+            	send_message("You Won!")   
             else:
                 send_message("You Lost.... Bitch")
         player_num = player_num + 1
