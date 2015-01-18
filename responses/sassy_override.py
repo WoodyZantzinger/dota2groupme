@@ -21,5 +21,6 @@ class ResponseSassyOverride(AbstractResponse):
 
     @classmethod
     def is_relevant_msg(cls, msg, sender):
-        return random.random() < ResponseSassyOverride.INSULT_THRESHOLD
+        relevant_to_me = "?" in msg or "#" in msg
+        return random.random() < ResponseSassyOverride.INSULT_THRESHOLD and relevant_to_me
 
