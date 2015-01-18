@@ -2,52 +2,13 @@ import os
 import urllib2
 import urllib
 import traceback
-import random
-import local_data
 import sys
 from flask import Flask, request
-from dota2py import api
-from dota2py import data
 from responses import *
 
 DEBUG = False
 
-INSULT_THRESHOLD = 0.005
-
-key =  "63760574A669369C2117EA4A30A4768B"
-
-
-help_dict = {"#last" : "Shows your personel stats from the last game, add a user argument to find someone elses stats",
-           "#now" : "Shows who is currently online (NOT IMPLEMENTE YET)",
-           "#setSteam" : "Set your SteamID if not hardcoded in yet. This is you Steam (Not Dota) username.",
-           "#setDOTA" : "This is your Dota ID number. Find this as the last number in your DotaBuff URL",
-           "#status" : "See if sUN bot is up",
-           "#help" : "You are reading the help now...",
-           "#next" : "Picks a random hero to play...",
-           "#nextItem" : "Picks a random item to buy...",
-           "#nextTeam" : "Picks a awesome team to play...",
-}
-
 app = Flask(__name__)
-#
-# https://api.groupme.com/v3/bots/post
-
-
-def random_hero():
-    next_hero = data.get_hero_name(random.randint(1, 107))
-    if next_hero is not None:
-        return str(next_hero["localized_name"])
-    else:
-        return random_hero()
-
-
-def random_item():
-    next_item = data.get_item_name(random.randint(1, 212))
-    if next_item is not None:
-        return str(next_item["name"])
-    else:
-        return next_item()
-
 
 def send_message(msg):
     print "Sending: '" + msg + "'"
@@ -59,130 +20,13 @@ def send_message(msg):
           'bot_id' : '535cbd947cf38b46a83fa3084f',
           'text' : msg,
         }
-        data = urllib.urlencode(values)
-        req = urllib2.Request(url, data, header)
+        response_data = urllib.urlencode(values)
+        req = urllib2.Request(url, response_data, header)
         response = urllib2.urlopen(req)
         #print "msg"
         return response
     else:
         return 'Win'
-
-
-def set_steam(msg, user):
-    print "Got here"
-    local_data.GroupMetoSteam[user] = msg
-    return send_message("I set your Steam ID to: " + msg)
-
-
-def set_dota(msg, user):
-    print "Got here"
-    local_data.GroupMetoDOTA[user] = msg
-    return send_message("I set your Dota ID to: " + msg)
-
-
-def last_game(msg, user):
-
-    print "Starting"
-
-    if not local_data.has_steamID(user):
-        send_message("I don't know your SteamID! Set it with '#set ID'")
-        return 'OK'
-
-    if not local_data.has_dotaID(user):
-        send_message("I don't know your DOTA ID! Set it with '#setDota ID'")
-        return 'OK'
-
-    print "Setting Key & Account ID"
-    api.set_api_key(key)
-
-    account_id = local_data.name_to_steamID(user)
-
-    print "Got Account ID"
-    # Get a list of recent matches for the player
-    matches = api.get_match_history(account_id=account_id)["result"]["matches"]
-
-    #Get the full details for a match
-    match = api.get_match_details(matches[0]["match_id"])
-    print "Got Match Details"
-    player_num = 0
-    for x in match["result"]["players"]:
-        if int(x["account_id"]) == local_data.name_to_dotaID(user):
-            print "Got User Data"
-
-            #Stats?
-            print player_num
-            msg = local_data.match_performance_template.format(hero=data.get_hero_name(x["hero_id"])["localized_name"],
-                                                        k=str(x["kills"]),
-                                                        d=str(x["deaths"]),
-                                                        a=str(x["assists"]),
-                                                        GPM=str(x["gold_per_min"]),
-                                                        level=str(x["level"])
-                                                        )
-            send_message(msg)
-
-            #Items?
-            finalItems = "Your items: "
-            for itemNum in range(0, 6):
-                if x["item_" + str(itemNum)] != 0 and x["item_" + str(itemNum)] is not None:
-                    finalItems += str(data.get_item_name(x["item_" + str(itemNum)])["name"]) + ", "
-            send_message(finalItems)
-
-            #Win?
-            if player_num < 5 and match["result"]["radiant_win"]:
-                send_message("You Won!")
-            else:
-                send_message("You Lost.... Bitch")
-        player_num = player_num + 1
-    return 'OK'
-
-
-def current_online(msg, user):
-    return send_message("No one is online!")
-
-
-def show_help(msg, user):
-    send_message("Fuck you " + str(user) + "... This shit isn't that hard")
-    for command, help_text in help_dict.iteritems():
-        send_message(command + ": " + help_text)
-    return 'OK'
-
-
-def status(msg, user):
-    return send_message("Currently listening...")
-
-
-def nextHero(msg, user):
-    return send_message("You will play " + random_hero())
-
-
-def nextItem(msg, user):
-    return send_message("You will buy " + random_item())
-
-
-def nextTeam(msg, user):
-    # makes a list of 5 random heroes
-    heroes = [random_hero() for _ in range(5)]
-    return send_message(local_data.team_template.format(*heroes))
-
-
-def send_burn(msg, user):
-    return send_message(random.choice(local_data.burn_responses))
-
-
-def send_insult():
-    return send_message("No, you {}".format(random.choice(local_data.mean_names)))
-
-options = {"#last": last_game,
-           "#now": current_online,
-           "#setsteam": set_steam,
-           "#setdota": set_dota,
-           "#status": status,
-           "#help": show_help,
-           "#next": nextHero,
-           "#nextitem": nextItem,
-           "#nextteam": nextTeam,
-           "#sunstrike": send_burn,
-}
 
 
 def get_response_categories(msg, sender):
@@ -191,7 +35,12 @@ def get_response_categories(msg, sender):
         if cls.is_relevant_msg(msg, sender):
             print(cls)
             out.append(cls)
-    return out
+    critical_override_threshold = max([cls.OVERRIDE_PRIORITY for cls in out])
+    filtered_out = []
+    for cls in out:
+        if cls.OVERRIDE_PRIORITY >= critical_override_threshold:
+            filtered_out.append(cls)
+    return filtered_out
 
 
 def make_responses(categories, msg, sender):

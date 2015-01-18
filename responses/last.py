@@ -62,20 +62,10 @@ class ResponseLast(AbstractResponse):
                 out += finalItems + "\n"
 
                 #Win?
+                #@todo fix this to incorporate woody's bugfix
                 if player_num < 5 and match["result"]["radiant_win"]:
                     out += "You Won!" + "\n"
                 else:
                     out += "You Lost.... Bitch"
                 return out
             player_num = player_num + 1
-
-
-
-if __name__ == "__main__":
-    mg = ResponseLast("#text", "sty")
-    if ResponseLast.is_relevant_msg("#laST", "sty"):
-        print("responding")
-    else:
-        print("not responding")
-    print(ResponseLast.HELP_RESPONSE)
-    print("hello")

@@ -35,7 +35,6 @@ burn_responses = ["http://media.giphy.com/media/LOVjuAnxaUR6U/giphy.gif",
                     "https://38.media.tumblr.com/a86240b247fc8a3579fab663a61fec86/tumblr_mi1n1cm5a51rqfhi2o1_500.gif",
                     "http://spaghettiwithcrocetti.files.wordpress.com/2014/07/giphy-51.gif",
                     "http://i489.photobucket.com/albums/rr257/BBladem83/BurnNotice.gif"
-
                     ]
 
 

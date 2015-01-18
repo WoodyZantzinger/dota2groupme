@@ -6,7 +6,7 @@ class AbstractResponse(object):
 
     # priority of message overriding other messsages
     # to allow some things to make others not come through the pipe
-    OVERRIDE_PRIORITY = -1
+    OVERRIDE_PRIORITY = 0
 
     # default help response
     HELP_RESPONSE = "Not implemented for " + RESPONSE_KEY
@@ -31,7 +31,7 @@ class AbstractResponse(object):
         'Jonny G': 65091923,
     }
 
-    key =  "63760574A669369C2117EA4A30A4768B"
+    key = "63760574A669369C2117EA4A30A4768B"
 
     @classmethod
     def name_to_dotaID(cls, name):

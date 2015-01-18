@@ -15,5 +15,6 @@ class ResponseHelp(AbstractResponse):
         classes = AbstractResponse.__subclasses__()
         out = ""
         for cls in classes:
-            out += cls.RESPONSE_KEY + " : " + cls.HELP_RESPONSE + '\n'
+            if cls.RESPONSE_KEY != AbstractResponse.RESPONSE_KEY:
+                out += cls.RESPONSE_KEY + " : " + cls.HELP_RESPONSE + '\n'
         return out
