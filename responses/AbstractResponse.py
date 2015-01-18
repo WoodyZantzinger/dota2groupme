@@ -1,3 +1,5 @@
+import json
+
 class AbstractResponse(object):
 
     # default response key
@@ -11,6 +13,13 @@ class AbstractResponse(object):
     # default help response
     HELP_RESPONSE = "Not implemented for " + RESPONSE_KEY
 
+    with open('responses\\GroupMetoSteam.json') as f:
+        GroupMetoSteam = json.load(f)
+
+    with open('responses\\GroupMetoDOTA.json') as f:
+        GroupMetoDOTA = json.load(f)
+
+    """
     GroupMetoSteam = {
           'Woody Zantzinger': 76561197990341684,
           'Andy Esposito': 76561198044654320,
@@ -30,6 +39,7 @@ class AbstractResponse(object):
         'Kevin': 136754293,
         'Jonny G': 65091923,
     }
+    """
 
     key = "63760574A669369C2117EA4A30A4768B"
 
@@ -48,6 +58,26 @@ class AbstractResponse(object):
     @classmethod
     def name_to_steamID(cls, name):
         return int(AbstractResponse.GroupMetoSteam[name])
+
+    @classmethod
+    def cache_GroupMetoSteam(cls):
+        with open('responses\\GroupMetoSteam.json', 'w') as f:
+            json.dump(AbstractResponse.GroupMetoSteam, f)
+
+    @classmethod
+    def cache_GroupMetoDOTA(cls):
+        with open('responses\\GroupMetoDOTA.json', 'w') as f:
+            json.dump(AbstractResponse.GroupMetoSteam, f)
+
+    @classmethod
+    def update_user(cls, old, new):
+        AbstractResponse.GroupMetoSteam[new] = AbstractResponse.GroupMetoSteam[old]
+        del AbstractResponse.GroupMetoSteam[old]
+        AbstractResponse.cache_GroupMetoSteam()
+
+        AbstractResponse.GroupMetoDOTA[new] = AbstractResponse.GroupMetoDOTA[old]
+        del AbstractResponse.GroupMetoDOTA[old]
+        AbstractResponse.cache_GroupMetoDOTA()
 
     def __init__(self, msg, sender):
         super(AbstractResponse, self).__init__()

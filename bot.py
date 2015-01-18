@@ -35,6 +35,8 @@ def get_response_categories(msg, sender):
         if cls.is_relevant_msg(msg, sender):
             print(cls)
             out.append(cls)
+    if not out:
+        return out
     critical_override_threshold = max([cls.OVERRIDE_PRIORITY for cls in out])
     filtered_out = []
     for cls in out:
