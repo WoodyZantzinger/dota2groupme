@@ -8,7 +8,7 @@ import sys
 from flask import Flask, request
 from dota2py import api
 from dota2py import data
-import random
+from responses import *
 
 DEBUG = False
 
@@ -50,7 +50,7 @@ def random_item():
 
 
 def send_message(msg):
-    print "Sending " + msg
+    print "Sending: '" + msg + "'"
     if not DEBUG:
         url = 'https://api.groupme.com/v3/bots/post'
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
@@ -185,25 +185,49 @@ options = {"#last": last_game,
 }
 
 
+def get_response_categories(msg, sender):
+    out = []
+    for cls in AbstractResponse.AbstractResponse.__subclasses__():
+        if cls.is_relevant_msg(msg, sender):
+            print(cls)
+            out.append(cls)
+    return out
+
+
+def make_responses(categories, msg, sender):
+    out = []
+    for cls in categories:
+        print("sending msg for {}".format(cls))
+        out.append(cls(msg, sender).respond())
+    return out
+
 
 @app.route('/message/', methods=['POST'])
 def message():
     new_message = request.get_json(force=True)
     sender = new_message["name"]
-    body = new_message["text"]
-    if body.startswith("#"):
-        insult_chance = random.random()
-        if insult_chance < INSULT_THRESHOLD:
-            print("Sending insult")
-            send_insult()
-        else:
-            print "Calling: " + body.partition(' ')[0] + " With " + body.partition(' ')[2]
+    msg = new_message["text"]
 
-            try:
-                options[(body.partition(' ')[0]).lower()](body.partition(' ')[2], sender)
-            except BaseException as e:
-                print repr(e)
-                traceback.print_exc()
+    active_response_categories = get_response_categories(msg, sender)
+    output_messages = make_responses(active_response_categories, msg, sender)
+
+    for output in output_messages:
+        if output:
+            send_message(output)
+
+    #if body.startswith("#"):
+        #insult_chance = random.random()
+        #if insult_chance < INSULT_THRESHOLD:
+            #print("Sending insult")
+            #send_insult()
+        #else:
+            #print "Calling: " + body.partition(' ')[0] + " With " + body.partition(' ')[2]
+
+            #try:
+                #options[(body.partition(' ')[0]).lower()](body.partition(' ')[2], sender)
+            #except BaseException as e:
+                #print repr(e)
+                #traceback.print_exc()
     return 'OK'
 
 
