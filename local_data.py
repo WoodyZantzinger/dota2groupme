@@ -43,17 +43,3 @@ burn_responses = ["http://media.giphy.com/media/LOVjuAnxaUR6U/giphy.gif",
 # if bot sees a word in the message, it will respond with the easy response
 easy_jokes = {"sausage": "but they don''t even have any money"}
 
-def name_to_dotaID(name):
-    return int(GroupMetoDOTA[name])
-
-
-def has_dotaID(name):
-    return GroupMetoDOTA.has_key(name)
-
-
-def has_steamID(name):
-    return GroupMetoSteam.has_key(name)
-
-
-def name_to_steamID(name):
-    return int(GroupMetoSteam[name])

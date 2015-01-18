@@ -49,8 +49,6 @@ class AbstractResponse(object):
     def name_to_steamID(cls, name):
         return int(AbstractResponse.GroupMetoSteam[name])
 
-
-
     def __init__(self, msg, sender):
         super(AbstractResponse, self).__init__()
         self.msg = msg

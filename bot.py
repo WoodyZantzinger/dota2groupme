@@ -215,19 +215,6 @@ def message():
         if output:
             send_message(output)
 
-    #if body.startswith("#"):
-        #insult_chance = random.random()
-        #if insult_chance < INSULT_THRESHOLD:
-            #print("Sending insult")
-            #send_insult()
-        #else:
-            #print "Calling: " + body.partition(' ')[0] + " With " + body.partition(' ')[2]
-
-            #try:
-                #options[(body.partition(' ')[0]).lower()](body.partition(' ')[2], sender)
-            #except BaseException as e:
-                #print repr(e)
-                #traceback.print_exc()
     return 'OK'
 
 
