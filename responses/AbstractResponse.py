@@ -67,7 +67,7 @@ class AbstractResponse(object):
     @classmethod
     def cache_GroupMetoDOTA(cls):
         with open('./responses/GroupMetoDOTA.json', 'w') as f:
-            json.dump(AbstractResponse.GroupMetoSteam, f)
+            json.dump(AbstractResponse.GroupMetoDOTA, f)
 
     @classmethod
     def update_user(cls, old, new):
