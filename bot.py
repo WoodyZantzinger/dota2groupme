@@ -58,7 +58,8 @@ def message():
     new_message = request.get_json(force=True)
     sender = new_message["name"]
     msg = new_message["text"]
-
+    if sender == "sUN":
+        return "OK"
     active_response_categories = get_response_categories(msg, sender)
     output_messages = make_responses(active_response_categories, msg, sender)
 
