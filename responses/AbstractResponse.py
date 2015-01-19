@@ -16,7 +16,7 @@ class AbstractResponse(object):
     with open('./responses/GroupMetoSteam.json') as f:
         GroupMetoSteam = json.load(f)
 
-    with open('/responses/GroupMetoDOTA.json') as f:
+    with open('./responses/GroupMetoDOTA.json') as f:
         GroupMetoDOTA = json.load(f)
 
     """
