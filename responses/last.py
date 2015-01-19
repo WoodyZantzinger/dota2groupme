@@ -65,6 +65,8 @@ class ResponseLast(AbstractResponse):
                 #@todo fix this to incorporate woody's bugfix
                 if player_num < 5 and match["result"]["radiant_win"]:
                     out += "You Won!" + "\n"
+                elif player_num > 4 and not match["result"]["radiant_win"]:
+                    send_message("You Won!")
                 else:
                     out += "You Lost.... Bitch"
                 return out
