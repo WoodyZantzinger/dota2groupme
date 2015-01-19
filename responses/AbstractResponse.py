@@ -13,10 +13,10 @@ class AbstractResponse(object):
     # default help response
     HELP_RESPONSE = "Not implemented for " + RESPONSE_KEY
 
-    with open('./responses/GroupMetoSteam.json') as f:
+    with open('responses\\GroupMetoSteam.json') as f:
         GroupMetoSteam = json.load(f)
 
-    with open('./responses/GroupMetoDOTA.json') as f:
+    with open('responses\\GroupMetoDOTA.json') as f:
         GroupMetoDOTA = json.load(f)
 
     """
@@ -61,13 +61,13 @@ class AbstractResponse(object):
 
     @classmethod
     def cache_GroupMetoSteam(cls):
-        with open('./responses/GroupMetoSteam.json', 'w') as f:
+        with open('responses\\GroupMetoSteam.json', 'w') as f:
             json.dump(AbstractResponse.GroupMetoSteam, f)
 
     @classmethod
     def cache_GroupMetoDOTA(cls):
-        with open('./responses/GroupMetoDOTA.json', 'w') as f:
-            json.dump(AbstractResponse.GroupMetoDOTA, f)
+        with open('responses\\GroupMetoDOTA.json', 'w') as f:
+            json.dump(AbstractResponse.GroupMetoSteam, f)
 
     @classmethod
     def update_user(cls, old, new):
