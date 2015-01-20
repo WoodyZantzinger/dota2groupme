@@ -47,9 +47,21 @@ class AbstractResponse(object):
     def name_to_dotaID(cls, name):
         return int(AbstractResponse.GroupMetoDOTA[name])
 
+	#TODO: We need to optimize, this is a poor was to do reverse lookups
+    @classmethod
+    def dotaID_to_name(cls, id):
+        for name, key in AbstractResponse.GroupMetoDOTA.items():
+        	if key == id:
+        		return name
+
+
     @classmethod
     def has_dotaID(cls, name):
         return AbstractResponse.GroupMetoDOTA.has_key(name)
+
+    @classmethod
+    def has_dotaID_num(cls, int):
+        return int in AbstractResponse.GroupMetoDOTA.values()
 
     @classmethod
     def has_steamID(cls, name):
