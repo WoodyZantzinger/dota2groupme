@@ -2,6 +2,7 @@
 from AbstractResponse import *
 from dota2py import api
 from dota2py import data
+import pprint
 
 class ResponseLast(AbstractResponse):
 
@@ -10,6 +11,8 @@ class ResponseLast(AbstractResponse):
     RESPONSE_KEY = "#last"
 
     HELP_RESPONSE = "Shows your personel stats from the last game, add a user argument to find someone elses stats"
+
+    DOTABUFF_LINK_TEMPLATE = "dotabuff.com/matches/{id}"
 
     def __init__(self, msg, sender):
         super(ResponseLast, self).__init__(msg, sender)
@@ -35,6 +38,11 @@ class ResponseLast(AbstractResponse):
 
         #Get the full details for a match
         match = api.get_match_details(matches[0]["match_id"])
+
+        match_id = match['result']['match_id']
+
+        dotabuff_link = ResponseLast.DOTABUFF_LINK_TEMPLATE.format(id=match_id)
+
         print "Got Match Details"
         player_num = 0
 
@@ -64,10 +72,11 @@ class ResponseLast(AbstractResponse):
                 #Win?
                 #@todo fix this to incorporate woody's bugfix
                 if player_num < 5 and match["result"]["radiant_win"]:
-                    out += "You Won!" + "\n"
+                    out += "You Won! "
                 elif player_num > 4 and not match["result"]["radiant_win"]:
-                    out += "You Won!" + "\n"
+                    out += "You Won! "
                 else:
-                    out += "You Lost.... Bitch"
+                    out += "You Lost.... Bitch "
+                out += str(match_id) + " " + dotabuff_link
                 return out
             player_num = player_num + 1
