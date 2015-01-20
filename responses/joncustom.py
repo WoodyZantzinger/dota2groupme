@@ -6,6 +6,8 @@ class ResponseJonCustom(AbstractResponse):
 
     OVERRIDE_PRIORITY = 5
 
+    ACTIVE = False
+
     def __init__(self, msg, sender):
         super(ResponseJonCustom, self).__init__(msg, sender)
 
@@ -14,5 +16,5 @@ class ResponseJonCustom(AbstractResponse):
 
     @classmethod
     def is_relevant_msg(cls, msg, sender):
-        return sender in ["Jonny G"]
+        return sender in ["Jonny G"] and ResponseJonCustom.ACTIVE
 
