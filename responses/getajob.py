@@ -8,6 +8,8 @@ class ResponseGetAJob(AbstractResponse):
 
     OVERRIDE_PRIORITY = 4
 
+    EST_UTC_OFFSET = 5
+
     def __init__(self, msg, sender):
         super(ResponseGetAJob, self).__init__(msg, sender)
 
@@ -16,9 +18,12 @@ class ResponseGetAJob(AbstractResponse):
 
     @classmethod
     def is_relevant_msg(cls, msg, sender):
-        hour = datetime.datetime.now().hour
-        isweekday = datetime.datetime.now().weekday() <= 5
-        return 9 < hour < 17 and "games" in msg and isweekday
+        hour = datetime.datetime.utcnow().hour
+        isweekday = datetime.datetime.utcnow().weekday() <= 5
+        EST_9AM = 9 + ResponseGetAJob.EST_UTC_OFFSET
+        EST_5PM = 17 + ResponseGetAJob.EST_UTC_OFFSET
+        is_during_workday = EST_9AM < hour < EST_5PM
+        return is_during_workday and "games" in msg and isweekday
 
 
 
