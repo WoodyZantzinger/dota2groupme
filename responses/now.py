@@ -16,7 +16,6 @@ class ResponseNow(AbstractResponse):
 
     def respond(self):
         out = ""
-        nobody_playing = False
         for person, steamid in AbstractResponse.GroupMetoSteam.iteritems():
             steamuser = steamapi.user.SteamUser(steamid)
 
@@ -24,10 +23,9 @@ class ResponseNow(AbstractResponse):
             print(person)
             print(playing)
             if playing:
-                nobody_playing = True
                 game = playing._cache['name'][0]
                 out += ResponseNow.person_status_template.format(name=person, status=game)
-        if nobody_playing:
+        if not out:
             return "Nobody's online :("
         return out
 
