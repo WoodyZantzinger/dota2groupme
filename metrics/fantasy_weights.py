@@ -22,527 +22,527 @@ role_weights = {
 
 roles = [
             {
-                "role": "",
+                "role": "core",
                 "id": 1,
                 "localized_name": "Anti-Mage"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 2,
                 "localized_name": "Axe"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 3,
                 "localized_name": "Bane"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 4,
                 "localized_name": "Bloodseeker"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 5,
                 "localized_name": "Crystal Maiden"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 6,
                 "localized_name": "Drow Ranger"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 7,
                 "localized_name": "Earthshaker"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 8,
                 "localized_name": "Juggernaut"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 9,
                 "localized_name": "Mirana"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 11,
                 "localized_name": "Shadow Fiend"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 10,
                 "localized_name": "Morphling"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 12,
                 "localized_name": "Phantom Lancer"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 13,
                 "localized_name": "Puck"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 14,
                 "localized_name": "Pudge"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 15,
                 "localized_name": "Razor"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 16,
                 "localized_name": "Sand King"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 17,
                 "localized_name": "Storm Spirit"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 18,
                 "localized_name": "Sven"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 19,
                 "localized_name": "Tiny"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 20,
                 "localized_name": "Vengeful Spirit"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 21,
                 "localized_name": "Windranger"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 22,
                 "localized_name": "Zeus"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 23,
                 "localized_name": "Kunkka"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 25,
                 "localized_name": "Lina"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 31,
                 "localized_name": "Lich"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 26,
                 "localized_name": "Lion"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 27,
                 "localized_name": "Shadow Shaman"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 28,
                 "localized_name": "Slardar"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 29,
                 "localized_name": "Tidehunter"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 30,
                 "localized_name": "Witch Doctor"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 32,
                 "localized_name": "Riki"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 33,
                 "localized_name": "Enigma"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 34,
                 "localized_name": "Tinker"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 35,
                 "localized_name": "Sniper"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 36,
                 "localized_name": "Necrophos"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 37,
                 "localized_name": "Warlock"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 38,
                 "localized_name": "Beastmaster"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 39,
                 "localized_name": "Queen of Pain"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 40,
                 "localized_name": "Venomancer"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 41,
                 "localized_name": "Faceless Void"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 42,
                 "localized_name": "Wraith King"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 43,
                 "localized_name": "Death Prophet"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 44,
                 "localized_name": "Phantom Assassin"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 45,
                 "localized_name": "Pugna"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 46,
                 "localized_name": "Templar Assassin"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 47,
                 "localized_name": "Viper"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 48,
                 "localized_name": "Luna"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 49,
                 "localized_name": "Dragon Knight"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 50,
                 "localized_name": "Dazzle"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 51,
                 "localized_name": "Clockwerk"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 52,
                 "localized_name": "Leshrac"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 53,
                 "localized_name": "Nature's Prophet"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 54,
                 "localized_name": "Lifestealer"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 55,
                 "localized_name": "Dark Seer"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 56,
                 "localized_name": "Clinkz"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 57,
                 "localized_name": "Omniknight"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 58,
                 "localized_name": "Enchantress"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 59,
                 "localized_name": "Huskar"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 60,
                 "localized_name": "Night Stalker"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 61,
                 "localized_name": "Broodmother"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 62,
                 "localized_name": "Bounty Hunter"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 63,
                 "localized_name": "Weaver"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 64,
                 "localized_name": "Jakiro"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 65,
                 "localized_name": "Batrider"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 66,
                 "localized_name": "Chen"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 67,
                 "localized_name": "Spectre"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 69,
                 "localized_name": "Doom"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 68,
                 "localized_name": "Ancient Apparition"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 70,
                 "localized_name": "Ursa"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 71,
                 "localized_name": "Spirit Breaker"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 72,
                 "localized_name": "Gyrocopter"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 73,
                 "localized_name": "Alchemist"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 74,
                 "localized_name": "Invoker"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 75,
                 "localized_name": "Silencer"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 76,
                 "localized_name": "Outworld Devourer"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 77,
                 "localized_name": "Lycan"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 78,
                 "localized_name": "Brewmaster"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 79,
                 "localized_name": "Shadow Demon"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 80,
                 "localized_name": "Lone Druid"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 81,
                 "localized_name": "Chaos Knight"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 82,
                 "localized_name": "Meepo"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 83,
                 "localized_name": "Treant Protector"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 84,
                 "localized_name": "Ogre Magi"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 85,
                 "localized_name": "Undying"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 86,
                 "localized_name": "Rubick"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 87,
                 "localized_name": "Disruptor"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 88,
                 "localized_name": "Nyx Assassin"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 89,
                 "localized_name": "Naga Siren"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 90,
                 "localized_name": "Keeper of the Light"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 91,
                 "localized_name": "Io"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 92,
                 "localized_name": "Visage"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 93,
                 "localized_name": "Slark"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 94,
                 "localized_name": "Medusa"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 95,
                 "localized_name": "Troll Warlord"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 96,
                 "localized_name": "Centaur Warrunner"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 97,
                 "localized_name": "Magnus"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 98,
                 "localized_name": "Timbersaw"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 99,
                 "localized_name": "Bristleback"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 100,
                 "localized_name": "Tusk"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 101,
                 "localized_name": "Skywrath Mage"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 102,
                 "localized_name": "Abaddon"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 103,
                 "localized_name": "Elder Titan"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 104,
                 "localized_name": "Legion Commander"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 106,
                 "localized_name": "Ember Spirit"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 107,
                 "localized_name": "Earth Spirit"
             },
@@ -552,17 +552,17 @@ roles = [
                 "localized_name": "Abyssal Underlord"
             },
             {
-                "role": "",
+                "role": "core",
                 "id": 109,
                 "localized_name": "Terrorblade"
             },
             {
-                "role": "",
+                "role": "support",
                 "id": 110,
                 "localized_name": "Oracle"
             },
             {
-                "role": "",
+                "role": "fuck you",
                 "id": 111,
                 "localized_name": "Techies"
             },
