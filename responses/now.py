@@ -21,6 +21,8 @@ class ResponseNow(AbstractResponse):
             steamuser = steamapi.user.SteamUser(steamid)
 
             playing = steamuser.currently_playing
+            print(person)
+            print(playing)
             if playing:
                 nobody_playing = True
                 game = playing._cache['name'][0]
