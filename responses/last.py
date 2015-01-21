@@ -12,7 +12,7 @@ class ResponseLast(AbstractResponse):
 
     HELP_RESPONSE = "Shows your personel stats from the last game, add a user argument to find someone elses stats"
 
-    DOTABUFF_LINK_TEMPLATE = "dotabuff.com/matches/{id}"
+    DOTABUFF_LINK_TEMPLATE = "http://www.dotabuff.com/matches/{id}"
 
     def __init__(self, msg, sender):
         super(ResponseLast, self).__init__(msg, sender)
@@ -51,14 +51,23 @@ class ResponseLast(AbstractResponse):
                 out = ""
                 print "Got self.sender Data"
 
+                won = False
+                if player_num < 5 and match["result"]["radiant_win"]:
+                    won = True
+                elif player_num > 4 and not match["result"]["radiant_win"]:
+                    won = True
+                else:
+                    won = False
+                results_are_poor = ResponseLast.are_match_results_poor(x, won)
                 #Stats?
                 print player_num
-                msg = ResponseLast.match_performance_template.format(hero=data.get_hero_name(x["hero_id"])["localized_name"],
-                                                            k=str(x["kills"]),
-                                                            d=str(x["deaths"]),
-                                                            a=str(x["assists"]),
-                                                            GPM=str(x["gold_per_min"]),
-                                                            level=str(x["level"])
+                msg = ResponseLast.match_performance_template.format(
+                                                            hero=data.get_hero_name(x["hero_id"])["localized_name"],
+                                                            k=x["kills"],
+                                                            d=x["deaths"],
+                                                            a=x["assists"],
+                                                            GPM=x["gold_per_min"],
+                                                            level=x["level"]
                                                             )
                 out += msg + "\n"
 
@@ -71,12 +80,28 @@ class ResponseLast(AbstractResponse):
 
                 #Win?
                 #@todo fix this to incorporate woody's bugfix
-                if player_num < 5 and match["result"]["radiant_win"]:
-                    out += "You Won! "
-                elif player_num > 4 and not match["result"]["radiant_win"]:
+                if won:
                     out += "You Won! "
                 else:
                     out += "You Lost.... Bitch "
+                if results_are_poor:
+                    out += "Good job creating space\n"
                 out += str(match_id) + " " + dotabuff_link
                 return out
             player_num = player_num + 1
+
+    @classmethod
+    def are_match_results_poor(cls, player_results, won):
+        if won:
+            return False
+        k = player_results['kills']
+        d = player_results['deaths']
+        a = player_results['assists']
+        gpm = player_results['gold_per_min']
+        xpm = player_results['xp_per_min']
+
+        if d > (k + a) and xpm < 200:
+            return True
+
+        pprint.pprint(player_results)
+        return False
