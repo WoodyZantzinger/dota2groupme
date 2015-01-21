@@ -3,6 +3,7 @@ from AbstractResponse import *
 from dota2py import api
 from dota2py import data
 import pprint
+from metrics import fantasy_weights
 
 class ResponseLast(AbstractResponse):
 
@@ -94,11 +95,27 @@ class ResponseLast(AbstractResponse):
     def are_match_results_poor(cls, player_results, won):
         if won:
             return False
+
+        points = 0
         k = player_results['kills']
+        k_weight = 0.3
+        points += k * k_weight
+
         d = player_results['deaths']
+        d_weight = -0.3
+        points += d * d_weight
+
         a = player_results['assists']
+        a_weight = 0.15
+
+        lh = player_results['last_hits']
+        lh_weight = 0.003
+
         gpm = player_results['gold_per_min']
+        gpm_weight = 0.002
+
         xpm = player_results['xp_per_min']
+        xpm_weight = 0.002
 
         if d > (k + a) and xpm < 200:
             return True
