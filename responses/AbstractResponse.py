@@ -1,4 +1,6 @@
 import json
+import os
+import pymongo
 
 class AbstractResponse(object):
 
@@ -20,6 +22,24 @@ class AbstractResponse(object):
         GroupMetoDOTA = json.load(f)
 
     key = "63760574A669369C2117EA4A30A4768B"
+
+    mongo_connection = pymongo.Connection(os.getenv('MONGOLAB_URL'))
+    mongo_db = mongo_connection.dota2bot
+
+    @classmethod
+    def has_dotaMatch(cls, ID):
+        matches = AbstractResponse.mongo_db.dota2matches
+        matches.find_one({'match_id': ID})
+        return (matches is not None)
+
+    @classmethod
+    def add_dotaMatch(cls, match):
+        matches = AbstractResponse.mongo_db.dota2matches
+        matches.insert(match)
+
+    @classmethod
+    def get_last_match(cls, name):
+        return False
 
     @classmethod
     def name_to_dotaID(cls, name):

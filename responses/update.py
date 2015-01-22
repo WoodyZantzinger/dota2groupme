@@ -5,11 +5,9 @@ from dota2py import data
 
 class ResponseLast(AbstractResponse):
 
-    match_performance_template = "As {hero} you went {k}:{d}:{a} with {GPM} GPM finishing at level {level}"
-
     RESPONSE_KEY = "#update"
 
-    HELP_RESPONSE = "Update everyones last games"
+    HELP_RESPONSE = "Update everyone's last games"
 
     def __init__(self, msg, sender):
         super(ResponseLast, self).__init__(msg, sender)
@@ -18,61 +16,26 @@ class ResponseLast(AbstractResponse):
 
         print "Starting"
 
-        if not AbstractResponse.has_steamID(self.sender):
-            return "I don't know your SteamID! Set it with '#set ID'"
+        total_added = 0
 
-        if not AbstractResponse.has_dotaID(self.sender):
-            return "I don't know your DOTA ID! Set it with '#setDota ID'"
-
-        print "Setting Key & Account ID"
         api.set_api_key(AbstractResponse.key)
 
-        account_id = AbstractResponse.name_to_steamID(self.sender)
+        #For every user
+        for name, account_id in AbstractResponse.GroupMetoDOTA.items():
 
-        print "Got Account ID"
-        # Get a list of recent matches for the player
-        matches = api.get_match_history(account_id=account_id)["result"]["matches"]
+            # Get a list of recent matches for the player
+            matches = api.get_match_history(account_id=account_id)["result"]["matches"]
 
-        #Go through every match, store in database with every user we know
+            #Go through every match
+            for match in matches:
 
-        for match in matches:
-
-            single_match = api.get_match_details(match["match_id"])
-
-            out = ""
-            player_num = 0
-            for x in single_match["result"]["players"]:
-                if AbstractResponse.has_dotaID_num(int(x["account_id"])):
-                    out += AbstractResponse.dotaID_to_name(int(x["account_id"])) + "\n"
-                    #print "We know this user!"
-
-                    #Stats?
-                    #print player_num
-                    print x["hero_id"]
-
-                    msg = ResponseLast.match_performance_template.format(hero=data.get_hero_name(x["hero_id"])["localized_name"],
-                                                                         k=str(x["kills"]),
-                                                                         d=str(x["deaths"]),
-                                                                         a=str(x["assists"]),
-                                                                         GPM=str(x["gold_per_min"]),
-                                                                         level=str(x["level"])
-                    )
-                    out += msg + "\n"
-
-                    #Items?
-                    finalItems = "Your items: "
-                    for itemNum in range(0, 6):
-                        if x["item_" + str(itemNum)] != 0 and x["item_" + str(itemNum)] is not None:
-                            finalItems += str(data.get_item_name(x["item_" + str(itemNum)])["name"]) + ", "
-                    out += finalItems + "\n"
-                player_num = player_num + 1
-
-            if player_num < 5 and single_match["result"]["radiant_win"]:
-                out += "You Won!" + "\n"
-            elif player_num > 4 and not single_match["result"]["radiant_win"]:
-                out += "You Won!" + "\n"
-            else:
-                out += "You Lost.... Bitch"
-            print out
-        print "\n"
-        return 'OK'
+                single_match = api.get_match_details(match["match_id"])["result"]
+                print "Checking: " + str(single_match["match_id"])
+                if (not AbstractResponse.has_dotaMatch(single_match["match_id"])):
+                    AbstractResponse.add_dotaMatch(single_match)
+                    print "\t Adding: " + str(single_match["match_id"])
+                    total_added += 1
+                else:
+                    print "\t Was Duplicate"
+        final_string = "Updated {0} Matches".format(total_added)
+        return final_string
