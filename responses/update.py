@@ -50,7 +50,6 @@ class ResponseLast(AbstractResponse):
                     #print player_num
                     print x["hero_id"]
 
-                    #TODO, need a test for Techie and Oracle (#111) who isn't in the system
                     msg = ResponseLast.match_performance_template.format(hero=data.get_hero_name(x["hero_id"])["localized_name"],
                                                                          k=str(x["kills"]),
                                                                          d=str(x["deaths"]),
