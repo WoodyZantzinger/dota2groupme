@@ -75,27 +75,27 @@ class ResponseLast(AbstractResponse):
                                     new_record["max_kills"] = player["kills"]
                                     new_record["max_kills_player"] = player["account_id"]
 
-                                elif old_record["max_deaths"] < player["deaths"]:
+                                if old_record["max_deaths"] < player["deaths"]:
                                     print "{0} just got {1} deaths with {2}, a new low!".format(player_name, player["deaths"], hero_name )
                                     new_record["max_deaths"] = player["deaths"]
                                     new_record["max_deaths_player"] = player["account_id"]
 
-                                elif old_record["max_GPM"] < player["gold_per_min"]:
+                                if old_record["max_GPM"] < player["gold_per_min"]:
                                     print "{0} just got {1} GPM with {2}, a new record!".format(player_name, player["gold_per_min"], hero_name )
                                     new_record["max_GPM"] = player["gold_per_min"]
                                     new_record["max_GPM_player"] = player["account_id"]
 
-                                elif old_record["min_GPM"] > player["gold_per_min"]:
+                                if old_record["min_GPM"] > player["gold_per_min"]:
                                     print "{0} just got {1} GPM with {2}, a new low!".format(player_name, player["gold_per_min"], hero_name )
                                     new_record["min_GPM"] = player["gold_per_min"]
                                     new_record["min_GPM_player"] = player["account_id"]
 
-                                elif old_record["max_XPM"] < player["xp_per_min"]:
+                                if old_record["max_XPM"] < player["xp_per_min"]:
                                     print "{0} just got {1} XPM with {2}, a new record!".format(player_name, player["xp_per_min"], hero_name )
                                     new_record["max_XPM"] = player["xp_per_min"]
                                     new_record["max_XPM_player"] = player["account_id"]
 
-                                elif old_record["min_XPM"] > player["xp_per_min"]:
+                                if old_record["min_XPM"] > player["xp_per_min"]:
                                     print "{0} just got {1} XPM with {2}, a new low!".format(player_name, player["xp_per_min"], hero_name )
                                     new_record["min_XPM"] = player["xp_per_min"]
                                     new_record["min_XPM_player"] = player["account_id"]
