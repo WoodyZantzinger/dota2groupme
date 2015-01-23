@@ -22,15 +22,15 @@ class Best(AbstractResponse):
 
             hero_num = AbstractResponse.get_hero_id(hero_name[1])
             if hero_num < 0:
-                if hero_name[1] == "person":
+                if hero_name[1].lower() == "person":
                     out = "Woody"
-                elif hero_name[1] == "beer":
+                elif hero_name[1].lower() == "beer":
                     out = "Budweiser"
-                elif hero_name[1] == "game":
+                elif hero_name[1].lower() == "game":
                     out = "The Dota"
-                elif hero_name[1] == "friend":
+                elif hero_name[1].lower() == "friend":
                     out = "Beer"
-                elif hero_name[1] == "country":
+                elif hero_name[1].lower() == "country":
                     out = "USA!"
                 else:
                     out = "Hero not found"

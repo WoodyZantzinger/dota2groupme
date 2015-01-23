@@ -23,15 +23,15 @@ class Worst(AbstractResponse):
 
             hero_num = AbstractResponse.get_hero_id(hero_name[1])
             if hero_num < 0:
-                if hero_name[1] == "person":
+                if hero_name[1].lower() == "person":
                     out = "Jon"
-                elif hero_name[1] == "beer":
+                elif hero_name[1].lower() == "beer":
                     out = "Mother. Fucking. Pabst."
-                elif hero_name[1] == "game":
+                elif hero_name[1].lower() == "game":
                     out = "Hello Kitty Adventure, Pink Edition"
-                elif hero_name[1] == "friend":
+                elif hero_name[1].lower() == "friend":
                     out = "Porcupines"
-                elif hero_name[1] == "country":
+                elif hero_name[1].lower() == "country":
                     out = "Canada (sike prolly some Middle East place)"
                 else:
                     out = "Hero not found"
