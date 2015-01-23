@@ -36,6 +36,7 @@ class AbstractResponse(object):
     def add_dotaMatch(cls, match):
         matches = AbstractResponse.mongo_db.dota2matches
         matches.insert(match)
+        return True
 
     @classmethod
     def get_last_match(cls, name):

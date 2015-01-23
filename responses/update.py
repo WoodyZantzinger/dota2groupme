@@ -32,8 +32,8 @@ class ResponseLast(AbstractResponse):
                 single_match = api.get_match_details(match["match_id"])["result"]
                 print "Checking: " + str(single_match["match_id"])
                 if (not AbstractResponse.has_dotaMatch(single_match["match_id"])):
-                    AbstractResponse.add_dotaMatch(single_match)
                     print "\t Adding: " + str(single_match["match_id"])
+                    AbstractResponse.add_dotaMatch(single_match)
                     total_added += 1
                 else:
                     print "\t Was Duplicate"
