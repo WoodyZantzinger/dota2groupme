@@ -28,17 +28,26 @@ class AbstractResponse(object):
 
     @classmethod
     def has_dotaMatch(cls, ID):
-        print "1"
         matches = AbstractResponse.mongo_db.dota2matches
-        print "2"
         temp = matches.find_one({'match_id': ID})
-        print "3"
         return (temp is not None)
 
     @classmethod
     def add_dotaMatch(cls, match):
         matches = AbstractResponse.mongo_db.dota2matches
         matches.insert(match)
+        return True
+
+    @classmethod
+    def get_record(cls, hero_id):
+        records = AbstractResponse.mongo_db.dota2hero_records
+        temp = records.find_one({'hero_id': hero_id})
+        return temp
+
+    @classmethod
+    def set_record(cls, record):
+        records = AbstractResponse.mongo_db.dota2hero_records
+        records.insert(record)
         return True
 
     @classmethod
