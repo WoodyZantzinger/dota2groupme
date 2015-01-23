@@ -24,12 +24,11 @@ class Update(AbstractResponse):
         api.set_api_key(AbstractResponse.key)
 
         account_id = int(Update.message.split()[1])
-        name = AbstractResponse.dotaID_to_name(account_id)
 
-        print "Starting: {0}".format(name)
+
         # Get a list of recent matches for the player
         matches = api.get_match_history(account_id=account_id)["result"]["matches"]
-
+        print "Starting: {0} for {1} Matches".format(account_id, matches.count())
         #Go through every match
         for match in matches:
 
