@@ -47,7 +47,7 @@ class AbstractResponse(object):
     @classmethod
     def set_record(cls, record):
         records = AbstractResponse.mongo_db.dota2hero_records
-        records.insert(record)
+        records.update({'_id': record["_id"]}, {"$set": record}, upsert=True)
         return True
 
     @classmethod

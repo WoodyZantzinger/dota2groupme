@@ -5,12 +5,12 @@ from dota2py import data
 
 class Best(AbstractResponse):
 
-    message = "1"
+    message = "#best 1"
 
     RESPONSE_KEY = "#best"
 
     def __init__(self, msg, sender):
-        message = msg
+        Best.message = msg
         super(Best, self).__init__(msg, sender)
 
     def respond(self):
