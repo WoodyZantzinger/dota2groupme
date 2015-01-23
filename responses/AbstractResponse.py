@@ -1,6 +1,7 @@
 import json
 import os
 import pymongo
+from dota2py import data
 
 class AbstractResponse(object):
 
@@ -74,6 +75,15 @@ class AbstractResponse(object):
         for name, key in AbstractResponse.GroupMetoDOTA.items():
             if key == id:
                 return name
+
+    @classmethod
+    def get_hero_id(cls, msg_name):
+        if len(data.HEROES_CACHE) < 1:
+            data.load_heroes()
+
+        for key in data.HEROES_CACHE.items():
+            if msg_name.lower() == (key[1]['localized_name'].lower()):
+                return key[0]
 
     @classmethod
     def has_dotaID(cls, name):
