@@ -23,7 +23,18 @@ class Worst(AbstractResponse):
 
             hero_num = AbstractResponse.get_hero_id(hero_name[1])
             if hero_num < 0:
-                out = "Hero not found"
+                if hero_name[1] == "person":
+                    out = "Jon"
+                elif hero_name[1] == "beer":
+                    out = "Mother. Fucking. Pabst."
+                elif hero_name[1] == "game":
+                    out = "Hello Kitty Adventure, Pink Edition"
+                elif hero_name[1] == "friend":
+                    out = "Porcupines"
+                elif hero_name[1] == "country":
+                    out = "Canada (sike prolly some Middle East place)"
+                else:
+                    out = "Hero not found"
             else:
                 hero_name = data.get_hero_name(hero_num)["localized_name"]
                 record = AbstractResponse.get_record(hero_num)

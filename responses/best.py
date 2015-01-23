@@ -22,7 +22,18 @@ class Best(AbstractResponse):
 
             hero_num = AbstractResponse.get_hero_id(hero_name[1])
             if hero_num < 0:
-                out = "Hero not found"
+                if hero_name[1] == "person":
+                    out = "Woody"
+                elif hero_name[1] == "beer":
+                    out = "Budweiser"
+                elif hero_name[1] == "game":
+                    out = "The Dota"
+                elif hero_name[1] == "friend":
+                    out = "Beer"
+                elif hero_name[1] == "country":
+                    out = "USA!"
+                else:
+                    out = "Hero not found"
             else:
                 hero_name = data.get_hero_name(hero_num)["localized_name"]
                 record = AbstractResponse.get_record(hero_num)
