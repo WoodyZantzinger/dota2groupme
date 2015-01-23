@@ -23,7 +23,14 @@ class AbstractResponse(object):
 
     key = "63760574A669369C2117EA4A30A4768B"
 
-    mongo_connection = pymongo.Connection(os.getenv('MONGOLAB_URL'))
+    try:
+        with open('local_variables.json') as f:
+            local_var = json.load(f)
+        print local_var["MONGOLAB_URL"]
+        mongo_connection = pymongo.Connection(local_var["MONGOLAB_URL"])
+    except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
+        mongo_connection = pymongo.Connection(os.getenv('MONGOLAB_URL'))
+
     mongo_db = mongo_connection.dota2bot
 
     @classmethod
@@ -47,7 +54,10 @@ class AbstractResponse(object):
     @classmethod
     def set_record(cls, record):
         records = AbstractResponse.mongo_db.dota2hero_records
-        records.update({'_id': record["_id"]}, {"$set": record}, upsert=True)
+        if record.has_key('_id'):
+            records.update({'_id': record["_id"]}, {"$set": record}, upsert=True)
+        else:
+            records.insert(record)
         return True
 
     @classmethod
