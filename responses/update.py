@@ -22,7 +22,7 @@ class ResponseLast(AbstractResponse):
 
         #For every user
         for name, account_id in AbstractResponse.GroupMetoDOTA.items():
-
+            print "Starting: {0}".format(name)
             # Get a list of recent matches for the player
             matches = api.get_match_history(account_id=account_id)["result"]["matches"]
 

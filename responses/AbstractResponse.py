@@ -28,9 +28,12 @@ class AbstractResponse(object):
 
     @classmethod
     def has_dotaMatch(cls, ID):
+        print "1"
         matches = AbstractResponse.mongo_db.dota2matches
-        matches.find_one({'match_id': ID})
-        return (matches is not None)
+        print "2"
+        temp = matches.find_one({'match_id': ID})
+        print "3"
+        return (temp is not None)
 
     @classmethod
     def add_dotaMatch(cls, match):
