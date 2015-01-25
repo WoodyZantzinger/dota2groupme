@@ -132,4 +132,4 @@ class Update(AbstractResponse):
         #thread.start()
         #
         record = Update.update_dota(self)
-        return record + "Use #last for more details"
+        return record

@@ -20,7 +20,8 @@ def repeat_task(msg, time):
 
     for output in output_messages:
         if output:
-            print output
+            if output != "":
+                send_message(output)
     threading.Timer(time, repeat_task, [msg, time]).start()
 
 def send_message(msg):
