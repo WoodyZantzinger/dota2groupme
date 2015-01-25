@@ -3,6 +3,7 @@ from AbstractResponse import *
 from threading import Thread
 from dota2py import api
 from dota2py import data
+import time
 
 class Update(AbstractResponse):
 
@@ -21,7 +22,9 @@ class Update(AbstractResponse):
          # Get a list of recent matches for the player
         total_added = 0
         api.set_api_key(AbstractResponse.key)
-
+        current_time = int(time.time())
+        last_update_time = AbstractResponse.get_last_update_time()
+        new_records = ""
         for name, account_id in AbstractResponse.GroupMetoDOTA.items():
             print "Starting: {0}".format(name)
             # Get a list of recent matches for the player
@@ -31,6 +34,10 @@ class Update(AbstractResponse):
             #Go through every match
             for match in matches:
                 print "Checking: " + str(match["match_id"])
+
+                if match["start_time"] < last_update_time["last_update"]:
+                    print "We've seen these matches"
+                    break
 
                 if (not AbstractResponse.has_dotaMatch(match["match_id"])):
                     single_match = api.get_match_details(match["match_id"])["result"]
@@ -72,32 +79,32 @@ class Update(AbstractResponse):
                                 new_record = old_record.copy()
 
                                 if old_record["max_kills"] < player["kills"]:
-                                    print "{0} just got {1} kills with {2}, a new record!".format(player_name, player["kills"], hero_name )
+                                    new_records += "{0} just got {1} kills with {2}, a new record!\n".format(player_name, player["kills"], hero_name )
                                     new_record["max_kills"] = player["kills"]
                                     new_record["max_kills_player"] = player["account_id"]
 
                                 if old_record["max_deaths"] < player["deaths"]:
-                                    print "{0} just got {1} deaths with {2}, a new low!".format(player_name, player["deaths"], hero_name )
+                                    new_records += "{0} just got {1} deaths with {2}, a new low!\n".format(player_name, player["deaths"], hero_name )
                                     new_record["max_deaths"] = player["deaths"]
                                     new_record["max_deaths_player"] = player["account_id"]
 
                                 if old_record["max_GPM"] < player["gold_per_min"]:
-                                    print "{0} just got {1} GPM with {2}, a new record!".format(player_name, player["gold_per_min"], hero_name )
+                                    new_records += "{0} just got {1} GPM with {2}, a new record!\n".format(player_name, player["gold_per_min"], hero_name )
                                     new_record["max_GPM"] = player["gold_per_min"]
                                     new_record["max_GPM_player"] = player["account_id"]
 
                                 if old_record["min_GPM"] > player["gold_per_min"]:
-                                    print "{0} just got {1} GPM with {2}, a new low!".format(player_name, player["gold_per_min"], hero_name )
+                                    new_records += "{0} just got {1} GPM with {2}, a new low!\n".format(player_name, player["gold_per_min"], hero_name )
                                     new_record["min_GPM"] = player["gold_per_min"]
                                     new_record["min_GPM_player"] = player["account_id"]
 
                                 if old_record["max_XPM"] < player["xp_per_min"]:
-                                    print "{0} just got {1} XPM with {2}, a new record!".format(player_name, player["xp_per_min"], hero_name )
+                                    new_records += "{0} just got {1} XPM with {2}, a new record!\n".format(player_name, player["xp_per_min"], hero_name )
                                     new_record["max_XPM"] = player["xp_per_min"]
                                     new_record["max_XPM_player"] = player["account_id"]
 
                                 if old_record["min_XPM"] > player["xp_per_min"]:
-                                    print "{0} just got {1} XPM with {2}, a new low!".format(player_name, player["xp_per_min"], hero_name )
+                                    new_records += "{0} just got {1} XPM with {2}, a new low!\n".format(player_name, player["xp_per_min"], hero_name )
                                     new_record["min_XPM"] = player["xp_per_min"]
                                     new_record["min_XPM_player"] = player["account_id"]
 
@@ -105,13 +112,24 @@ class Update(AbstractResponse):
 
                 else:
                     print "\t Was Duplicate"
+
             print "Updated {0} Matches".format(total_added)
+        if last_update_time == None:
+            time_dict = {'last_update' : current_time}
+        else:
+            time_dict = last_update_time.copy()
+            time_dict["last_update"] = current_time
+        AbstractResponse.set_last_update_time(time_dict)
+        return new_records
 
     def respond(self):
 
         print "Starting"
 
-        thread = Thread(target = Update.update_dota, args = (self, ))
-        thread.start()
-
-        return "Starting update Thread..."
+        # Use the Thread if we are going to be updating like 1,000 records, shouldn't be needed.
+        #
+        #thread = Thread(target = Update.update_dota, args = (self, ))
+        #thread.start()
+        #
+        record = Update.update_dota(self)
+        return record + "Use #last for more details"

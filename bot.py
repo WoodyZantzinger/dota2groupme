@@ -2,6 +2,7 @@ import os
 import urllib2
 import urllib
 import traceback
+import threading
 import sys
 from flask import Flask, request
 from responses import *
@@ -9,6 +10,18 @@ from responses import *
 DEBUG = False
 
 app = Flask(__name__)
+
+#have the bot do a specific msg in the background constantly (Time in seconds)
+def repeat_task(msg, time):
+    #have the bot do a specific msg in the background constantly
+    print "Running Repeat Task: " + msg
+    active_response_categories = get_response_categories(msg, "sUN")
+    output_messages = make_responses(active_response_categories, msg, "sUN")
+
+    for output in output_messages:
+        if output:
+            print output
+    threading.Timer(time, repeat_task, [msg, time]).start()
 
 def send_message(msg):
     print "Sending: '" + msg + "'"
@@ -80,6 +93,7 @@ if __name__ == "__main__":
             DEBUG = True
 
     port = int(os.environ.get("PORT", 5000))
+    repeat_task('#update', 120)
     if not DEBUG:
         app.run(host='0.0.0.0', port=port)
     else:

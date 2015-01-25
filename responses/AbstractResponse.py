@@ -53,6 +53,23 @@ class AbstractResponse(object):
         return temp
 
     @classmethod
+    def get_last_update_time(cls):
+        data = AbstractResponse.mongo_db.sUN_data
+        temp = data.find_one()
+        return temp
+
+    @classmethod
+    def set_last_update_time(cls, time):
+        data = AbstractResponse.mongo_db.sUN_data
+        if time.has_key('_id'):
+            data.update({'_id': time["_id"]}, {"$set": time}, upsert=True)
+            print "Inserted (Update): " + str(time['last_update'])
+        else:
+            data.insert(time)
+            print "Inserted (New): " + str(time['last_update'])
+        return True
+
+    @classmethod
     def set_record(cls, record):
         records = AbstractResponse.mongo_db.dota2hero_records
         if record.has_key('_id'):
