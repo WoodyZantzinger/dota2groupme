@@ -12,7 +12,7 @@ class ResponseLast(AbstractResponse):
 
     HELP_RESPONSE = "Shows your personel stats from the last game, add a user argument to find someone elses stats"
 
-    DOTABUFF_LINK_TEMPLATE = "dotabuff.com/matches/{id}"
+    DOTABUFF_LINK_TEMPLATE = "http://www.dotabuff.com/matches/{id}"
 
     def __init__(self, msg, sender):
         super(ResponseLast, self).__init__(msg, sender)
