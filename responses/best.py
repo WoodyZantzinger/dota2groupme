@@ -23,7 +23,7 @@ class Best(AbstractResponse):
             hero_num = AbstractResponse.get_hero_id(hero_name[1])
             if hero_num < 0:
                 if hero_name[1].lower() == "person":
-                    out = "Woody"
+                    out = "Stu"
                 elif hero_name[1].lower() == "beer":
                     out = "Budweiser"
                 elif hero_name[1].lower() == "game":
@@ -32,6 +32,8 @@ class Best(AbstractResponse):
                     out = "Beer"
                 elif hero_name[1].lower() == "country":
                     out = "USA!"
+                elif hero_name[1].lower() == "position"
+                    out = "everything butt sex" 
                 else:
                     out = "Hero not found"
             else:
