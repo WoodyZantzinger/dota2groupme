@@ -23,7 +23,7 @@ class ResponseGetAJob(AbstractResponse):
         EST_9AM = 9 + ResponseGetAJob.EST_UTC_OFFSET
         EST_5PM = 17 + ResponseGetAJob.EST_UTC_OFFSET
         is_during_workday = EST_9AM < hour < EST_5PM
-        return is_during_workday and "games" in msg and isweekday
+        return is_during_workday and "games" in msg and isweekday and "?" in msg
 
 
 
