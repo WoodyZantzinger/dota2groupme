@@ -13,6 +13,8 @@ class Update(AbstractResponse):
 
     HELP_RESPONSE = "Update ones's last games"
 
+    ENABLED = False
+
     def __init__(self, msg, sender):
         Update.message = msg
         super(Update, self).__init__(msg, sender)
@@ -123,7 +125,6 @@ class Update(AbstractResponse):
         return new_records
 
     def respond(self):
-
         print "Starting"
 
         # Use the Thread if we are going to be updating like 1,000 records, shouldn't be needed.
@@ -133,3 +134,6 @@ class Update(AbstractResponse):
         #
         record = Update.update_dota(self)
         return record
+
+    def is_relevant_msg(cls, msg, sender):
+        return super(Update, self).is_relevant_msg(cls, msg, sender) and Update.ENABLED
