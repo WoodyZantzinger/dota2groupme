@@ -136,4 +136,4 @@ class Update(AbstractResponse):
         return record
 
     def is_relevant_msg(cls, msg, sender):
-        return super(Update, self).is_relevant_msg(cls, msg, sender) and Update.ENABLED
+        return Update.ENABLED
