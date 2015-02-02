@@ -135,5 +135,6 @@ class Update(AbstractResponse):
         record = Update.update_dota(self)
         return record
 
+    @classmethod
     def is_relevant_msg(cls, msg, sender):
         return Update.ENABLED
