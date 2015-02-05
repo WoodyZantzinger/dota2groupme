@@ -94,7 +94,7 @@ if __name__ == "__main__":
             DEBUG = True
 
     port = int(os.environ.get("PORT", 5000))
-    repeat_task('#update', 120)
+    #repeat_task('#update', 120)
     if not DEBUG:
         app.run(host='0.0.0.0', port=port)
     else:
