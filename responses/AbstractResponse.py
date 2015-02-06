@@ -2,6 +2,7 @@ import json
 import os
 import pymongo
 from dota2py import data
+import time
 
 class AbstractResponse(object):
 
@@ -28,9 +29,15 @@ class AbstractResponse(object):
         with open('local_variables.json') as f:
             local_var = json.load(f)
         print local_var["MONGOLAB_URL"]
+        conn_start_time = time.time()
         mongo_connection = pymongo.Connection(local_var["MONGOLAB_URL"])
+        conn_time = time.time() - conn_start_time
+        print("took {} seconds to connect to mongo".format(conn_time))
     except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
+        conn_start_time = time.time()
         mongo_connection = pymongo.Connection(os.getenv('MONGOLAB_URL'))
+        conn_time = time.time() - conn_start_time
+        print("took {} seconds to connect to mongo".format(conn_time))
 
     mongo_db = mongo_connection.dota2bot
 
