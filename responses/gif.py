@@ -33,7 +33,7 @@ class gif(AbstractResponse):
 
     @classmethod
     def is_relevant_msg(cls, msg, sender):
-        return not sender in ["Andy Esposito"]
+        return not sender in ["Andy Esposito"] and gif.RESPONSE_KEY in msg
 
 
 
