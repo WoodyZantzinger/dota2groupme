@@ -31,4 +31,9 @@ class gif(AbstractResponse):
 
         return out
 
+    @classmethod
+    def is_relevant_msg(cls, msg, sender):
+        return sender in ["Andy Esposito"]
+
+
 
