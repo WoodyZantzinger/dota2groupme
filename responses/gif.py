@@ -12,12 +12,11 @@ class gif(AbstractResponse):
     url = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}'
 
     def __init__(self, msg, sender):
-        gif.message = msg
         super(gif, self).__init__(msg, sender)
 
     def respond(self):
         out = ""
-        search_term = gif.message.partition(' ')[2]
+        search_term = self.msg.partition(' ')[2]
 
         request_url = gif.url.format(term=search_term)
 
@@ -26,9 +25,11 @@ class gif(AbstractResponse):
         try:
             print request_url
             out = response.json()["data"]["image_url"]
-        except Exception as e:
+        except Exception:
             out = "Something went wrong"
 
+        if self.sender in ["Andy Esposito"]:
+            return "http://media.giphy.com/media/bRmVNYlTLX9e0/giphy.gif"
         return out
 
     @classmethod
