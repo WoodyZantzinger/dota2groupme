@@ -137,12 +137,3 @@ class Update(AbstractResponse):
             time_dict["last_update"] = current_time
         AbstractResponse.set_last_update_time(time_dict)
         return new_records
-
-
-
-    @classmethod
-    def is_relevant_msg(cls, msg, sender):
-        #return Update.ENABLED
-
-        #record = Update.update_dota()
-        return True

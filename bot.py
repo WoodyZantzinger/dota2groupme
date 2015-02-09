@@ -40,6 +40,8 @@ def send_message(msg):
         #print "msg"
         return response
     else:
+        print("sending message: ")
+        print("\t" + str(msg))
         return 'Win'
 
 
@@ -70,6 +72,8 @@ def make_responses(categories, msg, sender):
 @app.route('/message/', methods=['POST'])
 def message():
     new_message = request.get_json(force=True)
+    print("received message: ")
+    print(new_message)
     sender = new_message["name"]
     msg = new_message["text"]
     if sender == "sUN":

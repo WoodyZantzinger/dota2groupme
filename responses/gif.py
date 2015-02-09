@@ -32,9 +32,9 @@ class gif(AbstractResponse):
             return "http://media.giphy.com/media/bRmVNYlTLX9e0/giphy.gif"
         return out
 
-    @classmethod
-    def is_relevant_msg(cls, msg, sender):
-        return not sender in ["Andy Esposito"] and gif.RESPONSE_KEY in msg
+#    @classmethod
+#    def is_relevant_msg(cls, msg, sender):
+#        return not sender in ["Andy Esposito"] and gif.RESPONSE_KEY in msg"
 
 
 
