@@ -28,13 +28,4 @@ class gif(AbstractResponse):
         except Exception:
             out = "Something went wrong"
 
-        if self.sender in ["Andy Esposito"]:
-            return "http://media.giphy.com/media/bRmVNYlTLX9e0/giphy.gif"
         return out
-
-#    @classmethod
-#    def is_relevant_msg(cls, msg, sender):
-#        return not sender in ["Andy Esposito"] and gif.RESPONSE_KEY in msg"
-
-
-
