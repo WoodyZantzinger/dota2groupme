@@ -1,0 +1,102 @@
+2015-02-10T16:17:49.018304+00:00 app[web.1]: received message: 
+2015-02-10T16:17:49.019799+00:00 app[web.1]: 10.6.51.145 - - [10/Feb/2015 16:17:49] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:17:49.020677+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=56de99be-ace4-4b82-ab13-2a88e92b3e16 fwd="54.237.250.238" dyno=web.1 connect=1ms service=10ms status=200 bytes=154
+2015-02-10T16:20:00.720285+00:00 app[web.1]: received message: 
+2015-02-10T16:20:00.934563+00:00 app[web.1]: Sending: 'http://s3.amazonaws.com/giphymedia/media/5GFq04fIo4fBK/giphy.gif'
+2015-02-10T16:20:00.720401+00:00 app[web.1]: {u'system': False, u'sender_id': u'7340479', u'source_guid': u'68fea57bd9bc244e296b17f7e187d899', u'text': u'#gif kanye loves kanye', u'created_at': 1423585200, u'attachments': [], u'avatar_url': u'http://i.groupme.com/1224x1632.jpeg.86017eb1feb24965864d30cadd9eaa33', u'name': u'Sty', u'sender_type': u'user', u'user_id': u'7340479', u'id': u'142358520062515049', u'group_id': u'8840714'}
+2015-02-10T16:20:00.720450+00:00 app[web.1]: <class 'responses.gif.gif'>
+2015-02-10T16:20:00.720529+00:00 app[web.1]: sending msg for <class 'responses.gif.gif'>
+2015-02-10T16:20:00.934356+00:00 app[web.1]: http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=kanye loves kanye
+2015-02-10T16:20:01.066783+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=8fbea1a7-9410-44c7-937b-860e75719e1b fwd="54.160.209.206" dyno=web.1 connect=3ms service=340ms status=200 bytes=154
+2015-02-10T16:20:01.052193+00:00 app[web.1]: 10.10.139.239 - - [10/Feb/2015 16:20:01] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:20:01.098148+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=15130b67-6484-4219-a002-a6d7e688469c fwd="54.146.218.185" dyno=web.1 connect=8ms service=9ms status=200 bytes=154
+2015-02-10T16:20:01.090119+00:00 app[web.1]: received message: 
+2015-02-10T16:20:01.090195+00:00 app[web.1]: {u'system': False, u'sender_id': u'179267', u'source_guid': u'96215a70936e0132b45d22000a618769', u'text': u'http://s3.amazonaws.com/giphymedia/media/5GFq04fIo4fBK/giphy.gif', u'created_at': 1423585200, u'attachments': [], u'avatar_url': None, u'name': u'sUN', u'sender_type': u'bot', u'user_id': u'179267', u'id': u'142358520099876362', u'group_id': u'8840714'}
+2015-02-10T16:20:01.090530+00:00 app[web.1]: 10.93.25.70 - - [10/Feb/2015 16:20:01] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:20:46.258327+00:00 heroku[api]: Deploy 1970c8c by mjd2dh@virginia.edu
+2015-02-10T16:20:46.258327+00:00 heroku[api]: Release v87 created by mjd2dh@virginia.edu
+2015-02-10T16:20:46.534485+00:00 heroku[web.1]: State changed from up to starting
+2015-02-10T16:20:50.623085+00:00 heroku[web.1]: Starting process with command `python bot.py`
+2015-02-10T16:20:50.551636+00:00 heroku[web.1]: Stopping all processes with SIGTERM
+2015-02-10T16:20:52.440395+00:00 heroku[web.1]: Process exited with status 143
+2015-02-10T16:20:53.023563+00:00 app[web.1]: took 0.0383081436157 seconds to connect to mongo
+2015-02-10T16:20:53.253791+00:00 app[web.1]:  * Running on http://0.0.0.0:11570/
+2015-02-10T16:20:53.751415+00:00 heroku[web.1]: State changed from starting to up
+2015-02-10T16:20:55.391995+00:00 app[web.1]: {u'user_id': u'7406513', u'id': u'142358525031097731', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585250, u'attachments': [], u'avatar_url': u'http://i.groupme.com/600x397.jpeg.3b110172c7c4489ab2ecc290c9b96fa0', u'name': u'Andy Esposito', u'system': False, u'sender_id': u'7406513', u'source_guid': u'DFCD7A08-B120-4BCD-A049-4BB042753DF0', u'text': u'#gif sad kanye '}
+2015-02-10T16:20:55.391990+00:00 app[web.1]: received message: 
+2015-02-10T16:20:55.391997+00:00 app[web.1]: <class 'responses.gif.ResponseGif'>
+2015-02-10T16:20:55.391999+00:00 app[web.1]: sending msg for <class 'responses.gif.ResponseGif'>
+2015-02-10T16:20:55.392001+00:00 app[web.1]: elapsed time is 3601.00000787, and cooldown is 3600
+2015-02-10T16:20:55.816344+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=9f95b993-4f9c-4cd3-8056-c9d338a201e0 fwd="54.237.250.238" dyno=web.1 connect=0ms service=8ms status=200 bytes=154
+2015-02-10T16:20:55.802466+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=e55d90e9-5326-44ef-8bf3-e38e7d108a19 fwd="54.237.250.238" dyno=web.1 connect=1ms service=418ms status=200 bytes=154
+2015-02-10T16:20:55.671777+00:00 app[web.1]: http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=sad kanye 
+2015-02-10T16:20:55.810850+00:00 app[web.1]: {u'user_id': u'179267', u'id': u'142358525574772458', u'group_id': u'8840714', u'sender_type': u'bot', u'created_at': 1423585255, u'attachments': [], u'avatar_url': None, u'name': u'sUN', u'system': False, u'sender_id': u'179267', u'source_guid': u'b6c36420936e013263ba22000b808343', u'text': u'http://s3.amazonaws.com/giphymedia/media/11CsRJVQ1PIFd6/giphy.gif'}
+2015-02-10T16:20:55.797004+00:00 app[web.1]: 10.191.139.39 - - [10/Feb/2015 16:20:55] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:20:55.671782+00:00 app[web.1]: Sending: 'http://s3.amazonaws.com/giphymedia/media/11CsRJVQ1PIFd6/giphy.gif'
+2015-02-10T16:20:55.809336+00:00 app[web.1]: received message: 
+2015-02-10T16:20:55.811352+00:00 app[web.1]: 10.71.130.72 - - [10/Feb/2015 16:20:55] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:21:08.385362+00:00 app[web.1]: {u'user_id': u'7406513', u'id': u'142358526830840367', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585268, u'attachments': [], u'avatar_url': u'http://i.groupme.com/600x397.jpeg.3b110172c7c4489ab2ecc290c9b96fa0', u'name': u'Andy Esposito', u'system': False, u'sender_id': u'7406513', u'source_guid': u'C5CD5A58-DB7D-4378-BDC4-FB483DA6A350', u'text': u'#gif gay fish'}
+2015-02-10T16:21:08.385609+00:00 app[web.1]: <class 'responses.gif.ResponseGif'>
+2015-02-10T16:21:08.385676+00:00 app[web.1]: elapsed time is 12.9954080582, and cooldown is 3600
+2015-02-10T16:21:08.385248+00:00 app[web.1]: received message: 
+2015-02-10T16:21:08.385617+00:00 app[web.1]: sending msg for <class 'responses.gif.ResponseGif'>
+2015-02-10T16:21:08.385695+00:00 app[web.1]: not responding because sender Andy Esposito is on cooldown
+2015-02-10T16:21:08.386101+00:00 app[web.1]: 10.87.81.28 - - [10/Feb/2015 16:21:08] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:21:08.388350+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=5356dc1f-38bc-48a1-b86d-7c167154a2b8 fwd="54.160.209.206" dyno=web.1 connect=1ms service=6ms status=200 bytes=154
+2015-02-10T16:21:16.552890+00:00 app[web.1]: {u'user_id': u'9539230', u'id': u'142358527651088949', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585276, u'attachments': [], u'avatar_url': u'https://i.groupme.com/2048x1386.jpeg.454de8b0de020131c4aa22000a6d8834', u'name': u'Kevin', u'system': False, u'sender_id': u'9539230', u'source_guid': u'54d781fb9331c8d051de18a33e9048a7', u'text': u'ok limits should be added now. 1 gif/user/hour'}
+2015-02-10T16:21:16.552757+00:00 app[web.1]: received message: 
+2015-02-10T16:21:16.553361+00:00 app[web.1]: 10.191.139.39 - - [10/Feb/2015 16:21:16] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:21:16.554802+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=00685954-aee8-4d48-bccc-7b2d257483a0 fwd="54.237.250.238" dyno=web.1 connect=1ms service=4ms status=200 bytes=154
+2015-02-10T16:21:28.413218+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=74ee8970-536f-4430-a605-97fafe890d9e fwd="54.160.209.206" dyno=web.1 connect=1ms service=11ms status=200 bytes=154
+2015-02-10T16:21:28.411042+00:00 app[web.1]: 10.87.81.28 - - [10/Feb/2015 16:21:28] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:21:28.410226+00:00 app[web.1]: {u'user_id': u'7406513', u'id': u'142358528835122476', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585288, u'attachments': [], u'avatar_url': u'http://i.groupme.com/600x397.jpeg.3b110172c7c4489ab2ecc290c9b96fa0', u'name': u'Andy Esposito', u'system': False, u'sender_id': u'7406513', u'source_guid': u'8D14F7D5-6004-4E89-9462-241C17C0492D', u'text': u'Goddamnit I wasted mine'}
+2015-02-10T16:21:28.408358+00:00 app[web.1]: received message: 
+2015-02-10T16:21:31.807927+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=a343c96b-b451-49fa-bd0e-c59123a40170 fwd="54.160.209.206" dyno=web.1 connect=1ms service=11ms status=200 bytes=154
+2015-02-10T16:21:31.804336+00:00 app[web.1]: {u'user_id': u'9539230', u'id': u'142358529174925156', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585291, u'attachments': [], u'avatar_url': u'https://i.groupme.com/2048x1386.jpeg.454de8b0de020131c4aa22000a6d8834', u'name': u'Kevin', u'system': False, u'sender_id': u'9539230', u'source_guid': u'f2f84a8c93003e82904d2048b6a314eb', u'text': u'andy already got it, lol'}
+2015-02-10T16:21:31.800562+00:00 app[web.1]: received message: 
+2015-02-10T16:21:31.804844+00:00 app[web.1]: 10.87.81.28 - - [10/Feb/2015 16:21:31] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:21:53.544865+00:00 app[web.1]: received message: 
+2015-02-10T16:21:53.545818+00:00 app[web.1]: {u'user_id': u'7340479', u'id': u'142358531350279227', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585313, u'attachments': [], u'avatar_url': u'http://i.groupme.com/1224x1632.jpeg.86017eb1feb24965864d30cadd9eaa33', u'name': u'Sty', u'system': False, u'sender_id': u'7340479', u'source_guid': u'25c96df547ababbab9a385482802e187', u'text': u'do they rollover?'}
+2015-02-10T16:21:53.546471+00:00 app[web.1]: 10.191.139.39 - - [10/Feb/2015 16:21:53] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:21:53.547816+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=94380bb9-afca-4764-8c49-f761f3cf25cf fwd="54.237.250.238" dyno=web.1 connect=2ms service=5ms status=200 bytes=154
+2015-02-10T16:22:00.513669+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=e1e6a55f-e65c-4360-b554-17a27abd0dbe fwd="54.160.209.206" dyno=web.1 connect=1ms service=6ms status=200 bytes=154
+2015-02-10T16:22:00.509083+00:00 app[web.1]: received message: 
+2015-02-10T16:22:00.510442+00:00 app[web.1]: {u'user_id': u'9539230', u'id': u'142358532046438731', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585320, u'attachments': [], u'avatar_url': u'https://i.groupme.com/2048x1386.jpeg.454de8b0de020131c4aa22000a6d8834', u'name': u'Kevin', u'system': False, u'sender_id': u'9539230', u'source_guid': u'7139423fd038da49faa653619ea3d2fa', u'text': u'nope'}
+2015-02-10T16:22:00.512170+00:00 app[web.1]: 10.87.81.28 - - [10/Feb/2015 16:22:00] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:22:09.847078+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=c2882649-f445-48ba-b64a-3e7646ccb90e fwd="54.81.209.96" dyno=web.1 connect=2ms service=8ms status=200 bytes=154
+2015-02-10T16:22:09.844011+00:00 app[web.1]: received message: 
+2015-02-10T16:22:09.844134+00:00 app[web.1]: {u'user_id': u'898503', u'id': u'142358532977794685', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585329, u'attachments': [], u'avatar_url': u'http://i.groupme.com/8d5ebf8010370130f66d22000a8c4ab7', u'name': u'Jonny G', u'system': False, u'sender_id': u'898503', u'source_guid': u'android-c72ba3c1-10f3-4ccc-a4e2-4b76a778ae2a', u'text': u"Matt. Explain what you're doing in your most recent snapchats"}
+2015-02-10T16:22:09.844928+00:00 app[web.1]: 10.164.7.190 - - [10/Feb/2015 16:22:09] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:22:17.482601+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=e0174917-5ecc-4372-9954-665e95b09da6 fwd="54.146.218.185" dyno=web.1 connect=3ms service=7ms status=200 bytes=154
+2015-02-10T16:22:17.478720+00:00 app[web.1]: received message: 
+2015-02-10T16:22:17.478914+00:00 app[web.1]: {u'user_id': u'9539230', u'id': u'142358533741309227', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585337, u'attachments': [], u'avatar_url': u'https://i.groupme.com/2048x1386.jpeg.454de8b0de020131c4aa22000a6d8834', u'name': u'Kevin', u'system': False, u'sender_id': u'9539230', u'source_guid': u'2f10d2ebefecd96ec345017760db8081', u'text': u'its like doto abilities, once you use it, it goes on cooldown'}
+2015-02-10T16:22:17.479590+00:00 app[web.1]: 10.151.75.53 - - [10/Feb/2015 16:22:17] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:22:39.959275+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=feb19764-41e6-4f2b-afd8-ff6b56eadd95 fwd="54.237.250.238" dyno=web.1 connect=2ms service=8ms status=200 bytes=154
+2015-02-10T16:22:39.952932+00:00 app[web.1]: received message: 
+2015-02-10T16:22:39.953132+00:00 app[web.1]: {u'user_id': u'7406513', u'id': u'142358535990368568', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585359, u'attachments': [], u'avatar_url': u'http://i.groupme.com/600x397.jpeg.3b110172c7c4489ab2ecc290c9b96fa0', u'name': u'Andy Esposito', u'system': False, u'sender_id': u'7406513', u'source_guid': u'B6A66D68-C28E-424E-88CD-0688F13DDA0E', u'text': u'Make it like brood webs, ember ult or sniper shrapnel'}
+2015-02-10T16:22:39.953832+00:00 app[web.1]: 10.191.139.39 - - [10/Feb/2015 16:22:39] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:22:43.974028+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=d67dcf69-ad31-427a-aa07-c4562cedfcf4 fwd="54.160.209.206" dyno=web.1 connect=1ms service=22ms status=200 bytes=154
+2015-02-10T16:22:43.957056+00:00 app[web.1]: received message: 
+2015-02-10T16:22:43.972584+00:00 app[web.1]: 10.87.81.28 - - [10/Feb/2015 16:22:43] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:22:43.971954+00:00 app[web.1]: {u'user_id': u'7406513', u'id': u'142358536391176337', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585363, u'attachments': [], u'avatar_url': u'http://i.groupme.com/600x397.jpeg.3b110172c7c4489ab2ecc290c9b96fa0', u'name': u'Andy Esposito', u'system': False, u'sender_id': u'7406513', u'source_guid': u'D761DFEF-2515-473D-B656-A58E0C705362', u'text': u'Give us charges'}
+2015-02-10T16:23:10.195974+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=a91edd64-0147-4a0b-8bb3-ff34bd0014a6 fwd="54.81.209.96" dyno=web.1 connect=1ms service=5ms status=200 bytes=154
+2015-02-10T16:23:10.192382+00:00 app[web.1]: 10.4.74.119 - - [10/Feb/2015 16:23:10] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:23:10.191814+00:00 app[web.1]: received message: 
+2015-02-10T16:23:10.191911+00:00 app[web.1]: {u'user_id': u'748364', u'id': u'142358539012484444', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585390, u'attachments': [], u'avatar_url': u'https://i.groupme.com/1280x1280.jpeg.e3e26380e81c013158db22000b208f7b', u'name': u'Brian', u'system': False, u'sender_id': u'748364', u'source_guid': u'A7CB9840-A6A8-42F0-99C1-A1DBB9F0E3CE', u'text': u'I want refresher '}
+2015-02-10T16:23:19.705160+00:00 app[web.1]: sending msg for <class 'resp
+onses.gif.ResponseGif'>
+2015-02-10T16:23:19.704413+00:00 app[web.1]: received message: 
+2015-02-10T16:23:19.705115+00:00 app[web.1]: <class 'responses.gif.ResponseGif'>
+2015-02-10T16:23:19.705222+00:00 app[web.1]: elapsed time is 9.05990600586e-06, and cooldown is 3600
+2015-02-10T16:23:19.705246+00:00 app[web.1]: not responding because sender Brian is on cooldown
+2015-02-10T16:23:19.705850+00:00 app[web.1]: 10.4.74.119 - - [10/Feb/2015 16:23:19] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:23:19.704800+00:00 app[web.1]: {u'user_id': u'748364', u'id': u'142358539966216451', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585399, u'attachments': [], u'avatar_url': u'https://i.groupme.com/1280x1280.jpeg.e3e26380e81c013158db22000b208f7b', u'name': u'Brian', u'system': False, u'sender_id': u'748364', u'source_guid': u'3B6440FB-1CB0-4DED-BF1C-B1291E9D5EC1', u'text': u'#gif refresher'}
+2015-02-10T16:23:19.709250+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=546c0cfc-6ff2-495f-a7cf-79d887395565 fwd="54.81.209.96" dyno=web.1 connect=2ms service=5ms status=200 bytes=154
+2015-02-10T16:23:28.685440+00:00 app[web.1]: received message: 
+2015-02-10T16:23:28.686325+00:00 app[web.1]: {u'user_id': u'7406513', u'id': u'142358540862792476', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585408, u'attachments': [], u'avatar_url': u'http://i.groupme.com/600x397.jpeg.3b110172c7c4489ab2ecc290c9b96fa0', u'name': u'Andy Esposito', u'system': False, u'sender_id': u'7406513', u'source_guid': u'93B5953A-D406-4EDD-B1A2-5C2EFF39B4E4', u'text': u'I refresher per day would be sweet'}
+2015-02-10T16:23:28.687016+00:00 app[web.1]: 10.4.74.119 - - [10/Feb/2015 16:23:28] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:23:28.693430+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=0cad9aca-2df5-431c-9071-2b61e047d3dc fwd="54.81.209.96" dyno=web.1 connect=5ms service=12ms status=200 bytes=154
+2015-02-10T16:23:34.224923+00:00 app[web.1]: received message: 
+2015-02-10T16:23:34.225042+00:00 app[web.1]: {u'user_id': u'7406513', u'id': u'142358541414928949', u'group_id': u'8840714', u'sender_type': u'user', u'created_at': 1423585414, u'attachments': [], u'avatar_url': u'http://i.groupme.com/600x397.jpeg.3b110172c7c4489ab2ecc290c9b96fa0', u'name': u'Andy Esposito', u'system': False, u'sender_id': u'7406513', u'source_guid': u'027A4111-BBA5-4A5D-9851-4531728053FA', u'text': u'1'}
+2015-02-10T16:23:34.225507+00:00 app[web.1]: 10.38.77.226 - - [10/Feb/2015 16:23:34] "POST /message/ HTTP/1.1" 200 -
+2015-02-10T16:23:34.227217+00:00 heroku[router]: at=info method=POST path="/message/" host=young-fortress-3393.herokuapp.com request_id=a5b588c5-5ba4-4f8e-ad36-c031f060e214 fwd="54.146.218.185" dyno=web.1 connect=1ms service=5ms status=200 bytes=154

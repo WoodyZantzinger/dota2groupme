@@ -12,10 +12,10 @@ class ResponseCooldown(AbstractResponse):
         self.mod = mod
         if not hasattr(sys.modules[mod], 'last_used'):
             setattr(sys.modules[mod], 'last_used', dict())
-            getattr(sys.modules[mod], 'last_used')[sender] = time.time() - (cooldown + 1)
+            getattr(sys.modules[mod], 'last_used')[sender] = 0
         else:
             if not sender in getattr(sys.modules[mod], 'last_used'):
-                getattr(sys.modules[mod], 'last_used')[sender] = time.time()
+                getattr(sys.modules[mod], 'last_used')[sender] = 0
 
     def is_sender_off_cooldown(self):
         last_time = getattr(sys.modules[self.mod], 'last_used')[self.sender]
