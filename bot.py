@@ -47,7 +47,15 @@ def send_message(msg):
 
 def get_response_categories(msg, sender):
     out = []
+    classes = []
     for cls in AbstractResponse.AbstractResponse.__subclasses__():
+        classes.append(cls)
+    for cls in classes:
+        for cls2 in cls.__subclasses__():
+            if cls2 not in classes:
+                classes.append(cls2)
+
+    for cls in classes:
         if cls.is_relevant_msg(msg, sender):
             print(cls)
             out.append(cls)

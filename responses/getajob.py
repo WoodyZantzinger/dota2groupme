@@ -12,6 +12,7 @@ class ResponseGetAJob(AbstractResponse):
 
     def __init__(self, msg, sender):
         super(ResponseGetAJob, self).__init__(msg, sender)
+        setattr(self.__class__, "last_used", dict())
 
     def respond(self):
         return "Get a job"

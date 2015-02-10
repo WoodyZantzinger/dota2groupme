@@ -3,6 +3,7 @@ import os
 import pymongo
 from dota2py import data
 import time
+import sys
 
 class AbstractResponse(object):
 
@@ -145,10 +146,18 @@ class AbstractResponse(object):
         del AbstractResponse.GroupMetoDOTA[old]
         AbstractResponse.cache_GroupMetoDOTA()
 
-    def __init__(self, msg, sender):
+    def __init__(self, msg, sender, mod=None):
         super(AbstractResponse, self).__init__()
         self.msg = msg
         self.sender = sender
+
+    def get_last_used_time(self, sender, mod=None):
+        if mod is not None:
+            return getattr(sys.modules[mod], 'last_used')[sender]
+
+    def set_last_used_time(self, sender, mod=None):
+        if mod is not None:
+            getattr(sys.modules[mod], 'last_used')[sender] = time.time()
 
     def respond(self):
         return None
