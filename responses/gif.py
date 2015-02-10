@@ -10,7 +10,7 @@ class ResponseGif(ResponseCooldown):
 
     RESPONSE_KEY = "#gif"
 
-    COOLDOWN = 1 * 60 * 60
+    COOLDOWN = 1 * 60 * 60 * 3 / 2
 
     url = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}'
 
@@ -31,4 +31,4 @@ class ResponseGif(ResponseCooldown):
 
             return out
         else:
-            print("not responding because sender {} is on cooldown".format(self.sender))
+            print("not responding to gif because sender {} is on cooldown".format(self.sender))

@@ -40,8 +40,6 @@ def send_message(msg):
         #print "msg"
         return response
     else:
-        print("sending message: ")
-        print("\t" + str(msg))
         return 'Win'
 
 
