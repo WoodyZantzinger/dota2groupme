@@ -15,8 +15,8 @@ app = Flask(__name__)
 def repeat_task(msg, time):
     #have the bot do a specific msg in the background constantly
     print "Running Repeat Task: " + msg
-    active_response_categories = get_response_categories(msg, "sUN")
-    output_messages = make_responses(active_response_categories, msg, "sUN")
+    active_response_categories = get_response_categories(msg, "sUN-self")
+    output_messages = make_responses(active_response_categories, msg, "sUN-self")
 
     for output in output_messages:
         if output:

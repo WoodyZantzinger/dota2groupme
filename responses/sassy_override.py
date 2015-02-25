@@ -23,5 +23,7 @@ class ResponseSassyOverride(AbstractResponse):
     def is_relevant_msg(cls, msg, sender):
         relevant_to_me = "?" in msg or "#" in msg
         could_be_url = "http" in msg or "www" in msg or ".com" in msg
-        return random.random() < ResponseSassyOverride.INSULT_THRESHOLD and relevant_to_me and not could_be_url
+        not_self = sender != "sUN-self"
+        booleans = relevant_to_me and not could_be_url and not_self
+        return random.random() < ResponseSassyOverride.INSULT_THRESHOLD and booleans
 
