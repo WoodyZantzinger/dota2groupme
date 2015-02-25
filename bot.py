@@ -45,7 +45,7 @@ def send_message(msg):
 
 def get_response_categories(msg, sender):
     if sender == "sUN":
-        return None
+        return []
     out = []
     classes = []
     for cls in AbstractResponse.AbstractResponse.__subclasses__():
