@@ -6,6 +6,7 @@ import threading
 import sys
 from flask import Flask, request
 from responses import *
+import time
 
 DEBUG = False
 
@@ -87,6 +88,9 @@ def message():
     active_response_categories = get_response_categories(msg, sender)
     output_messages = make_responses(active_response_categories, msg, sender)
 
+    # sleep for a second before sending message
+    # makes sure that the message from the bot arrives after the message from the user
+    time.sleep(1)
     for output in output_messages:
         if output:
             send_message(output)
