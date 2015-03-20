@@ -14,5 +14,5 @@ class ResponseSausage(AbstractResponse):
 
     @classmethod
     def is_relevant_msg(cls, msg, sender):
-        return sender in ["Armadilldo", "Jonny G"] and 'sausage' in msg
+        return sender in ["Brian", "Jonny G"] and 'sausage' in msg
 
