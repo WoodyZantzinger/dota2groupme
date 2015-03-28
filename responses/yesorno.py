@@ -15,6 +15,8 @@ class ResponseYesOrNo(ResponseCooldown):
 
     def respond(self):
         if self.is_sender_off_cooldown():
+            if "omni" in self.msg.lower():
+                return "no"
             return random.choice(["yes", "no"])
         print("not responding to yesorno because sender {} is on cooldown".format(self.sender))
 
