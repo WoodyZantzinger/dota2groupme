@@ -21,6 +21,8 @@ class ResponseGif(ResponseCooldown):
         if self.is_sender_off_cooldown():
             out = ""
             search_term = self.msg.partition(' ')[2]
+            if "spider" in search_term:
+                return "fuck spiders, fuck you"
             request_url = ResponseGif.url.format(term=search_term)
             response = requests.get(request_url)
             try:
