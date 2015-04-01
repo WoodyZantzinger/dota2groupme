@@ -32,7 +32,7 @@ def send_message(msg):
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         header = {'User-Agent': user_agent}
         values = {
-          'bot_id' : '535cbd947cf38b46a83fa3084f',
+          'bot_id' : '1f10f0e9da9ac4d8c8650c7200',
           'text' : msg,
         }
         response_data = urllib.urlencode(values)
