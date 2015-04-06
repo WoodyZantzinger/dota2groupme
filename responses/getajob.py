@@ -21,8 +21,8 @@ class ResponseGetAJob(AbstractResponse):
     def is_relevant_msg(cls, msg, sender):
         hour = datetime.datetime.utcnow().hour
         isweekday = datetime.datetime.utcnow().weekday() <= 5
-        EST_9AM = 9 + ResponseGetAJob.EST_UTC_OFFSET
-        EST_5PM = 17 + ResponseGetAJob.EST_UTC_OFFSET
+        EST_9AM = 8 - ResponseGetAJob.EST_UTC_OFFSET
+        EST_5PM = 4 + 12 - ResponseGetAJob.EST_UTC_OFFSET
         is_during_workday = EST_9AM < hour < EST_5PM
         return is_during_workday and "games" in msg and isweekday and "?" in msg
 

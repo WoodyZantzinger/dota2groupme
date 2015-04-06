@@ -2,7 +2,7 @@
 from AbstractResponse import *
 from CooldownResponse import *
 import requests
-
+import datetime
 
 class ResponseGif(ResponseCooldown):
 
@@ -13,6 +13,7 @@ class ResponseGif(ResponseCooldown):
     COOLDOWN = 1 * 60 * 60 * 3 / 2
 
     url = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}'
+    url_9to5 = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}&rating=pg'
 
     def __init__(self, msg, sender):
         super(ResponseGif, self).__init__(msg, sender, self.__module__, ResponseGif.COOLDOWN)
@@ -23,7 +24,17 @@ class ResponseGif(ResponseCooldown):
             search_term = self.msg.partition(' ')[2]
             if "spider" in search_term:
                 return "fuck spiders, fuck you"
-            request_url = ResponseGif.url.format(term=search_term)
+            hour = datetime.datetime.utcnow().hour
+            is_weekday = datetime.datetime.utcnow().weekday() <= 5
+            EST_9AM = 8 - 5 # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
+            EST_5PM = 4 + 12 - 5
+            is_during_workday = EST_9AM < hour < EST_5PM
+            url_to_format = ResponseGif.url
+            if (is_weekday and is_during_workday):
+                print("PG-ifying the gif response")
+                url_to_format = ResponseGif.url_9to5
+
+            request_url = url_to_format.format(term=search_term)
             response = requests.get(request_url)
             try:
                 print request_url
