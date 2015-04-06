@@ -26,6 +26,9 @@ class AbstractResponse(object):
 
     key = "63760574A669369C2117EA4A30A4768B"
 
+
+    mongo_connection = None
+
     try:
         with open('local_variables.json') as f:
             local_var = json.load(f)
@@ -39,8 +42,13 @@ class AbstractResponse(object):
         mongo_connection = pymongo.Connection(os.getenv('MONGOLAB_URL'))
         conn_time = time.time() - conn_start_time
         print("took {} seconds to connect to mongo".format(conn_time))
+    except:
+        print("failed to connect to mongodb!")
 
-    mongo_db = mongo_connection.dota2bot
+    if mongo_connection:
+        mongo_db = mongo_connection.dota2bot
+    else:
+        mongo_db = None
 
     @classmethod
     def has_dotaMatch(cls, ID):

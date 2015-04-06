@@ -26,9 +26,11 @@ class ResponseGif(ResponseCooldown):
                 return "fuck spiders, fuck you"
             hour = datetime.datetime.utcnow().hour
             is_weekday = datetime.datetime.utcnow().weekday() <= 5
-            EST_9AM = 8 - 5 # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
-            EST_5PM = 4 + 12 - 5
+            EST_9AM = 8 + 5 # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
+            EST_5PM = 4 + 12 + 5
             is_during_workday = EST_9AM < hour < EST_5PM
+            print("hour is: {}".format(hour))
+            print("is it a weekday? {}".format(is_weekday))
             url_to_format = ResponseGif.url
             if (is_weekday and is_during_workday):
                 print("PG-ifying the gif response")

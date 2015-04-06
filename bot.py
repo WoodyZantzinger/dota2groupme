@@ -14,16 +14,19 @@ app = Flask(__name__)
 
 #have the bot do a specific msg in the background constantly (Time in seconds)
 def repeat_task(msg, time):
-    #have the bot do a specific msg in the background constantly
-    print "Running Repeat Task: " + msg
-    active_response_categories = get_response_categories(msg, "sUN-self")
-    output_messages = make_responses(active_response_categories, msg, "sUN-self")
+    try:
+        #have the bot do a specific msg in the background constantly
+        print "Running Repeat Task: " + msg
+        active_response_categories = get_response_categories(msg, "sUN-self")
+        output_messages = make_responses(active_response_categories, msg, "sUN-self")
 
-    for output in output_messages:
-        if output:
-            if output != "":
-                send_message(output)
-    threading.Timer(time, repeat_task, [msg, time]).start()
+        for output in output_messages:
+            if output:
+                if output != "":
+                    send_message(output)
+        threading.Timer(time, repeat_task, [msg, time]).start()
+    except:
+        print("repeat task failed: {}".format(msg))
 
 def send_message(msg):
     print "Sending: '" + msg + "'"
