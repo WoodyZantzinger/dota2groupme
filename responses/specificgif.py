@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import AbstractResponse
+from CooldownResponse import *
 
 
-class ResponseSpecificGif(AbstractResponse):
+class ResponseSpecificGif(ResponseCooldown):
+
+    COOLDOWN = 1 * 60 * 60
 
     GIF_MAP = { "letsgoalready" : "http://media.giphy.com/media/y4HyxvrP8JRhm/giphy.gif",
                 "neat" : "http://i.imgur.com/zCBQP8s.gif",
@@ -20,9 +22,12 @@ class ResponseSpecificGif(AbstractResponse):
         super(ResponseSpecificGif, self).__init__(msg, sender)
 
     def respond(self):
-        for word in self.msg.split(" "):
-            if word.startswith("#") and word[1:] in ResponseSpecificGif.GIF_MAP:
-                return ResponseSpecificGif.GIF_MAP[word[1:]]
+        if self.is_sender_off_cooldown():
+            for word in self.msg.split(" "):
+                if word.startswith("#") and word[1:] in ResponseSpecificGif.GIF_MAP:
+                    return ResponseSpecificGif.GIF_MAP[word[1:]]
+        else:
+            print("not responding to gif because sender {} is on cooldown".format(self.sender))
 
     @classmethod
     def is_relevant_msg(cls, msg, sender):
