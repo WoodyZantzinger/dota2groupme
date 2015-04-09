@@ -19,7 +19,7 @@ class ResponseSpecificGif(ResponseCooldown):
                  }
 
     def __init__(self, msg, sender):
-        super(ResponseSpecificGif, self).__init__(msg, sender)
+        super(ResponseSpecificGif, self).__init__(msg, sender, ResponseSpecificGif.COOLDOWN)
 
     def respond(self):
         if self.is_sender_off_cooldown():
