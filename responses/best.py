@@ -32,6 +32,12 @@ class Best(AbstractResponse):
                     out = "Beer"
                 elif hero_name[1].lower() == "country":
                     out = "USA!"
+                elif hero_name[1].lower() == "bear"
+                    out = "Liz, the great white scare bear"
+                elif hero_name[1].lower() == "food"
+                    out = "Chicken Parm"
+                elif hero_name[1].lower() == "liquor"
+                    out = "Rum"
                 else:
                     out = "Hero not found"
             else:
