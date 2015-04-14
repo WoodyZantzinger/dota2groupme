@@ -7,6 +7,12 @@ class Best(AbstractResponse):
 
     message = "#best 1"
 
+    SPECIFIC_RESPONSES = {"person": "Woody",
+                          "beer": "Budweiser",
+                          "game": "The Dota",
+                          "friend": "Beer",
+                          "country": "USA!"}
+
     RESPONSE_KEY = "#best"
 
     def __init__(self, msg, sender):
@@ -22,16 +28,9 @@ class Best(AbstractResponse):
 
             hero_num = AbstractResponse.get_hero_id(hero_name[1])
             if hero_num < 0:
-                if hero_name[1].lower() == "person":
-                    out = "Woody"
-                elif hero_name[1].lower() == "beer":
-                    out = "Budweiser"
-                elif hero_name[1].lower() == "game":
-                    out = "The Dota"
-                elif hero_name[1].lower() == "friend":
-                    out = "Beer"
-                elif hero_name[1].lower() == "country":
-                    out = "USA!"
+                name = hero_name[1].lower()
+                if name in Best.SPECIFIC_RESPONSES:
+                    out = Best.SPECIFIC_RESPONSES[name]
                 else:
                     out = "Hero not found"
             else:
