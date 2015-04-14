@@ -13,9 +13,9 @@ class Best(AbstractResponse):
                           "friend": "Beer",
                           "country": "USA!",
                           "food": "Chicken Parm",
-                          "liquor": "Rum"
-                          "bear": "Liz, the great white scare bear"
-                          "chicken": "Kanes"}
+                          "liquor": "Rum",
+                          "bear": "Liz, the great white scare bear",
+                          "chicken": "Cane's"}
 
     RESPONSE_KEY = "#best"
 
