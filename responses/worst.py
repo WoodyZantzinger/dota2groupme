@@ -6,6 +6,16 @@ from dota2py import data
 class Worst(AbstractResponse):
 
     message = "#worst 1"
+    
+    SPECIFIC_RESPONSES = {"person": "Jon",
+                            "beer": "Mother. Fucking. Pabst.",
+                            "game": "Hello Kitty Adventure, Pink Edition",
+                            "friend": "Porcupines"
+                            "country": "Canada (sike prolly some Middle East place)"
+                            "food": "Anything with blue cheese",
+                            "liquor": "I hardly even know 'er"
+                            "bear": "Koala"
+                            "chicken": "KFC"}
 
     RESPONSE_KEY = "#worst"
 
@@ -23,16 +33,9 @@ class Worst(AbstractResponse):
 
             hero_num = AbstractResponse.get_hero_id(hero_name[1])
             if hero_num < 0:
-                if hero_name[1].lower() == "person":
-                    out = "Jon"
-                elif hero_name[1].lower() == "beer":
-                    out = "Mother. Fucking. Pabst."
-                elif hero_name[1].lower() == "game":
-                    out = "Hello Kitty Adventure, Pink Edition"
-                elif hero_name[1].lower() == "friend":
-                    out = "Porcupines"
-                elif hero_name[1].lower() == "country":
-                    out = "Canada (sike prolly some Middle East place)"
+                name = hero_name[1].lower()
+                if name in Worst.SPECIFICRESPONSES:
+                    out = Best.SPECIFIC_RESPONSES[name]
                 else:
                     out = "Hero not found"
             else:
