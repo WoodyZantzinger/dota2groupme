@@ -66,7 +66,11 @@ class ResponseLast(AbstractResponse):
                 finalItems = "Your items: "
                 for itemNum in range(0, 6):
                     if x["item_" + str(itemNum)] != 0 and x["item_" + str(itemNum)] is not None:
-                        finalItems += str(data.get_item_name(x["item_" + str(itemNum)])["name"]) + ", "
+                        try:
+                            finalItems += str(data.get_item_name(x["item_" + str(itemNum)])["name"]) + ", "
+                        except:
+                            finalItems += "unknown item, "
+
                 out += finalItems + "\n"
 
                 #Win?
