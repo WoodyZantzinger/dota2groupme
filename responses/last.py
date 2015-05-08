@@ -2,6 +2,7 @@
 from AbstractResponse import *
 from dota2py import api
 from dota2py import data
+import random
 import pprint
 
 class ResponseLast(AbstractResponse):
@@ -14,10 +15,16 @@ class ResponseLast(AbstractResponse):
 
     DOTABUFF_LINK_TEMPLATE = "http://www.dotabuff.com/matches/{id}"
 
+    SASS_PERCENTAGE = 0.005
+
     def __init__(self, msg, sender):
         super(ResponseLast, self).__init__(msg, sender)
 
     def respond(self):
+
+        if random.random() < ResponseLast.SASS_PERCENTAGE:
+            print("#last - sassy override")
+            return "Bitch, you can't last for shit"
 
         print "Starting"
 
