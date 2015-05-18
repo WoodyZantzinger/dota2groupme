@@ -16,6 +16,7 @@ class ResponseSpecificGif(ResponseCooldown):
                  "datass": "http://26.media.tumblr.com/tumblr_lw7lvvZz9n1r5zq6ao1_500.gif",
                  "aliens": "http://i0.kym-cdn.com/photos/images/original/000/155/594/yesitis2.gif?1311943181",
                  "pooping": "http://media.tumblr.com/tumblr_m0t0ykVDMu1qzozj1.gif",
+                 "tearsofunfathomablesadness": "http://i.imgur.com/X3TeVee.gif"
                  }
 
     def __init__(self, msg, sender):
