@@ -20,6 +20,8 @@ class ResponseWho(ResponseCooldown):
                 people.append(person)
             if "two thumbs" in self.msg:
                 return "^^ this guy"
+            if "gonna call" in self.msg:
+                return "Ghostbusters!"
             return random.choice(people)
         else:
             print("not responding to #who because sender {} is on cooldown".format(self.sender))

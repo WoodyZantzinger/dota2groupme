@@ -6,7 +6,7 @@ import random
 
 class ResponseYesOrNo(ResponseCooldown):
 
-    RESPONSE_KEY = "#yesorno"
+    RESPONSE_KEY = "#?"
 
     COOLDOWN = 1 * 60 * 60 / 2
 
