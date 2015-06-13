@@ -2,6 +2,7 @@
 from AbstractResponse import *
 from dota2py import api
 from dota2py import data
+import random
 import pprint
 
 class ResponseLast(AbstractResponse):
@@ -14,10 +15,16 @@ class ResponseLast(AbstractResponse):
 
     DOTABUFF_LINK_TEMPLATE = "http://www.dotabuff.com/matches/{id}"
 
+    SASS_PERCENTAGE = 0.005
+
     def __init__(self, msg, sender):
         super(ResponseLast, self).__init__(msg, sender)
 
     def respond(self):
+
+        if random.random() < ResponseLast.SASS_PERCENTAGE:
+            print("#last - sassy override")
+            return "Bitch, you can't last for shit"
 
         print "Starting"
 
@@ -66,7 +73,11 @@ class ResponseLast(AbstractResponse):
                 finalItems = "Your items: "
                 for itemNum in range(0, 6):
                     if x["item_" + str(itemNum)] != 0 and x["item_" + str(itemNum)] is not None:
-                        finalItems += str(data.get_item_name(x["item_" + str(itemNum)])["name"]) + ", "
+                        try:
+                            finalItems += str(data.get_item_name(x["item_" + str(itemNum)])["name"]) + ", "
+                        except:
+                            finalItems += "unknown item, "
+
                 out += finalItems + "\n"
 
                 #Win?

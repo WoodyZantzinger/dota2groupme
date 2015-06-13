@@ -6,6 +6,7 @@ import threading
 import sys
 from flask import Flask, request
 from responses import *
+import time
 
 DEBUG = False
 
@@ -13,16 +14,19 @@ app = Flask(__name__)
 
 #have the bot do a specific msg in the background constantly (Time in seconds)
 def repeat_task(msg, time):
-    #have the bot do a specific msg in the background constantly
-    print "Running Repeat Task: " + msg
-    active_response_categories = get_response_categories(msg, "sUN-self")
-    output_messages = make_responses(active_response_categories, msg, "sUN-self")
+    try:
+        #have the bot do a specific msg in the background constantly
+        print "Running Repeat Task: " + msg
+        active_response_categories = get_response_categories(msg, "sUN-self")
+        output_messages = make_responses(active_response_categories, msg, "sUN-self")
 
-    for output in output_messages:
-        if output:
-            if output != "":
-                send_message(output)
-    threading.Timer(time, repeat_task, [msg, time]).start()
+        for output in output_messages:
+            if output:
+                if output != "":
+                    send_message(output)
+        threading.Timer(time, repeat_task, [msg, time]).start()
+    except:
+        print("repeat task failed: {}".format(msg))
 
 def send_message(msg):
     print "Sending: '" + msg + "'"
@@ -31,7 +35,7 @@ def send_message(msg):
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         header = {'User-Agent': user_agent}
         values = {
-          'bot_id' : '535cbd947cf38b46a83fa3084f',
+          'bot_id' : '1f10f0e9da9ac4d8c8650c7200',
           'text' : msg,
         }
         response_data = urllib.urlencode(values)
@@ -87,6 +91,9 @@ def message():
     active_response_categories = get_response_categories(msg, sender)
     output_messages = make_responses(active_response_categories, msg, sender)
 
+    # sleep for a second before sending message
+    # makes sure that the message from the bot arrives after the message from the user
+    time.sleep(1)
     for output in output_messages:
         if output:
             send_message(output)
