@@ -104,8 +104,8 @@ if __name__ == "__main__":
             DEBUG = True
 
     port = int(os.environ.get("PORT", 5000))
-    repeat_task('#update', 60 * 30) # repeat every half an hour
     if not DEBUG:
         app.run(host='0.0.0.0', port=port)
+        repeat_task('#update', 60 * 30) # repeat every half an hour
     else:
         app.run(host='0.0.0.0', port=port, debug=True)
