@@ -2,6 +2,7 @@ import os
 import urllib2
 import urllib
 import traceback
+import time
 import threading
 import sys
 from flask import Flask, request
@@ -100,6 +101,24 @@ def message():
 
     return 'OK'
 
+
+@app.route("/cooldown")
+def cooldown():
+    response = ""
+    for cls in CooldownResponse.ResponseCooldown.__subclasses__():
+        if cls.__module__ in sys.modules:
+            if hasattr(sys.modules[cls.__module__], 'last_used') and hasattr(cls, "COOLDOWN"):
+                response += "<h2>" + cls.__module__ + "</h2>"
+                last_time = getattr(sys.modules[cls.__module__], 'last_used')
+                for name in last_time:
+                    elapsed_time = time.time() - last_time[name]
+                    seconds = (elapsed_time - cls.COOLDOWN) * -1
+                    if seconds > 0:
+                        m, s = divmod(seconds, 60)
+                        h, m = divmod(m, 60)
+                        time_left = "%d:%02d:%02d" % (h, m, s)
+                        response += "Cooldown Remaining for <b>" + name + "</b>: " + time_left
+    return response
 
 @app.route("/")
 def hello():
