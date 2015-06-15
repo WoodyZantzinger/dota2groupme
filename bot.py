@@ -36,7 +36,7 @@ def send_message(msg):
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         header = {'User-Agent': user_agent}
         values = {
-          'bot_id' : '1f10f0e9da9ac4d8c8650c7200',
+          'bot_id' : 'f906f09e88ff3764c3c8b8c043',
           'text' : msg,
         }
         response_data = urllib.urlencode(values)
@@ -117,7 +117,7 @@ def cooldown():
                         m, s = divmod(seconds, 60)
                         h, m = divmod(m, 60)
                         time_left = "%d:%02d:%02d" % (h, m, s)
-                        response += "Cooldown Remaining for <b>" + name + "</b>: " + time_left
+                        response += "Cooldown Remaining for <b>" + name + "</b>: " + time_left + "<br>"
     return response
 
 @app.route("/")
