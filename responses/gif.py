@@ -25,7 +25,7 @@ class ResponseGif(ResponseCooldown):
             if "spider" in search_term:
                 return "fuck spiders, fuck you"
             hour = datetime.datetime.utcnow().hour
-            is_weekday = datetime.datetime.utcnow().weekday() <= 5
+            is_weekday = datetime.datetime.utcnow().weekday() < 5
             EST_9AM = 8 + 5 # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
             EST_5PM = 4 + 12 + 5
             is_during_workday = EST_9AM < hour < EST_5PM

@@ -2,6 +2,7 @@ import os
 import urllib2
 import urllib
 import traceback
+import time
 import threading
 import sys
 from flask import Flask, request
@@ -35,7 +36,7 @@ def send_message(msg):
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         header = {'User-Agent': user_agent}
         values = {
-          'bot_id' : '1f10f0e9da9ac4d8c8650c7200',
+          'bot_id' : 'f906f09e88ff3764c3c8b8c043',
           'text' : msg,
         }
         response_data = urllib.urlencode(values)
@@ -101,6 +102,24 @@ def message():
     return 'OK'
 
 
+@app.route("/cooldown")
+def cooldown():
+    response = ""
+    for cls in CooldownResponse.ResponseCooldown.__subclasses__():
+        if cls.__module__ in sys.modules:
+            if hasattr(sys.modules[cls.__module__], 'last_used') and hasattr(cls, "COOLDOWN"):
+                response += "<h2>" + cls.__module__ + "</h2>"
+                last_time = getattr(sys.modules[cls.__module__], 'last_used')
+                for name in last_time:
+                    elapsed_time = time.time() - last_time[name]
+                    seconds = (elapsed_time - cls.COOLDOWN) * -1
+                    if seconds > 0:
+                        m, s = divmod(seconds, 60)
+                        h, m = divmod(m, 60)
+                        time_left = "%d:%02d:%02d" % (h, m, s)
+                        response += "Cooldown Remaining for <b>" + name + "</b>: " + time_left + "<br>"
+    return response
+
 @app.route("/")
 def hello():
     return "Hello world!"
@@ -111,8 +130,8 @@ if __name__ == "__main__":
             DEBUG = True
 
     port = int(os.environ.get("PORT", 5000))
-    repeat_task('#update', 60 * 30) # repeat every half an hour
     if not DEBUG:
         app.run(host='0.0.0.0', port=port)
+        repeat_task('#update', 60 * 30) # repeat every half an hour
     else:
         app.run(host='0.0.0.0', port=port, debug=True)
