@@ -59,11 +59,13 @@ def get_response_categories(msg, sender):
         for cls2 in cls.__subclasses__():
             if cls2 not in classes:
                 classes.append(cls2)
-
     for cls in classes:
         if cls.is_relevant_msg(msg, sender):
             print(cls)
-            out.append(cls)
+            if cls.ENABLED:
+                out.append(cls)
+            else:
+                print("ignoring cls {} because cls is disabled".format(cls))
     if not out:
         return out
     critical_override_threshold = max([cls.OVERRIDE_PRIORITY for cls in out])

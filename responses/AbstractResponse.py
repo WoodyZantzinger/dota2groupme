@@ -15,6 +15,8 @@ class AbstractResponse(object):
     # to allow some things to make others not come through the pipe
     OVERRIDE_PRIORITY = 0
 
+    ENABLED = True
+
     # default help response
     HELP_RESPONSE = "Not implemented for " + RESPONSE_KEY
 
