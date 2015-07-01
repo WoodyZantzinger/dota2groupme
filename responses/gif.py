@@ -10,7 +10,7 @@ class ResponseGif(ResponseCooldown):
 
     RESPONSE_KEY = "#gif"
 
-    COOLDOWN = 1 * 60 * 60 * 3 / 2
+    COOLDOWN = 10
 
     url = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}'
     url_9to5 = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}&rating=pg'
@@ -43,7 +43,7 @@ class ResponseGif(ResponseCooldown):
                 out = response.json()["data"]["image_url"]
             except Exception:
                 out = "Something went wrong"
-
+            self.note_response(out)
             return out
         else:
             print("not responding to gif because sender {} is on cooldown".format(self.sender))

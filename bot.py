@@ -7,7 +7,8 @@ import threading
 import sys
 from flask import Flask, request
 from responses import *
-import time
+import difflib
+from responses import AbstractResponse
 
 DEBUG = False
 
@@ -121,6 +122,27 @@ def cooldown():
                         time_left = "%d:%02d:%02d" % (h, m, s)
                         response += "Cooldown Remaining for <b>" + name + "</b>: " + time_left + "<br>"
     return response
+
+
+@app.route("/past_response/<name>")
+def past_response(name):
+    dummy = AbstractResponse.AbstractResponse("", "")
+    names = dummy.GroupMetoSteam.keys()
+    matches = difflib.get_close_matches(name, names, cutoff=0.2)
+    if not len(matches):
+        return "Could not match name for given name of {}".format(name)
+    match = matches[0]
+
+    output = "Responses for: <b>{}</b><br>".format(match)
+    for cls in CooldownResponse.ResponseCooldown.__subclasses__():
+        if cls.__module__ in sys.modules:
+            if hasattr(sys.modules[cls.__module__], 'last_used') and hasattr(cls, "COOLDOWN"):
+                cls_responses = getattr(sys.modules[cls.__module__], 'last_used')
+                if match in cls_responses.keys():
+                    output += "<b>{}</b><br>\n".format(cls)
+                    for response in cls_responses[match]:
+                        output += "{}<br>".format(response.web_format())
+    return output
 
 @app.route("/")
 def hello():

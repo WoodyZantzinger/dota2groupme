@@ -24,9 +24,12 @@ class ResponseSpecificGif(ResponseCooldown):
 
     def respond(self):
         if self.is_sender_off_cooldown():
+            out = None
             for word in self.msg.split(" "):
                 if word.startswith("#") and word[1:] in ResponseSpecificGif.GIF_MAP:
-                    return ResponseSpecificGif.GIF_MAP[word[1:]]
+                    out = ResponseSpecificGif.GIF_MAP[word[1:]]
+            self.note_response(out)
+            return out
         else:
             print("not responding to gif because sender {} is on cooldown".format(self.sender))
 

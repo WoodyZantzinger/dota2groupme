@@ -37,6 +37,8 @@ class ResponseMagic8Ball(ResponseCooldown):
 
     def respond(self):
         if self.is_sender_off_cooldown():
-            return random.choice(ResponseMagic8Ball.ANSWERS)
+            out = random.choice(ResponseMagic8Ball.ANSWERS)
+            self.note_response(out)
+            return out
         print("not responding to yesorno because sender {} is on cooldown".format(self.sender))
 

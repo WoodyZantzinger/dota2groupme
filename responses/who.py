@@ -16,12 +16,16 @@ class ResponseWho(ResponseCooldown):
     def respond(self):
         if self.is_sender_off_cooldown():
             people = []
+            out = None
             for person, steamid in AbstractResponse.GroupMetoSteam.iteritems():
                 people.append(person)
             if "two thumbs" in self.msg:
-                return "^^ this guy"
-            if "gonna call" in self.msg:
-                return "Ghostbusters!"
-            return random.choice(people)
+                out = "^^ this guy"
+            elif "gonna call" in self.msg:
+                out = "Ghostbusters!"
+            else:
+                out = random.choice(people)
+            self.note_response(out)
+            return out
         else:
             print("not responding to #who because sender {} is on cooldown".format(self.sender))
