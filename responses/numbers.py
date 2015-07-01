@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*
 from AbstractResponse import AbstractResponse
-import random
 
 
 class ResponseNumbers(AbstractResponse):
@@ -9,10 +8,10 @@ class ResponseNumbers(AbstractResponse):
 
     NUMBERS_THRESHOLD = 6
 
-    ENABLED = False
+    #ENABLED = False
 
-    def __init__(self, msg, sender):
-        super(ResponseNumbers, self).__init__(msg, sender)
+    #def __init__(self, msg, sender):
+    #   super(ResponseNumbers, self).__init__(msg, sender)
 
     def respond(self):
         return "whatcha got there, numbers?"
