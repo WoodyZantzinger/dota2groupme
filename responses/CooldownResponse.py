@@ -4,6 +4,8 @@ import sys
 import time
 from utils import cachedmessage
 
+USAGE_MEMBER_NAME = "usage_history"
+
 
 class ResponseCooldown(AbstractResponse):
 
@@ -11,16 +13,16 @@ class ResponseCooldown(AbstractResponse):
         super(ResponseCooldown, self).__init__(msg, sender, mod)
         self.cooldown = cooldown
         self.mod = mod
-        if not hasattr(sys.modules[mod], 'last_used'):
-            setattr(sys.modules[mod], 'last_used', dict())
-            getattr(sys.modules[mod], 'last_used')[sender] = []
+        if not self.has_usage():
+            self.set_usage(dict())
+            self.get_usage()[sender] = []
         else:
-            if not sender in getattr(sys.modules[mod], 'last_used'):
-                getattr(sys.modules[mod], 'last_used')[sender] = []
+            if not sender in self.get_usage():
+                self.get_usage()[sender] = []
 
     def is_sender_off_cooldown(self):
         can_send = False
-        messages = getattr(sys.modules[self.mod], 'last_used')[self.sender]
+        messages = self.get_usage()[self.sender]
         if not len(messages):
             can_send = True
         else:
@@ -30,17 +32,26 @@ class ResponseCooldown(AbstractResponse):
             if elapsed_time > self.cooldown:
                 can_send = True
         if can_send:
-            getattr(sys.modules[self.mod], 'last_used')[self.sender].append(cachedmessage.CachedMessage(self.msg))
+            self.get_usage()[self.sender].append(cachedmessage.CachedMessage(self.msg))
         return can_send
 
     def note_response(self, response):
-        getattr(sys.modules[self.mod], 'last_used')[self.sender][-1].response = response
+        self.get_usage()[self.sender][-1].response = response
         self.print_responses()
 
     def print_responses(self):
         print("past messages are:")
-        for _ in getattr(sys.modules[self.mod], 'last_used')[self.sender]:
+        for _ in self.get_usage()[self.sender]:
             print(_)
+
+    def get_usage(self):
+        return getattr(sys.modules[self.mod], USAGE_MEMBER_NAME)
+
+    def has_usage(self):
+        return hasattr(sys.modules[self.mod], USAGE_MEMBER_NAME)
+
+    def set_usage(self, obj):
+        setattr(sys.modules[self.mod], USAGE_MEMBER_NAME, obj)
 
     def respond(self):
         pass

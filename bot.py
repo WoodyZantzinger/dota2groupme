@@ -9,6 +9,7 @@ from flask import Flask, request
 from responses import *
 import difflib
 from responses import AbstractResponse
+from utils import rawmessage
 
 DEBUG = False
 
@@ -88,6 +89,7 @@ def make_responses(categories, msg, sender):
 @app.route('/message/', methods=['POST'])
 def message():
     new_message = request.get_json(force=True)
+    msg = rawmessage.RawMessage(new_message)
     print("received message: ")
     print(new_message)
     sender = new_message["name"]
@@ -136,8 +138,8 @@ def past_response(name):
     output = "Responses for: <b>{}</b><br>".format(match)
     for cls in CooldownResponse.ResponseCooldown.__subclasses__():
         if cls.__module__ in sys.modules:
-            if hasattr(sys.modules[cls.__module__], 'last_used') and hasattr(cls, "COOLDOWN"):
-                cls_responses = getattr(sys.modules[cls.__module__], 'last_used')
+            if hasattr(sys.modules[cls.__module__], 'usage_history') and hasattr(cls, "COOLDOWN"):
+                cls_responses = getattr(sys.modules[cls.__module__], 'usage_history')
                 if match in cls_responses.keys():
                     output += "<b>{}</b><br>\n".format(cls)
                     for response in cls_responses[match]:
