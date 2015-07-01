@@ -8,7 +8,7 @@ class ResponseNumbers(AbstractResponse):
 
     NUMBERS_THRESHOLD = 6
 
-    #ENABLED = False
+    ENABLED = False
 
     #def __init__(self, msg, sender):
     #   super(ResponseNumbers, self).__init__(msg, sender)
