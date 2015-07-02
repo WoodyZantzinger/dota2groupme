@@ -15,13 +15,13 @@ class ResponseGif(ResponseCooldown):
     url = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}'
     url_9to5 = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}&rating=pg'
 
-    def __init__(self, msg, sender):
-        super(ResponseGif, self).__init__(msg, sender, self.__module__, ResponseGif.COOLDOWN)
+    def __init__(self, msg):
+        super(ResponseGif, self).__init__(msg, self.__module__, ResponseGif.COOLDOWN)
 
     def respond(self):
         if self.is_sender_off_cooldown():
             out = ""
-            search_term = self.msg.partition(' ')[2]
+            search_term = self.msg.text.partition(' ')[2]
             if "spider" in search_term:
                 return "fuck spiders, fuck you"
             hour = datetime.datetime.utcnow().hour

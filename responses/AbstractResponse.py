@@ -26,6 +26,9 @@ class AbstractResponse(object):
     with open('./responses/GroupMetoDOTA.json') as f:
         GroupMetoDOTA = json.load(f)
 
+    with open('./utils/GroupMeIDs.json') as f:
+        GroupMeIDs = json.load(f)
+
     key = "63760574A669369C2117EA4A30A4768B"
 
 
@@ -156,10 +159,9 @@ class AbstractResponse(object):
         del AbstractResponse.GroupMetoDOTA[old]
         AbstractResponse.cache_GroupMetoDOTA()
 
-    def __init__(self, msg, sender, mod=None):
+    def __init__(self, msg, mod=None):
         super(AbstractResponse, self).__init__()
         self.msg = msg
-        self.sender = sender
 
     def get_last_used_time(self, sender, mod=None):
         if mod is not None:
@@ -173,8 +175,5 @@ class AbstractResponse(object):
         return None
 
     @classmethod
-    def is_relevant_msg(cls, msg, sender):
-        if cls.RESPONSE_KEY in msg.lower():
-            return True
-        else:
-            return False
+    def is_relevant_msg(cls, msg):
+        return cls.RESPONSE_KEY in msg.text.lower()

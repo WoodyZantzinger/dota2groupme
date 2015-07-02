@@ -11,6 +11,9 @@ import difflib
 from responses import AbstractResponse
 from utils import rawmessage
 
+
+dummyAR = AbstractResponse.AbstractResponse(None)
+
 DEBUG = False
 
 app = Flask(__name__)
@@ -50,9 +53,9 @@ def send_message(msg):
         return 'Win'
 
 
-def get_response_categories(msg, sender):
-    if sender == "sUN":
-        return []
+def get_response_categories(msg):
+    if (msg.sender_id == dummyAR.GroupMeIDs["sUN"]):
+        return None
     out = []
     classes = []
     for cls in AbstractResponse.AbstractResponse.__subclasses__():
@@ -62,7 +65,7 @@ def get_response_categories(msg, sender):
             if cls2 not in classes:
                 classes.append(cls2)
     for cls in classes:
-        if cls.is_relevant_msg(msg, sender):
+        if cls.is_relevant_msg(msg):
             print(cls)
             if cls.ENABLED:
                 out.append(cls)
@@ -78,11 +81,11 @@ def get_response_categories(msg, sender):
     return filtered_out
 
 
-def make_responses(categories, msg, sender):
+def make_responses(categories, msg):
     out = []
     for cls in categories:
         print("sending msg for {}".format(cls))
-        out.append(cls(msg, sender).respond())
+        out.append(cls(msg).respond())
     return out
 
 
@@ -92,10 +95,10 @@ def message():
     msg = rawmessage.RawMessage(new_message)
     print("received message: ")
     print(new_message)
-    sender = new_message["name"]
-    msg = new_message["text"]
-    active_response_categories = get_response_categories(msg, sender)
-    output_messages = make_responses(active_response_categories, msg, sender)
+    #sender = new_message["name"]
+    #msg = new_message["text"]
+    active_response_categories = get_response_categories(msg)
+    output_messages = make_responses(active_response_categories, msg)
 
     # sleep for a second before sending message
     # makes sure that the message from the bot arrives after the message from the user
@@ -128,23 +131,24 @@ def cooldown():
 
 @app.route("/past_response/<name>")
 def past_response(name):
-    dummy = AbstractResponse.AbstractResponse("", "")
-    names = dummy.GroupMetoSteam.keys()
+    names = AbstractResponse.AbstractResponse.GroupMetoSteam.keys()
     matches = difflib.get_close_matches(name, names, cutoff=0.2)
     if not len(matches):
         return "Could not match name for given name of {}".format(name)
     match = matches[0]
+    groupme_id = AbstractResponse.AbstractResponse.GroupMeIDs[match]
 
     output = "Responses for: <b>{}</b><br>".format(match)
     for cls in CooldownResponse.ResponseCooldown.__subclasses__():
         if cls.__module__ in sys.modules:
             if hasattr(sys.modules[cls.__module__], 'usage_history') and hasattr(cls, "COOLDOWN"):
                 cls_responses = getattr(sys.modules[cls.__module__], 'usage_history')
-                if match in cls_responses.keys():
+                if groupme_id in cls_responses.keys():
                     output += "<b>{}</b><br>\n".format(cls)
-                    for response in cls_responses[match]:
+                    for response in cls_responses[groupme_id]:
                         output += "{}<br>".format(response.web_format())
     return output
+
 
 @app.route("/")
 def hello():
@@ -155,9 +159,10 @@ if __name__ == "__main__":
         if sys.argv[1] == "debug":
             DEBUG = True
 
+    print(AbstractResponse.AbstractResponse("", "").GroupMeIDs)
     port = int(os.environ.get("PORT", 5000))
     if not DEBUG:
         app.run(host='0.0.0.0', port=port)
-        repeat_task('#update', 60 * 30) # repeat every half an hour
+        repeat_task('#update', 60 * 30)  # repeat every half an hour
     else:
         app.run(host='0.0.0.0', port=port, debug=True)

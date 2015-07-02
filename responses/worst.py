@@ -9,14 +9,13 @@ class Worst(AbstractResponse):
 
     RESPONSE_KEY = "#worst"
 
-    def __init__(self, msg, sender):
-        Worst.message = msg
-        super(Worst, self).__init__(msg, sender)
+    def __init__(self, msg):
+        super(Worst, self).__init__(msg)
 
     def respond(self):
 
         out = ""
-        hero_name = Worst.message.split(' ', 1)
+        hero_name = self.msg.text.split(' ', 1)
         if len(hero_name) < 2:
             out = "You need a hero name"
         else:

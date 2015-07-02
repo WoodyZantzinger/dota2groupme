@@ -17,8 +17,8 @@ class ResponseLast(AbstractResponse):
 
     SASS_PERCENTAGE = 0.005
 
-    def __init__(self, msg, sender):
-        super(ResponseLast, self).__init__(msg, sender)
+    def __init__(self, msg):
+        super(ResponseLast, self).__init__(msg)
 
     def respond(self):
 
@@ -28,16 +28,18 @@ class ResponseLast(AbstractResponse):
 
         print "Starting"
 
-        if not AbstractResponse.has_steamID(self.sender):
+        canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).next()
+
+        if not AbstractResponse.has_steamID(canonical_name):
             return "I don't know your SteamID! Set it with '#set ID'"
 
-        if not AbstractResponse.has_dotaID(self.sender):
+        if not AbstractResponse.has_dotaID(canonical_name):
             return "I don't know your DOTA ID! Set it with '#setDota ID'"
 
         print "Setting Key & Account ID"
         api.set_api_key(AbstractResponse.key)
 
-        account_id = AbstractResponse.name_to_steamID(self.sender)
+        account_id = AbstractResponse.name_to_steamID(canonical_name)
 
         print "Got Account ID"
         # Get a list of recent matches for the player
@@ -54,7 +56,7 @@ class ResponseLast(AbstractResponse):
         player_num = 0
 
         for x in match["result"]["players"]:
-            if int(x["account_id"]) == AbstractResponse.name_to_dotaID(self.sender):
+            if int(x["account_id"]) == AbstractResponse.name_to_dotaID(canonical_name):
                 out = ""
                 print "Got self.sender Data"
 

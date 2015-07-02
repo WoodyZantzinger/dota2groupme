@@ -10,8 +10,8 @@ class ResponseWho(ResponseCooldown):
 
     COOLDOWN = 1 * 60 * 60 / 4
 
-    def __init__(self, msg, sender):
-        super(ResponseWho, self).__init__(msg, sender, self.__module__, ResponseWho.COOLDOWN)
+    def __init__(self, msg):
+        super(ResponseWho, self).__init__(msg, self.__module__, ResponseWho.COOLDOWN)
 
     def respond(self):
         if self.is_sender_off_cooldown():
@@ -19,13 +19,13 @@ class ResponseWho(ResponseCooldown):
             out = None
             for person, steamid in AbstractResponse.GroupMetoSteam.iteritems():
                 people.append(person)
-            if "two thumbs" in self.msg:
+            if "two thumbs" in self.msg.text:
                 out = "^^ this guy"
-            elif "gonna call" in self.msg:
+            elif "gonna call" in self.msg.text:
                 out = "Ghostbusters!"
             else:
                 out = random.choice(people)
             self.note_response(out)
             return out
         else:
-            print("not responding to #who because sender {} is on cooldown".format(self.sender))
+            print("not responding to #who because sender {} is on cooldown".format(self.msg.name))

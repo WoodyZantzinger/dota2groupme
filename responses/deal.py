@@ -24,8 +24,8 @@ class ResponseDeal(AbstractResponse):
 
                         ]
 
-    def __init__(self, msg, sender):
-        super(ResponseDeal, self).__init__(msg, sender)
+    def __init__(self, msg):
+        super(ResponseDeal, self).__init__(msg)
 
     def respond(self):
         return random.choice(ResponseDeal.deal_responses)

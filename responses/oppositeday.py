@@ -10,8 +10,8 @@ class ResponseOppositeDay(AbstractResponse):
 
     opposite_mode_enabled = False
 
-    def __init__(self, msg, sender):
-        super(ResponseOppositeDay, self).__init__(msg, sender)
+    def __init__(self, msg):
+        super(ResponseOppositeDay, self).__init__(msg)
 
     def respond(self):
         if ResponseOppositeDay.opposite_mode_enabled:

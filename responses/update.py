@@ -15,9 +15,8 @@ class Update(AbstractResponse):
 
     ENABLED = True
 
-    def __init__(self, msg, sender):
-        Update.message = msg
-        super(Update, self).__init__(msg, sender)
+    def __init__(self, msg):
+        super(Update, self).__init__(msg)
 
     def respond(self):
         print "Starting"

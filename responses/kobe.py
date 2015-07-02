@@ -25,14 +25,14 @@ class kobe(AbstractResponse):
         "http://i.imgur.com/eTCwx.gif"  # 10
     ]
 
-    def __init__(self, msg, sender):
-        super(kobe, self).__init__(msg, sender)
+    def __init__(self, msg):
+        super(kobe, self).__init__(msg)
 
     def respond(self):
-        names10_in_msg = [name for name in kobe.NAMES_10 if name in self.msg.lower()]
+        names10_in_msg = [name for name in kobe.NAMES_10 if name in self.msg.text.lower()]
         if len(names10_in_msg):
             return kobe.kobe_url[-1]
-        names1_in_msg = [name for name in kobe.NAMES_1 if name in self.msg.lower()]
+        names1_in_msg = [name for name in kobe.NAMES_1 if name in self.msg.text.lower()]
         if len(names1_in_msg):
             return kobe.kobe_url[0]
         return kobe.kobe_url[randint(0, 9)]

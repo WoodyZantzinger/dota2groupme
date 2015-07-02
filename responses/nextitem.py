@@ -10,8 +10,8 @@ class ResponseNextItem(AbstractResponse):
 
     HELP_RESPONSE = "Your next item to buy"
 
-    def __init__(self, msg, sender):
-        super(ResponseNextItem, self).__init__(msg, sender)
+    def __init__(self, msg):
+        super(ResponseNextItem, self).__init__(msg)
 
     def respond(self):
         return "You will buy: " + ResponseNextItem.random_item()

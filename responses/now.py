@@ -11,8 +11,8 @@ class ResponseNow(AbstractResponse):
 
     RESPONSE_KEY = "#now"
 
-    def __init__(self, msg, sender):
-        super(ResponseNow, self).__init__(msg, sender)
+    def __init__(self, msg):
+        super(ResponseNow, self).__init__(msg)
 
     def respond(self):
         out = ""

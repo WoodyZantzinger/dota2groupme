@@ -9,20 +9,20 @@ USAGE_MEMBER_NAME = "usage_history"
 
 class ResponseCooldown(AbstractResponse):
 
-    def __init__(self, msg, sender, mod, cooldown):
-        super(ResponseCooldown, self).__init__(msg, sender, mod)
+    def __init__(self, msg, mod, cooldown):
+        super(ResponseCooldown, self).__init__(msg, mod)
         self.cooldown = cooldown
         self.mod = mod
         if not self.has_usage():
             self.set_usage(dict())
-            self.get_usage()[sender] = []
+            self.get_usage()[self.msg.sender_id] = []
         else:
-            if not sender in self.get_usage():
-                self.get_usage()[sender] = []
+            if not self.msg.sender_id in self.get_usage():
+                self.get_usage()[self.msg.sender_id] = []
 
     def is_sender_off_cooldown(self):
         can_send = False
-        messages = self.get_usage()[self.sender]
+        messages = self.get_usage()[self.msg.sender_id]
         if not len(messages):
             can_send = True
         else:
@@ -32,16 +32,17 @@ class ResponseCooldown(AbstractResponse):
             if elapsed_time > self.cooldown:
                 can_send = True
         if can_send:
-            self.get_usage()[self.sender].append(cachedmessage.CachedMessage(self.msg))
+            self.get_usage()[self.msg.sender_id].append(cachedmessage.CachedMessage(self.msg.text))
         return can_send
 
     def note_response(self, response):
-        self.get_usage()[self.sender][-1].response = response
-        self.print_responses()
+        print("noting a response for name of {} and id = {}".format(self.msg.name, self.msg.sender_id))
+        self.get_usage()[self.msg.sender_id][-1].response = response
+        #self.print_responses()
 
     def print_responses(self):
         print("past messages are:")
-        for _ in self.get_usage()[self.sender]:
+        for _ in self.get_usage()[self.msg.sender_id]:
             print(_)
 
     def get_usage(self):
