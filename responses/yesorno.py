@@ -19,7 +19,7 @@ class ResponseYesOrNo(ResponseCooldown):
             if "omni" in self.msg.text.lower():
                 out = "no"
             else:
-                out = random.choice(["yes", "no"])
+                out = random.choice(["yes", "no :dino:"])
             self.note_response(out)
             return out
         print("not responding to yesorno because sender {} is on cooldown".format(self.sender))
