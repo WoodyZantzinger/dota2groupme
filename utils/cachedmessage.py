@@ -14,4 +14,6 @@ class CachedMessage(object):
         return "<CachedMessage w/ m={}, t={}, r={}>".format(self.msg, self.time, self.response)
 
     def web_format(self):
+        if ("#gif" in self.msg):
+            return "<a href=\"{}\">{}</a> : <br> <img src=\"{}\">".format(self.response, self.msg, self.response)
         return "<a href=\"{}\">{}</a> : {}".format(self.response, self.msg, self.response)
