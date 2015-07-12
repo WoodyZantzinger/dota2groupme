@@ -24,11 +24,11 @@ def parse_message(text):
                 if emoticon[0] in emojis:
                     char_map.append(emojis[emoticon[0]])
                     text = text.replace(":" + emoticon[0] + ":",u'\ufffd',1)
-            values["attachments"] = {
+            values["attachments"] = [{
                 'type' : 'emoji',
                 'charmap' : char_map[0],
                 'placeholder' : u'\ufffd'
-            }
+                                     }]
 
     values["text"] = text
     return values
