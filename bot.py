@@ -10,7 +10,7 @@ from responses import *
 import difflib
 from responses import AbstractResponse
 from utils import rawmessage
-import GroupMeMessage
+from utils import GroupMeMessage
 
 
 dummyAR = AbstractResponse.AbstractResponse(None)
