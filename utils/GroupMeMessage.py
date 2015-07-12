@@ -26,8 +26,8 @@ def parse_message(text):
                     text = text.replace(":" + emoticon[0] + ":",u'\ufffd',1)
             values["attachments"] = {
                 'type' : 'emoji',
-                'charmap' : char_map,
-                'placeholder' : '\ufffd'
+                'charmap' : char_map[0],
+                'placeholder' : u'\ufffd'
             }
 
     values["text"] = text
