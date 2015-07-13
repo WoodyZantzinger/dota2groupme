@@ -42,8 +42,8 @@ def send_message(msg):
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         header = {'User-Agent': user_agent}
         values = GroupMeMessage.parse_message(msg)
-        print values
         response_data = urllib.urlencode(values)
+        print response_data
         req = urllib2.Request(url, response_data, header)
         response = urllib2.urlopen(req)
         #print "msg"
