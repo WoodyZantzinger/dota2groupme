@@ -11,6 +11,7 @@ import difflib
 from responses import AbstractResponse
 from utils import rawmessage
 from utils import GroupMeMessage
+import json
 
 
 dummyAR = AbstractResponse.AbstractResponse(None)
@@ -40,11 +41,9 @@ def send_message(msg):
     if not DEBUG:
         url = 'https://api.groupme.com/v3/bots/post'
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-        header = {'User-Agent': user_agent}
+        header = {'User-Agent': user_agent, 'Content-Type': 'application/json'}
         values = GroupMeMessage.parse_message(msg)
-        response_data = urllib.urlencode(values)
-        print response_data
-        req = urllib2.Request(url, response_data, header)
+        req = urllib2.Request(url, json.dumps(values), header)
         response = urllib2.urlopen(req)
         #print "msg"
         return response
