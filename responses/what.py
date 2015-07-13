@@ -12,7 +12,7 @@ class ResponseWhat(ResponseCooldown):
 
     RESPONSE_KEY = "#what"
 
-    COOLDOWN = 2
+    COOLDOWN = 1 * 60 * 60 / 4
 
     def __init__(self, msg):
         super(ResponseWhat, self).__init__(msg, self.__module__, ResponseWhat.COOLDOWN)
