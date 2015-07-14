@@ -54,6 +54,7 @@ class ResponseRemindMe(ResponseCooldown):
                         dt = datetime.datetime(*time[0][:6])
                         storemsg = {"message": body, "time": dt, "senderid": self.msg.sender_id}
                         reminders.insert(storemsg)
+                        print("inserting message: " + str(storemsg))
                     else:
                         print("time is before now, not sending")
         else:
