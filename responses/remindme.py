@@ -31,7 +31,13 @@ class ResponseRemindMe(ResponseCooldown):
         super(ResponseRemindMe, self).__init__(msg, self.__module__, ResponseRemindMe.COOLDOWN)
 
     def respond(self):
-        conn = pymongo.Connection(get_db_url())
+        conn = None
+        try:
+            conn = pymongo.Connection(get_db_url())
+        except:
+            print("failed to connect to reminders-db")
+            return None
+
         reminders = conn.mjsunbot.reminders
         print("connected to db")
 

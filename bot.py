@@ -150,7 +150,12 @@ def past_response(name):
 @app.route("/remindme")
 def remindme_callback():
     print("callbacking on remindme")
-    conn = pymongo.Connection(remindme.get_db_url())
+    conn = None
+    try:
+        conn = pymongo.Connection(remindme.get_db_url(), connectTimeoutMS=1000)
+    except:
+        print("failed to connect to reminders-db")
+        return "failed to connect to reminders-db"
     reminders = conn.mjsunbot.reminders
 
     now = datetime.datetime.now()
