@@ -1,7 +1,5 @@
 import os
 import urllib2
-import urllib
-import traceback
 import time
 import threading
 import sys
@@ -12,7 +10,8 @@ from responses import AbstractResponse
 from utils import rawmessage
 from utils import GroupMeMessage
 import json
-
+import datetime
+import pymongo
 
 dummyAR = AbstractResponse.AbstractResponse(None)
 
@@ -149,9 +148,29 @@ def past_response(name):
 
 
 @app.route("/remindme")
-def remindme():
-    print("triggering remindme update")
-    return "Remindme!"
+def remindme_callback():
+    conn = pymongo.Connection(remindme.get_db_url())
+    reminders = conn.mjsunbot.reminders
+
+    now = datetime.datetime.now()
+    triggered_messages = []
+    for item in reminders.find():
+        if (now > item["time"]):
+            triggered_messages.append(item)
+
+    names = AbstractResponse.AbstractResponse.GroupMetoSteam.keys()
+    out = []
+    for item in triggered_messages:
+        for name in names:
+            if AbstractResponse.AbstractResponse.GroupMeIDs[name] == item['senderid']:
+                out.append("Hey, {}: {}".format(name, item["message"]))
+                break
+        print("triggering message:")
+        print(item)
+        reminders.remove(item)
+    for msg in out:
+        send_message(msg)
+    return out.__str__()
 
 
 @app.route("/")
