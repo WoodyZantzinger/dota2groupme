@@ -148,6 +148,12 @@ def past_response(name):
     return output
 
 
+@app.route("/remindme")
+def remindme():
+    print("triggering remindme update")
+
+
+
 @app.route("/")
 def hello():
     return "Hello world!"
