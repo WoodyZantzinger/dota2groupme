@@ -38,7 +38,7 @@ class ResponseRemindMe(ResponseCooldown):
         for item in reminders.find():
             print(item)
 
-        if self.is_sender_off_cooldown():
+        if True or self.is_sender_off_cooldown():
             print("sender is off CD")
             now = time_parser.parse("now")
             if (self.msg.text.split(" ")[0].lower() != "#remindme"):
