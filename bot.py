@@ -149,6 +149,7 @@ def past_response(name):
 
 @app.route("/remindme")
 def remindme_callback():
+    print("callbacking on remindme")
     conn = pymongo.Connection(remindme.get_db_url())
     reminders = conn.mjsunbot.reminders
 
