@@ -5,8 +5,6 @@ import parsedatetime
 import pymongo
 import datetime
 
-print("connection to reminders DB established")
-
 c = parsedatetime.Constants()
 c.BirthdayEpoch = 80
 time_parser = parsedatetime.Calendar(c)
@@ -35,14 +33,17 @@ class ResponseRemindMe(ResponseCooldown):
     def respond(self):
         conn = pymongo.Connection(get_db_url())
         reminders = conn.mjsunbot.reminders
+        print("connected to db")
 
         for item in reminders.find():
             print(item)
 
         if self.is_sender_off_cooldown():
+            print("sender is off CD")
             now = time_parser.parse("now")
             if (self.msg.text.split(" ")[0].lower() != "#remindme"):
                 return
+            print("first word was remindme")
             firstquot = self.msg.text.find(quot)
             if (firstquot != -1):
                 secondquot = self.msg.text[firstquot + 1:].find(quot)
