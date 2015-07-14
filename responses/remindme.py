@@ -57,5 +57,9 @@ class ResponseRemindMe(ResponseCooldown):
                         print("inserting message: " + str(storemsg))
                     else:
                         print("time is before now, not sending")
+                else:
+                    print("couldn't find second quot")
+            else:
+                print("couldn't find first quot")
         else:
             print("not responding to #what because sender {} is on cooldown".format(self.msg.name))
