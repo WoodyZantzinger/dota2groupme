@@ -35,9 +35,9 @@ def repeat_task(msg, time):
     except:
         print("repeat task failed: {}".format(msg))
 
-def send_message(msg):
+def send_message(msg, send=True):
     print "Sending: '" + msg + "'"
-    if not DEBUG:
+    if not DEBUG and send:
         url = 'https://api.groupme.com/v3/bots/post'
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         header = {'User-Agent': user_agent, 'Content-Type': 'application/json'}
@@ -103,6 +103,26 @@ def message():
     for output in output_messages:
         if output:
             send_message(output)
+
+    return 'OK'
+
+@app.route('/debugmessage/', methods=['POST'])
+def debug_message():
+    new_message = request.get_json(force=True)
+    msg = rawmessage.RawMessage(new_message)
+    print("received message: ")
+    print(new_message)
+    #sender = new_message["name"]
+    #msg = new_message["text"]
+    active_response_categories = get_response_categories(msg)
+    output_messages = make_responses(active_response_categories, msg)
+
+    # sleep for a second before sending message
+    # makes sure that the message from the bot arrives after the message from the user
+    time.sleep(1)
+    for output in output_messages:
+        if output:
+            send_message(output, send=False)
 
     return 'OK'
 
