@@ -185,9 +185,12 @@ def remindme_callback():
         out = []
         for item in triggered_messages:
             for name in names:
-                if AbstractResponse.AbstractResponse.GroupMeIDs[name] == item['senderid']:
-                    out.append("Hey, {}: {}".format(name, item["message"]))
-                    break
+                try:
+                    if AbstractResponse.AbstractResponse.GroupMeIDs[name] == item['senderid']:
+                        out.append("Hey, {}: {}".format(name, item["message"]))
+                        break
+                except:
+                    print("error reverse-looking up name: " + name)
             print("triggering message:")
             print(item)
             reminders.remove(item)
