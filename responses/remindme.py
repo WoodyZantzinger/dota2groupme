@@ -17,7 +17,7 @@ def get_db_url():
             local_var = json.load(f)
         return local_var["REMINDMEURL"]
     except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
-        return os.getenv('MONGOLAB_URL')
+        return os.getenv('REMINDMEURL')
     except:
         return None
 
