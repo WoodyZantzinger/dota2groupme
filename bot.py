@@ -12,6 +12,7 @@ from utils import GroupMeMessage
 import json
 import datetime
 import pymongo
+import traceback
 
 dummyAR = AbstractResponse.AbstractResponse(None)
 
@@ -169,34 +170,34 @@ def past_response(name):
 
 @app.route("/remindme")
 def remindme_callback():
-    print("callbacking on remindme")
-    conn = None
     try:
-        conn = pymongo.Connection(remindme.get_db_url(), connectTimeoutMS=1000)
-    except:
-        print("failed to connect to reminders-db")
-        return "failed to connect to reminders-db"
-    reminders = conn.mjsunbot.reminders
+        print("callbacking on remindme")
+        conn = pymongo.Connection(remindme.get_db_url())
+        reminders = conn.mjsunbot.reminders
 
-    now = datetime.datetime.now()
-    triggered_messages = []
-    for item in reminders.find():
-        if (now > item["time"]):
-            triggered_messages.append(item)
+        now = datetime.datetime.now()
+        triggered_messages = []
+        for item in reminders.find():
+            if (now > item["time"]):
+                triggered_messages.append(item)
 
-    names = AbstractResponse.AbstractResponse.GroupMetoSteam.keys()
-    out = []
-    for item in triggered_messages:
-        for name in names:
-            if AbstractResponse.AbstractResponse.GroupMeIDs[name] == item['senderid']:
-                out.append("Hey, {}: {}".format(name, item["message"]))
-                break
-        print("triggering message:")
-        print(item)
-        reminders.remove(item)
-    for msg in out:
-        send_message(msg)
-    return out.__str__()
+        names = AbstractResponse.AbstractResponse.GroupMetoSteam.keys()
+        out = []
+        for item in triggered_messages:
+            for name in names:
+                if AbstractResponse.AbstractResponse.GroupMeIDs[name] == item['senderid']:
+                    out.append("Hey, {}: {}".format(name, item["message"]))
+                    break
+            print("triggering message:")
+            print(item)
+            reminders.remove(item)
+        for msg in out:
+            send_message(msg)
+        return out.__str__()
+    except Exception, e:
+        (e)
+        print(traceback.format_exc())
+        return "remindme failed!"
 
 
 @app.route("/")
