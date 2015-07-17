@@ -39,10 +39,10 @@ class ResponseRemindMe(ResponseCooldown):
             return None
 
         reminders = conn.mjsunbot.reminders
-        print("connected to db")
+        print("remindme: connected to db")
 
-        for item in reminders.find():
-            print(item)
+        #for item in reminders.find():
+        #    print(item)
 
         if True or self.is_sender_off_cooldown():
             print("sender is off CD")
