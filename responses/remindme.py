@@ -62,6 +62,7 @@ class ResponseRemindMe(ResponseCooldown):
                         storemsg = {"message": body, "time": dt, "senderid": self.msg.sender_id}
                         reminders.insert(storemsg)
                         print("inserting message: " + str(storemsg))
+                        return "I will remind {} about {}. Beep boop.".format(self.msg.name, body)
                     else:
                         print("time is before now, not sending")
                 else:
