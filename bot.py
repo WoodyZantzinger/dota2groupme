@@ -1,7 +1,5 @@
 import os
 import urllib2
-import urllib
-import traceback
 import time
 import threading
 import sys
@@ -12,7 +10,8 @@ from responses import AbstractResponse
 from utils import rawmessage
 from utils import GroupMeMessage
 import json
-
+import datetime
+import pymongo
 
 dummyAR = AbstractResponse.AbstractResponse(None)
 
@@ -36,9 +35,9 @@ def repeat_task(msg, time):
     except:
         print("repeat task failed: {}".format(msg))
 
-def send_message(msg):
+def send_message(msg, send=True):
     print "Sending: '" + msg + "'"
-    if not DEBUG:
+    if not DEBUG and send:
         url = 'https://api.groupme.com/v3/bots/post'
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         header = {'User-Agent': user_agent, 'Content-Type': 'application/json'}
@@ -107,6 +106,26 @@ def message():
 
     return 'OK'
 
+@app.route('/debugmessage/', methods=['POST'])
+def debug_message():
+    new_message = request.get_json(force=True)
+    msg = rawmessage.RawMessage(new_message)
+    print("received message: ")
+    print(new_message)
+    #sender = new_message["name"]
+    #msg = new_message["text"]
+    active_response_categories = get_response_categories(msg)
+    output_messages = make_responses(active_response_categories, msg)
+
+    # sleep for a second before sending message
+    # makes sure that the message from the bot arrives after the message from the user
+    time.sleep(1)
+    for output in output_messages:
+        if output:
+            send_message(output, send=False)
+
+    return 'OK'
+
 
 @app.route("/cooldown")
 def cooldown():
@@ -146,6 +165,38 @@ def past_response(name):
                     for response in cls_responses[groupme_id]:
                         output += "{}<br>".format(response.web_format())
     return output
+
+
+@app.route("/remindme")
+def remindme_callback():
+    print("callbacking on remindme")
+    conn = None
+    try:
+        conn = pymongo.Connection(remindme.get_db_url(), connectTimeoutMS=1000)
+    except:
+        print("failed to connect to reminders-db")
+        return "failed to connect to reminders-db"
+    reminders = conn.mjsunbot.reminders
+
+    now = datetime.datetime.now()
+    triggered_messages = []
+    for item in reminders.find():
+        if (now > item["time"]):
+            triggered_messages.append(item)
+
+    names = AbstractResponse.AbstractResponse.GroupMetoSteam.keys()
+    out = []
+    for item in triggered_messages:
+        for name in names:
+            if AbstractResponse.AbstractResponse.GroupMeIDs[name] == item['senderid']:
+                out.append("Hey, {}: {}".format(name, item["message"]))
+                break
+        print("triggering message:")
+        print(item)
+        reminders.remove(item)
+    for msg in out:
+        send_message(msg)
+    return out.__str__()
 
 
 @app.route("/")
