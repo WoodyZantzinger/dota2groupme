@@ -177,7 +177,7 @@ def remindme_callback():
 
         now = datetime.datetime.now()
         triggered_messages = []
-        for item in reminders.find():
+        for item in conn.mjsunbot.reminders.find():
             if (now > item["time"]):
                 triggered_messages.append(item)
 
@@ -197,7 +197,7 @@ def remindme_callback():
     except Exception, e:
         (e)
         print(traceback.format_exc())
-        return "remindme failed!"
+        return "remindme failed!ex"
 
 
 @app.route("/")
