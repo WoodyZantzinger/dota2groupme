@@ -29,6 +29,10 @@ class AbstractResponse(object):
     with open('./utils/GroupMeIDs.json') as f:
         GroupMeIDs = json.load(f)
 
+    with open('./utils/PhoneNumbers.json') as f:
+        Numbers = json.load(f)
+
+
     key = "63760574A669369C2117EA4A30A4768B"
 
 
