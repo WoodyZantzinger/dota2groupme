@@ -1,6 +1,6 @@
 import json
 
-emoji_data_file = "groupme_emojis.json"
+emoji_data_file = "utils/groupme_emojis.json"
 
 emojis_temp = None
 
