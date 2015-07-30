@@ -15,6 +15,7 @@ class ResponseJaJa(ResponseCooldown):
         if self.is_sender_off_cooldown():
             out = "ja" * random.randint(4, 8)
             self.note_response(out)
+            print("trying to send : " + out)
             return out
         print("not responding to jaja because sender {} is on cooldown".format(self.sender))
 
