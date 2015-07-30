@@ -6,7 +6,7 @@ import random
 
 class ResponseSiONo(ResponseCooldown):
 
-    RESPONSE_KEY = "#\xbf"
+    RESPONSE_KEY = u"#\xbf"
 
     COOLDOWN = 1 * 60 * 60 / 2
 
