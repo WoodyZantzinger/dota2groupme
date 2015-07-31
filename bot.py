@@ -146,6 +146,18 @@ def cooldown():
                         response += "Cooldown Remaining for <b>" + name + "</b>: " + time_left + "<br>"
     return response
 
+@app.route("/strava_token")
+def strava():
+    GroupmeID = request.args.get('state')
+    code = request.args.get('code')
+    url = 'https://www.strava.com/oauth/token'
+    user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+    header = {'User-Agent': user_agent, 'Content-Type': 'application/json'}
+    values = GroupMeMessage.parse_message(msg)
+    req = urllib2.Request(url, json.dumps(values), header)
+    response = urllib2.urlopen(req)
+    response = ""
+    return response
 
 @app.route("/past_response/<name>")
 def past_response(name):
