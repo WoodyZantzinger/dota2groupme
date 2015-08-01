@@ -1,5 +1,6 @@
 import os
 import urllib2
+import urllib
 import time
 import threading
 import sys
@@ -151,13 +152,28 @@ def strava():
     GroupmeID = request.args.get('state')
     code = request.args.get('code')
     url = 'https://www.strava.com/oauth/token'
-    user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-    header = {'User-Agent': user_agent, 'Content-Type': 'application/json'}
-    values = GroupMeMessage.parse_message(msg)
-    req = urllib2.Request(url, json.dumps(values), header)
-    response = urllib2.urlopen(req)
-    response = ""
-    return response
+    values = {
+          'client_id' : '7477',
+          'client_secret' : auth_strava.get_strava_key(),
+          'code' : code
+    }
+
+    strava_data = urllib.urlencode(values)
+    strava_req = urllib2.Request(url, strava_data)
+    strava_response = urllib2.urlopen(strava_req)
+    StravaData = json.load(strava_response)
+    print StravaData
+    StravaData['GroupmeID'] = GroupmeID
+    conn_start_time = time.time()
+
+    conn = pymongo.Connection(auth_strava.get_db_url())
+    print auth_strava.get_db_url()
+    conn_time = time.time() - conn_start_time
+    print("took {} seconds to connect to mongo".format(conn_time))
+    StravaUsers = conn.dota2bot.strava
+    result = StravaUsers.insert(StravaData)
+    print result
+    return "Success! GroupMe, sUN and Strava are synched"
 
 @app.route("/past_response/<name>")
 def past_response(name):
