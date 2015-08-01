@@ -13,7 +13,10 @@ class ResponseJaJa(ResponseCooldown):
 
     def respond(self):
         if self.is_sender_off_cooldown():
-            out = "ja" * random.randint(4, 8)
+            n = 1
+            while (random.choice([0, 1])):
+                n += 1
+            out = "fuck andy " * n
             self.note_response(out)
             print("trying to send : " + out)
             return out
