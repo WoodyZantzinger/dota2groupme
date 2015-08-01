@@ -42,7 +42,7 @@ class last_move(ResponseCooldown):
                 return out
             else:
                 URL = ("You need to Auth\nhttps://www.strava.com/oauth/authorize?"
-                "client_id= 7477"
+                "client_id=7477"
                 "&response_type=code"
                 "&redirect_uri=https://young-fortress-3393.herokuapp.com/strava_token"
                 "&scope=view_private"
