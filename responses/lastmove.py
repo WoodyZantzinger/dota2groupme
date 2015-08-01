@@ -8,9 +8,9 @@ import dateutil.parser
 
 class last_move(ResponseCooldown):
 
-    message = "#recent"
+    message = "#move"
 
-    RESPONSE_KEY = "#recent"
+    RESPONSE_KEY = "#move"
 
     COOLDOWN = 1 * 60 * 60 * 3 / 2
 
