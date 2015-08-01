@@ -149,6 +149,7 @@ def cooldown():
 
 @app.route("/strava_token")
 def strava():
+    print "1"
     GroupmeID = request.args.get('state')
     code = request.args.get('code')
     url = 'https://www.strava.com/oauth/token'
@@ -157,7 +158,7 @@ def strava():
           'client_secret' : auth_strava.get_strava_key(),
           'code' : code
     }
-
+    print auth_strava.get_strava_key()
     strava_data = urllib.urlencode(values)
     strava_req = urllib2.Request(url, strava_data)
     strava_response = urllib2.urlopen(strava_req)
@@ -165,7 +166,7 @@ def strava():
     print StravaData
     StravaData['GroupmeID'] = GroupmeID
     conn_start_time = time.time()
-
+    print "1"
     conn = pymongo.Connection(auth_strava.get_db_url())
     print auth_strava.get_db_url()
     conn_time = time.time() - conn_start_time
