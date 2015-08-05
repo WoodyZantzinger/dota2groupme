@@ -19,7 +19,7 @@ class ResponseSiONo(ResponseCooldown):
             if "omni" in self.msg.text.lower():
                 out = "no"
             else:
-                out = random.choice([u"sí :tacotaco:", u"no :tacotaco:"])
+                out = random.choice(["si :tacotaco:", "no :tacotaco:"])
             self.note_response(out)
             return out
         print("not responding to siono because sender {} is on cooldown".format(self.sender))
