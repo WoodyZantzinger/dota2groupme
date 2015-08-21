@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*
 from AbstractResponse import *
+import random
 from CooldownResponse import *
 
 class ResponseWhich(ResponseCooldown):
@@ -13,9 +14,9 @@ class ResponseWhich(ResponseCooldown):
 
     def respond(self):
         if self.is_sender_off_cooldown():
-            start = msg.text.find("(")
-            end = msg.text[start:].find(")")
-            whiches = msg.text[start+1:start+end].split(",")
+            start = self.msg.text.find("(")
+            end = self.msg.text[start:].find(")")
+            whiches = self.msg.text[start+1:start+end].split(",")
             out = random.choice(whiches)
             self.note_response(out)
             return out
