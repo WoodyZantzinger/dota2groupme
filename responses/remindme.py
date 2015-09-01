@@ -25,7 +25,9 @@ class ResponseRemindMe(ResponseCooldown):
 
     RESPONSE_KEY = "#remindme"
 
-    COOLDOWN = 1
+    OVERRIDE_PRIORITY = 1
+
+    COOLDOWN = 10 * 60
 
     def __init__(self, msg):
         super(ResponseRemindMe, self).__init__(msg, self.__module__, ResponseRemindMe.COOLDOWN)
@@ -44,7 +46,7 @@ class ResponseRemindMe(ResponseCooldown):
         #for item in reminders.find():
         #    print(item)
 
-        if True or self.is_sender_off_cooldown():
+        if self.is_sender_off_cooldown():
             print("sender is off CD")
             now = time_parser.parse("now")
             if (self.msg.text.split(" ")[0].lower() != "#remindme"):
