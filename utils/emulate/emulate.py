@@ -42,7 +42,7 @@ def generate_response(input, debug = 0):
     if debug:
         output += "I think your question is about: "
         for key in keys:
-            output += key
+            output += key + ", "
         output += "\n"
 
     result_set = []
@@ -80,7 +80,7 @@ def generate_response(input, debug = 0):
                 if debug: output += key + ": " + str(weight * 100) + "%, "
                 word_list.append(key)
         if len(word_list) < 1:
-            #we couldn't find a meaningful pattern!
+            # we couldn't find a meaningful pattern!
             # print result_set
             output += "I don't have confidence in any response"
         else:
