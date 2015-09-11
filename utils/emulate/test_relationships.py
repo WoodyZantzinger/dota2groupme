@@ -1,6 +1,10 @@
 import sys
 import json
 import re
+import pdb
+from senGen import *
+
+from operator import itemgetter
 
 __author__ = 'woodyzantzinger'
 
@@ -40,14 +44,40 @@ else:
 
         for key in keys:
             if key in relationship_data:
+
                 if len(result_set) == 0:
                     result_set = relationship_data[key]
-                    print "Empty Set so lets input for " + key
-                    print result_set
                 else:
-                    result_set = [k for k in relationship_data[key] if k in result_set]
-                    print "Collision leads to testing against " + key
-                    print relationship_data[key]
-                    print result_set
+                    for newKey in relationship_data[key]:
+                        if newKey in result_set:
+                            result_set[newKey] += 1
+                        else:
+                            result_set[newKey] = 1
+                    # result_set = [k for k in relationship_data[key] if k in result_set]
 
-        print result_set
+        #for key in sorted(result_set, key=itemgetter(1), reverse=True):
+
+        word_list = []
+
+        sum = 0.0
+        if len(result_set) > 0:
+            for key in sorted(result_set, key=result_set.get):
+                result_set[key] = result_set[key] ** 3
+                sum += result_set[key]
+
+                #print key, result_set[key]
+
+            for key in sorted(result_set, key=result_set.get):
+                weight = result_set[key] / sum
+                if weight > .03:
+                    print key, weight * 100
+                    word_list.append(key)
+            if len(word_list) < 1:
+                #we couldn't find a meaningful pattern!
+                print result_set
+            else:
+                for key in keys:
+                    word_list.append(key)
+                print make_sentence(word_list)
+        else:
+            print "We couldn't figure out what that sentence meant!"

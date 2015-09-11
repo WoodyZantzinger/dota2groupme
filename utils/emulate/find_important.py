@@ -37,14 +37,14 @@ else:
     relationships = {}
 
     print "TOTAL MESSAGES"
-    print len(message_data[:len(message_data)/10])
+    print len(message_data[:len(message_data)/1])
 
     pbar = ProgressBar(
-        maxval=len(message_data[:len(message_data)/10]),
+        maxval=len(message_data[:len(message_data)/1]),
     )
 
 
-    for index, message in pbar(enumerate(message_data[:len(message_data)/10])):
+    for index, message in pbar(enumerate(message_data[:len(message_data)/1])):
         text = message["text"]
         time = message["created_at"]
         if index == (len(message_data) - 1):
@@ -60,12 +60,14 @@ else:
         for result_key in message_weight:
             for next_key in previous_message_weight:
                 #print next_key + " leads to " + result_key
-                #pdb.set_trace()
+
                 if next_key not in relationships:
                     relationships[next_key] = {}
                 if result_key not in relationships[next_key]:
                     relationships[next_key][result_key] = 0
-                relationships[next_key][result_key] += previous_message_weight[next_key]
+                #pdb.set_trace()
+                #relationships[next_key][result_key] += message_weight[result_key]
+                relationships[next_key][result_key] += 1
 
     with open("relationships.json", 'w') as outfile:
         json.dump(relationships, outfile)
