@@ -24,8 +24,8 @@ class ResponseGif(ResponseCooldown):
             search_term = self.msg.text.partition(' ')[2].lower()
             if "spider" in search_term:
                 return "fuck spiders, fuck you"
-            if "ariana" in search_term and "grande" in search_term:
-		return "her?"
+#            if "ariana" in search_term and "grande" in search_term:
+#		return "her?"
             hour = datetime.datetime.utcnow().hour
             is_weekday = datetime.datetime.utcnow().weekday() < 5
             EST_9AM = 8 + 5 # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
