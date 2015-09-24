@@ -131,7 +131,7 @@ def genSentence(markovLength):
 def make_sentence(white_list):
 
     filename = "utils/emulate/rawtext_history.txt"
-    markovLength = 2
+    markovLength = 3
 
     buildMapping(wordlist(filename, white_list), markovLength)
     return genSentence(markovLength)
