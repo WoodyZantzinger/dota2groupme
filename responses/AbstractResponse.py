@@ -44,8 +44,15 @@ class AbstractResponse(object):
         print("took {} seconds to connect to mongo".format(conn_time))
     except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
         conn_start_time = time.time()
-        mongo_connection = pymongo.Connection(os.getenv('MONGOLAB_URL'))
-        conn_time = time.time() - conn_start_time
+        mongo_connection = None
+        try:
+            print("trying...")
+            mongo_connection = pymongo.Connection(os.getenv('MONGOLAB_URL'))
+        except Exception, e:
+            print("connection to remote db using os.getenv failed!")
+            print(e)
+        if mongo_connection is not None:
+            conn_time = time.time() - conn_start_time
         print("took {} seconds to connect to mongo".format(conn_time))
     except:
         print("failed to connect to mongodb!")
