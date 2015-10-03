@@ -53,7 +53,7 @@ class AbstractResponse(object):
             print(e)
         if mongo_connection is not None:
             conn_time = time.time() - conn_start_time
-        print("took {} seconds to connect to mongo".format(conn_time))
+            print("took {} seconds to connect to mongo".format(conn_time))
     except:
         print("failed to connect to mongodb!")
 
