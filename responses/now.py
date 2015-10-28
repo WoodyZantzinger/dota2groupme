@@ -48,7 +48,8 @@ class ResponseNow(AbstractResponse):
 
             response = requests.get(xbox_url.format(id=xboxid), headers={'X-AUTH': key})
             if response.json()["state"] == "Online":
-                game = response.json()["lastSeen"]["titleName"]
+                print "is Online!"
+                game = response.json()["devices"][0]["titles"][0]["name"]
                 out += ResponseNow.person_status_template.format(name=person, status=game, system="Xbox")
 
         if not out:
