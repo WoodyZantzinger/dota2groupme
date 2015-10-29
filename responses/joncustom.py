@@ -8,13 +8,13 @@ class ResponseJonCustom(AbstractResponse):
 
     ACTIVE = False
 
-    def __init__(self, msg, sender):
-        super(ResponseJonCustom, self).__init__(msg, sender)
+    def __init__(self, msg):
+        super(ResponseJonCustom, self).__init__(msg)
 
     def respond(self):
         return "8======D"
 
     @classmethod
-    def is_relevant_msg(cls, msg, sender):
-        return sender in ["Jonny G"] and ResponseJonCustom.ACTIVE
+    def is_relevant_msg(cls, msg):
+        return (msg.sender_id == AbstractResponse.GroupMeIDs['Jonny G']) and ResponseJonCustom.ACTIVE
 

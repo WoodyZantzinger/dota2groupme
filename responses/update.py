@@ -13,10 +13,21 @@ class Update(AbstractResponse):
 
     HELP_RESPONSE = "Update ones's last games"
 
-    def __init__(self, msg, sender):
-        Update.message = msg
-        super(Update, self).__init__(msg, sender)
+    ENABLED = True
 
+    def __init__(self, msg):
+        super(Update, self).__init__(msg)
+
+    def respond(self):
+        print "Starting"
+
+        # Use the Thread if we are going to be updating like 1,000 records, shouldn't be needed.
+        #
+        #thread = Thread(target = Update.update_dota, args = (self, ))
+        #thread.start()
+        #
+        record = self.update_dota()
+        return record
 
     def update_dota(self):
          # Get a list of recent matches for the player
@@ -33,15 +44,15 @@ class Update(AbstractResponse):
 
             #Go through every match
             for match in matches:
-                print "Checking: " + str(match["match_id"])
+                print "\tChecking: " + str(match["match_id"])
 
                 if match["start_time"] < last_update_time["last_update"]:
-                    print "We've seen these matches"
+                    print "\tWe've seen these matches"
                     break
 
                 if (not AbstractResponse.has_dotaMatch(match["match_id"])):
                     single_match = api.get_match_details(match["match_id"])["result"]
-                    print "\t Adding: " + str(single_match["match_id"])
+                    print "\t\tAdding: " + str(single_match["match_id"])
                     AbstractResponse.add_dotaMatch(single_match)
                     total_added += 1
 
@@ -52,6 +63,10 @@ class Update(AbstractResponse):
                             #Yes! Check if they broke a record
                             old_record = AbstractResponse.get_record(player["hero_id"])
                             print player["hero_id"]
+                            hero_dict = data.get_hero_name(player["hero_id"])
+                            if not hero_dict:
+                                print("For hero id = {}, not in dota2py".format(player["hero_id"]))
+                                continue
                             hero_name = data.get_hero_name(player["hero_id"])["localized_name"]
                             player_name = AbstractResponse.dotaID_to_name(int(player["account_id"]))
 
@@ -121,15 +136,3 @@ class Update(AbstractResponse):
             time_dict["last_update"] = current_time
         AbstractResponse.set_last_update_time(time_dict)
         return new_records
-
-    def respond(self):
-
-        print "Starting"
-
-        # Use the Thread if we are going to be updating like 1,000 records, shouldn't be needed.
-        #
-        #thread = Thread(target = Update.update_dota, args = (self, ))
-        #thread.start()
-        #
-        record = Update.update_dota(self)
-        return record

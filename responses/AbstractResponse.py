@@ -2,6 +2,8 @@ import json
 import os
 import pymongo
 from dota2py import data
+import time
+import sys
 
 class AbstractResponse(object):
 
@@ -13,6 +15,8 @@ class AbstractResponse(object):
     # to allow some things to make others not come through the pipe
     OVERRIDE_PRIORITY = 0
 
+    ENABLED = True
+
     # default help response
     HELP_RESPONSE = "Not implemented for " + RESPONSE_KEY
 
@@ -22,17 +26,44 @@ class AbstractResponse(object):
     with open('./responses/GroupMetoDOTA.json') as f:
         GroupMetoDOTA = json.load(f)
 
+    with open('./responses/GroupMetoXbox.json') as f:
+        GroupMetoXbox = json.load(f)
+
+    with open('./utils/GroupMeIDs.json') as f:
+        GroupMeIDs = json.load(f)
+
     key = "63760574A669369C2117EA4A30A4768B"
+
+
+    mongo_connection = None
 
     try:
         with open('local_variables.json') as f:
             local_var = json.load(f)
         print local_var["MONGOLAB_URL"]
-        mongo_connection = pymongo.Connection(local_var["MONGOLAB_URL"])
+        conn_start_time = time.time()
+        mongo_connection = pymongo.Connection(local_var["MONGOLAB_URL"], connectTimeoutMS=1000)
+        conn_time = time.time() - conn_start_time
+        print("took {} seconds to connect to mongo".format(conn_time))
     except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
-        mongo_connection = pymongo.Connection(os.getenv('MONGOLAB_URL'))
+        conn_start_time = time.time()
+        mongo_connection = None
+        try:
+            print("trying...")
+            mongo_connection = pymongo.Connection(os.getenv('MONGOLAB_URL'))
+        except Exception, e:
+            print("connection to remote db using os.getenv failed!")
+            print(e)
+        if mongo_connection is not None:
+            conn_time = time.time() - conn_start_time
+            print("took {} seconds to connect to mongo".format(conn_time))
+    except:
+        print("failed to connect to mongodb!")
 
-    mongo_db = mongo_connection.dota2bot
+    if mongo_connection:
+        mongo_db = mongo_connection.dota2bot
+    else:
+        mongo_db = None
 
     @classmethod
     def has_dotaMatch(cls, ID):
@@ -138,17 +169,21 @@ class AbstractResponse(object):
         del AbstractResponse.GroupMetoDOTA[old]
         AbstractResponse.cache_GroupMetoDOTA()
 
-    def __init__(self, msg, sender):
+    def __init__(self, msg, mod=None):
         super(AbstractResponse, self).__init__()
         self.msg = msg
-        self.sender = sender
+
+    def get_last_used_time(self, sender, mod=None):
+        if mod is not None:
+            return getattr(sys.modules[mod], 'last_used')[sender]
+
+    def set_last_used_time(self, sender, mod=None):
+        if mod is not None:
+            getattr(sys.modules[mod], 'last_used')[sender] = time.time()
 
     def respond(self):
         return None
 
     @classmethod
-    def is_relevant_msg(cls, msg, sender):
-        if cls.RESPONSE_KEY in msg.lower():
-            return True
-        else:
-            return False
+    def is_relevant_msg(cls, msg):
+        return cls.RESPONSE_KEY in msg.text.lower()

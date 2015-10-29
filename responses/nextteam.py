@@ -10,8 +10,8 @@ class ResponseNextTeam(AbstractResponse):
 
     team_template = "The best team ever: {}, {}, {}, {}, {}"
 
-    def __init__(self, msg, sender):
-        super(ResponseNextTeam, self).__init__(msg, sender)
+    def __init__(self, msg):
+        super(ResponseNextTeam, self).__init__(msg)
 
     def respond(self):
         heroes = [ResponseNext.random_hero() for _ in range(5)]

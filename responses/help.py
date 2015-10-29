@@ -8,8 +8,8 @@ class ResponseHelp(AbstractResponse):
 
     HELP_RESPONSE = "Sends help information"
 
-    def __init__(self, msg, sender):
-        super(ResponseHelp, self).__init__(msg, sender)
+    def __init__(self, msg):
+        super(ResponseHelp, self).__init__(msg)
 
     def respond(self):
         classes = AbstractResponse.__subclasses__()
