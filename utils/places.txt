@@ -1,0 +1,13 @@
+Kitchen
+Ballroom
+Conservatory
+Dining Room
+Cellar
+Billiard Room
+Library
+Study
+Hall
+Lounge
+Bathroom
+Sex Dungeon
+Attic
