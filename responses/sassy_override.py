@@ -13,17 +13,15 @@ class ResponseSassyOverride(AbstractResponse):
                   "butt-pirate", "cockface", "dickbag", "fuckstick", "jackass", "muffdiver", "prick", "queef", "rimjob",
                   "shitstain", "thundercunt", "unclefucker"]
 
-    def __init__(self, msg):
-        super(ResponseSassyOverride, self).__init__(msg)
+    def __init__(self, msg, sender):
+        super(ResponseSassyOverride, self).__init__(msg, sender)
 
     def respond(self):
         return "No, you {}".format(random.choice(ResponseSassyOverride.mean_names))
 
     @classmethod
-    def is_relevant_msg(cls, msg):
-        relevant_to_me = "?" in msg.text or "#" in msg.text
-        could_be_url = "http" in msg.text or "www" in msg.text or ".com" in msg.text
-        not_self = msg.sender_id != AbstractResponse.GroupMeIDs["sUN"]
-        booleans = relevant_to_me and not could_be_url and not_self
-        return random.random() < ResponseSassyOverride.INSULT_THRESHOLD and booleans
+    def is_relevant_msg(cls, msg, sender):
+        relevant_to_me = "?" in msg or "#" in msg
+        could_be_url = "http" in msg or "www" in msg or ".com" in msg
+        return random.random() < ResponseSassyOverride.INSULT_THRESHOLD and relevant_to_me and could_be_url
 

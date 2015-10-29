@@ -10,15 +10,15 @@ class ResponseNext(AbstractResponse):
 
     HELP_RESPONSE = "Your next hero to play"
 
-    def __init__(self, msg):
-        super(ResponseNext, self).__init__(msg)
+    def __init__(self, msg, sender):
+        super(ResponseNext, self).__init__(msg, sender)
 
     def respond(self):
         return "You will play: " + ResponseNext.random_hero()
 
     @classmethod
-    def is_relevant_msg(cls, msg):
-        return ResponseNext.RESPONSE_KEY in msg.text.lower() and "#nextteam" not in msg.text and "#nextitem" not in msg.text
+    def is_relevant_msg(cls, msg, sender):
+        return ResponseNext.RESPONSE_KEY in msg.lower() and "#nextteam" not in msg and "#nextitem" not in msg
 
     @classmethod
     def random_hero(cls):
