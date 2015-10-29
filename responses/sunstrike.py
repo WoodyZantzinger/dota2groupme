@@ -29,8 +29,8 @@ class ResponseSunstrike(AbstractResponse):
 
                         ]
 
-    def __init__(self, msg):
-        super(ResponseSunstrike, self).__init__(msg)
+    def __init__(self, msg, sender):
+        super(ResponseSunstrike, self).__init__(msg, sender)
 
     def respond(self):
         return random.choice(ResponseSunstrike.burn_responses)

@@ -6,13 +6,13 @@ class ResponseSausage(AbstractResponse):
 
     OVERRIDE_PRIORITY = 4
 
-    def __init__(self, msg):
-        super(ResponseSausage, self).__init__(msg)
+    def __init__(self, msg, sender):
+        super(ResponseSausage, self).__init__(msg, sender)
 
     def respond(self):
-        return "But, {}, you don't even have any money".format(self.msg.name)
+        return "But, {}, you don't even have any money".format(self.sender)
 
     @classmethod
-    def is_relevant_msg(cls, msg):
-        return AbstractResponse.GroupMeIDs["Jonny G"] == msg.sender_id and 'sausage' in msg.text
+    def is_relevant_msg(cls, msg, sender):
+        return sender in ["Armadilldo", "Jonny G"] and 'sausage' in msg
 

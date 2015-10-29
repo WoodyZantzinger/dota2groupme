@@ -8,8 +8,8 @@ class ResponseStatus(AbstractResponse):
 
     HELP_RESPONSE = "See if sUN bot is up"
 
-    def __init__(self, msg):
-        super(ResponseStatus, self).__init__(msg)
+    def __init__(self, msg, sender):
+        super(ResponseStatus, self).__init__(msg, sender)
 
     def respond(self):
         return "Currently listening ;)"
