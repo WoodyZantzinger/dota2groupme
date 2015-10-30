@@ -231,7 +231,7 @@ def remindme_callback():
         print(traceback.format_exc())
         return "remindme failed!ex"
 
-@app.route('/gitevent/', methods=['POST'])
+@app.route('/gitevent', methods=['POST'])
 def git_event():
     new_event = request.get_json(force=True)
     updates_buffer = "I've been updated!\n"
