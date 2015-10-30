@@ -236,7 +236,7 @@ def git_event():
     new_event = request.get_json(force=True)
     updates_buffer = "I've been updated!\n"
     for commit in new_event["commits"]:
-        updates_buffer += "'" + commit["message"] + "' by " + commit["author"]["name"] + "\n"
+        updates_buffer += "'" + commit["message"] + "' - " + commit["author"]["name"] + "\n"
     send_message(updates_buffer)
     return updates_buffer
 
