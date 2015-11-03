@@ -36,7 +36,7 @@ class ResponseCooldown(AbstractResponse):
         return can_send
 
     def note_response(self, response):
-        print(u"noting a response for name of {} and id = {}".format(self.msg.name, self.msg.sender_id))
+        print(u"noting a response for name of {} and id = {}".format(unicode(self.msg.name, "utf-8"), self.msg.sender_id))
         self.get_usage()[self.msg.sender_id][-1].response = response
         #self.print_responses()
 
