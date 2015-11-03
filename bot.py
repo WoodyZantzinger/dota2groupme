@@ -252,7 +252,7 @@ if __name__ == "__main__":
     print(AbstractResponse.AbstractResponse("", "").GroupMeIDs)
     port = int(os.environ.get("PORT", 5000))
     if not DEBUG:
-        app.run(host='0.0.0.0', port=port)
+        app.run(host='0.0.0.0', port=port, debug=True)
         repeat_task('#update', 60 * 30)  # repeat every half an hour
     else:
         app.run(host='0.0.0.0', port=port, debug=True)
