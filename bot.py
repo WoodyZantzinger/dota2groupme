@@ -231,6 +231,14 @@ def remindme_callback():
         print(traceback.format_exc())
         return "remindme failed!ex"
 
+@app.route('/gitevent', methods=['POST'])
+def git_event():
+    new_event = request.get_json(force=True)
+    updates_buffer = "I've been updated!\n"
+    for commit in new_event["commits"]:
+        updates_buffer += "'" + commit["message"] + "' - " + commit["author"]["name"] + "\n"
+    send_message(updates_buffer)
+    return updates_buffer
 
 @app.route("/")
 def hello():
@@ -244,7 +252,7 @@ if __name__ == "__main__":
     print(AbstractResponse.AbstractResponse("", "").GroupMeIDs)
     port = int(os.environ.get("PORT", 5000))
     if not DEBUG:
-        app.run(host='0.0.0.0', port=port)
+        app.run(host='0.0.0.0', port=port, debug=True)
         repeat_task('#update', 60 * 30)  # repeat every half an hour
     else:
         app.run(host='0.0.0.0', port=port, debug=True)
