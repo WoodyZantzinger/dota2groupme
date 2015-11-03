@@ -5,7 +5,7 @@ import random
 
 reasons = []
 with open(os.path.join("utils", "reasons.txt")) as f:
-    things = [line.rstrip('\n') for line in f]
+    reasons = [line.rstrip('\n') for line in f]
 
 
 class ResponseWhy(ResponseCooldown):
