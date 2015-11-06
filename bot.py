@@ -97,16 +97,18 @@ def message():
     #sender = new_message["name"]
     #msg = new_message["text"]
     active_response_categories = get_response_categories(msg)
-    output_messages = make_responses(active_response_categories, msg)
+    if active_response_categories != None:
+        output_messages = make_responses(active_response_categories, msg)
+        # sleep for a second before sending message
+        # makes sure that the message from the bot arrives after the message from the user
+        time.sleep(1)
+        for output in output_messages:
+            if output:
+                send_message(output)
 
-    # sleep for a second before sending message
-    # makes sure that the message from the bot arrives after the message from the user
-    time.sleep(1)
-    for output in output_messages:
-        if output:
-            send_message(output)
-
-    return 'OK'
+        return 'OK - Response Sent'
+    else:
+        return 'No Response'
 
 @app.route('/debugmessage/', methods=['POST'])
 def debug_message():

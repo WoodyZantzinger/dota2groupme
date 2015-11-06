@@ -20,7 +20,7 @@ class ResponseJaJa(ResponseCooldown):
             self.note_response(out)
             print("trying to send : " + out)
             return out
-        print("not responding to jaja because sender {} is on cooldown".format(self.sender))
+        print("not responding to jaja because sender {} is on cooldown".format(self.msg.name))
 
         return "Get a job"
 

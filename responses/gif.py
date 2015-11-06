@@ -48,4 +48,4 @@ class ResponseGif(ResponseCooldown):
             self.note_response(out)
             return out
         else:
-            print("not responding to gif because sender {} is on cooldown".format(self.sender))
+            print("not responding to gif because sender {} is on cooldown".format(self.msg.name))

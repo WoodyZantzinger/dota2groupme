@@ -22,5 +22,5 @@ class ResponseSiONo(ResponseCooldown):
                 out = random.choice(["si :tacotaco:", "no :tacotaco:"])
             self.note_response(out)
             return out
-        print("not responding to siono because sender {} is on cooldown".format(self.sender))
+        print("not responding to siono because sender {} is on cooldown".format(self.msg.name))
 

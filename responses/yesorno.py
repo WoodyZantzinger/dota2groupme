@@ -22,5 +22,5 @@ class ResponseYesOrNo(ResponseCooldown):
                 out = random.choice(["yes :dino:", "no :dino:"])
             self.note_response(out)
             return out
-        print("not responding to yesorno because sender {} is on cooldown".format(self.sender))
+        print("not responding to yesorno because sender {} is on cooldown".format(self.msg.name))
 
