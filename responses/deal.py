@@ -19,10 +19,7 @@ class ResponseDeal(AbstractResponse):
 "http://i.giphy.com/B7bLPuQgCJRKg.gif",
 "http://i.giphy.com/f6pOe5e8ShRhS.gif",
 "http://i.giphy.com/Nx2Lx1RmLadtC.gif",
-"http://i.imgur.com/oEe6BBr.jpg"
-
-
-                        ]
+"http://i.imgur.com/oEe6BBr.jpg"]
 
     def __init__(self, msg):
         super(ResponseDeal, self).__init__(msg)

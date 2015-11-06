@@ -5,6 +5,7 @@ import steamapi
 import os
 import json
 
+
 class ResponseNow(AbstractResponse):
 
     api = steamapi.core.APIConnection(AbstractResponse.key)
@@ -48,7 +49,7 @@ class ResponseNow(AbstractResponse):
 
             response = requests.get(xbox_url.format(id=xboxid), headers={'X-AUTH': key})
             if response.json()["state"] == "Online":
-                print "is Online!"
+                print("is Online!")
                 game = response.json()["devices"][0]["titles"][0]["name"]
                 out += ResponseNow.person_status_template.format(name=person, status=game, system="Xbox")
 

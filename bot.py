@@ -21,6 +21,7 @@ DEBUG = False
 
 app = Flask(__name__)
 
+
 #have the bot do a specific msg in the background constantly (Time in seconds)
 def repeat_task(msg, time):
     try:
@@ -36,6 +37,7 @@ def repeat_task(msg, time):
         threading.Timer(time, repeat_task, [msg, time]).start()
     except:
         print("repeat task failed: {}".format(msg))
+
 
 def send_message(msg, send=True):
     print "Sending: '" + msg + "'"
@@ -97,18 +99,18 @@ def message():
     #sender = new_message["name"]
     #msg = new_message["text"]
     active_response_categories = get_response_categories(msg)
-    if active_response_categories != None:
-        output_messages = make_responses(active_response_categories, msg)
+    if active_response_categories:
+        #output_messages = make_responses(active_response_categories, msg)
         # sleep for a second before sending message
         # makes sure that the message from the bot arrives after the message from the user
         time.sleep(1)
         for output in output_messages:
             if output:
                 send_message(output)
-
         return 'OK - Response Sent'
     else:
         return 'No Response'
+
 
 @app.route('/debugmessage/', methods=['POST'])
 def debug_message():
@@ -149,18 +151,17 @@ def cooldown():
                         response += "Cooldown Remaining for <b>" + name + "</b>: " + time_left + "<br>"
     return response
 
+
 @app.route("/strava_token")
 def strava():
-    print "1"
     GroupmeID = request.args.get('state')
     code = request.args.get('code')
     url = 'https://www.strava.com/oauth/token'
     values = {
-          'client_id' : '7477',
-          'client_secret' : auth_strava.get_strava_key(),
-          'code' : code
+          'client_id': '7477',
+          'client_secret': auth_strava.get_strava_key(),
+          'code': code
     }
-    print auth_strava.get_strava_key()
     strava_data = urllib.urlencode(values)
     strava_req = urllib2.Request(url, strava_data)
     strava_response = urllib2.urlopen(strava_req)
@@ -177,6 +178,7 @@ def strava():
     result = StravaUsers.insert(StravaData)
     print result
     return "Success! GroupMe, sUN and Strava are synched"
+
 
 @app.route("/past_response/<name>")
 def past_response(name):
@@ -233,6 +235,7 @@ def remindme_callback():
         print(traceback.format_exc())
         return "remindme failed!ex"
 
+
 @app.route('/gitevent', methods=['POST'])
 def git_event():
     new_event = request.get_json(force=True)
@@ -241,6 +244,7 @@ def git_event():
         updates_buffer += "'" + commit["message"] + "' - " + commit["author"]["name"] + "\n"
     send_message(updates_buffer)
     return updates_buffer
+
 
 @app.route("/")
 def hello():

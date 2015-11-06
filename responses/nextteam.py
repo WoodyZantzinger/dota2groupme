@@ -2,6 +2,7 @@
 from AbstractResponse import AbstractResponse
 from nexthero import ResponseNext
 
+
 class ResponseNextTeam(AbstractResponse):
 
     RESPONSE_KEY = "#nextteam"

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*
 from AbstractResponse import AbstractResponse
-import steamapi
 
 
 class ResponseOppositeDay(AbstractResponse):

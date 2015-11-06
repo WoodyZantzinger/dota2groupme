@@ -5,6 +5,7 @@ from dota2py import api
 from dota2py import data
 import time
 
+
 class Update(AbstractResponse):
 
     RESPONSE_KEY = "#update"

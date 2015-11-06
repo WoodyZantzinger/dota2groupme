@@ -4,6 +4,7 @@ from CooldownResponse import *
 import requests
 import datetime
 
+
 class ResponseGif(ResponseCooldown):
 
     message = "#gif"
@@ -28,7 +29,7 @@ class ResponseGif(ResponseCooldown):
 #		return "her?"
             hour = datetime.datetime.utcnow().hour
             is_weekday = datetime.datetime.utcnow().weekday() < 5
-            EST_9AM = 8 + 5 # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
+            EST_9AM = 8 + 5  # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
             EST_5PM = 4 + 12 + 5
             is_during_workday = EST_9AM < hour < EST_5PM
             print("hour is: {}".format(hour))

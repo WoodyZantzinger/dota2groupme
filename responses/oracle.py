@@ -1,6 +1,7 @@
 from CooldownResponse import *
 from utils.emulate.emulate import *
 
+
 class oracle(ResponseCooldown):
 
     RESPONSE_KEY = "#oracle"

@@ -2,9 +2,9 @@
 from AbstractResponse import *
 from CooldownResponse import *
 import requests
-import datetime
 import auth_strava
 import dateutil.parser
+
 
 class last_move(AbstractResponse):
 
@@ -28,13 +28,13 @@ class last_move(AbstractResponse):
             request_url = last_move.url.format(token=Token)
             response = requests.get(request_url)
             try:
-                print request_url
+                print(request_url)
                 miles = response.json()[0]["distance"] / 1609.34
                 time = response.json()[0]["elapsed_time"] / 60 / miles
                 location = response.json()[0]["location_city"]
-                type = response.json()[0]["type"]
+                move_type = response.json()[0]["type"]
                 date = dateutil.parser.parse(response.json()[0]["start_date_local"]).date()
-                out = str(date) + ": You went " + "{0:.2f}".format(miles) + " miles at a " + "{0:.2f}".format(time) + "minute/mile pace in " + location + " (" + type + ")"
+                out = str(date) + ": You went " + "{0:.2f}".format(miles) + " miles at a " + "{0:.2f}".format(time) + "minute/mile pace in " + location + " (" + move_type + ")"
             except Exception as e:
                 out = "Something went wrong: " + str(e)
             return out

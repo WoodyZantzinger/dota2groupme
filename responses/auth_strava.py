@@ -3,6 +3,7 @@ from AbstractResponse import AbstractResponse
 import json
 import os
 
+
 def get_db_url():
     try:
         with open('local_variables.json') as f:
@@ -13,6 +14,7 @@ def get_db_url():
     except:
         return None
 
+
 def get_strava_key():
     try:
         with open('local_variables.json') as f:
@@ -22,6 +24,7 @@ def get_strava_key():
         return os.getenv('STRAVA_KEY')
     except:
         return None
+
 
 class ResponseNow(AbstractResponse):
 

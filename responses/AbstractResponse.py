@@ -37,7 +37,6 @@ class AbstractResponse(object):
 
     key = "63760574A669369C2117EA4A30A4768B"
 
-
     mongo_connection = None
 
     try:
@@ -48,7 +47,7 @@ class AbstractResponse(object):
         mongo_connection = pymongo.Connection(local_var["MONGOLAB_URL"], connectTimeoutMS=1000)
         conn_time = time.time() - conn_start_time
         print("took {} seconds to connect to mongo".format(conn_time))
-    except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
+    except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
         conn_start_time = time.time()
         mongo_connection = None
         try:
@@ -88,18 +87,18 @@ class AbstractResponse(object):
 
     @classmethod
     def get_last_update_time(cls):
-        data = AbstractResponse.mongo_db.sUN_data
-        temp = data.find_one()
+        fdata = AbstractResponse.mongo_db.sUN_data
+        temp = fdata.find_one()
         return temp
 
     @classmethod
     def set_last_update_time(cls, time):
-        data = AbstractResponse.mongo_db.sUN_data
+        fdata = AbstractResponse.mongo_db.sUN_data
         if time.has_key('_id'):
-            data.update({'_id': time["_id"]}, {"$set": time}, upsert=True)
+            fdata.update({'_id': time["_id"]}, {"$set": time}, upsert=True)
             print "Inserted (Update): " + str(time['last_update'])
         else:
-            data.insert(time)
+            fdata.insert(time)
             print "Inserted (New): " + str(time['last_update'])
         return True
 

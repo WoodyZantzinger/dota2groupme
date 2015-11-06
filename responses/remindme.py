@@ -11,6 +11,7 @@ time_parser = parsedatetime.Calendar(c)
 
 quot = "\""
 
+
 def get_db_url():
     try:
         with open('local_variables.json') as f:
@@ -20,6 +21,7 @@ def get_db_url():
         return os.getenv('REMINDMEURL')
     except:
         return None
+
 
 class ResponseRemindMe(ResponseCooldown):
 

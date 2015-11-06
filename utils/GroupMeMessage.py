@@ -19,13 +19,7 @@ for emoji in emojis_temp:
 emojis = {}
 for emoji in emojis_temp:
     emojis[emoji[2][1:-1]] = [emoji[0], emoji[1]]
-    
 
-#emojis = {
-#    "dino": [1, 62], 
-#    "sun_with_sunglasses": [2, 18],
-#
-#}
 
 def return_emoticons(text):
     return_val = []
@@ -36,9 +30,10 @@ def return_emoticons(text):
 
     return return_val
 
+
 def parse_message(text):
     values = {
-          'bot_id' : 'f906f09e88ff3764c3c8b8c043',
+          'bot_id': 'f906f09e88ff3764c3c8b8c043',
     }
     emoticons = return_emoticons(text)
     if len(emoticons) > 0:
@@ -48,9 +43,9 @@ def parse_message(text):
                 char_map.append(emojis[emoticon])
                 text = text.replace(":" + emoticon + ":",u'\ufffd',1)
         values["attachments"] = [{
-            'type' : 'emoji',
-            'charmap' : char_map,
-            'placeholder' : u'\ufffd'
+            'type': 'emoji',
+            'charmap': char_map,
+            'placeholder': u'\ufffd'
                                  }]
 
     values["text"] = text

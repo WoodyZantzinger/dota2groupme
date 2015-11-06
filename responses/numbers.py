@@ -11,7 +11,7 @@ class ResponseNumbers(AbstractResponse):
     ENABLED = False
 
     def __init__(self, msg):
-       super(ResponseNumbers, self).__init__(msg)
+        super(ResponseNumbers, self).__init__(msg)
 
     def respond(self):
         return "whatcha got there, numbers?"

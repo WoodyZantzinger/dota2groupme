@@ -2,6 +2,7 @@
 from AbstractResponse import *
 from random import randint
 
+
 class kobe(AbstractResponse):
 
     message = "#kobe"

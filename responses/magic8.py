@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import AbstractResponse
 from CooldownResponse import *
 import random
 
