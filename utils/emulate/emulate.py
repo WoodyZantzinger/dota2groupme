@@ -3,25 +3,13 @@ import json
 import re
 import pdb
 from senGen import *
+import emulate_util
 
 from operator import itemgetter
 
 __author__ = 'woodyzantzinger'
 
 blacklist = []
-word_list = []
-
-def key_words(msg):
-
-    results = {}
-    total_weight = 0
-
-    for word in msg.lower().split():
-        if word not in blacklist:
-            results[word] = word_list.count(word)
-            total_weight = total_weight + word_list.count(word)
-
-    return results
 
 def generate_response(input, debug = 0):
 
@@ -30,19 +18,12 @@ def generate_response(input, debug = 0):
     with open("utils/emulate/relationships.json") as data_file:
         relationship_data = json.load(data_file)
 
-    with open("utils/emulate/stop_words.txt") as inputfile:
-        blacklist = inputfile.read().splitlines()
-
-    file = open("utils/emulate/rawtext_history.txt","r")
-    inputString = file.read()
-    word_list = re.split('\s+', inputString.lower())
-
-    keys = key_words(input)
+    keys = emulate_util.key_words(input)
 
     if debug:
         output += "I think your question is about: "
         for key in keys:
-            output += key + ", "
+            output += key + " (importance: " + str(keys[key]) + ") , "
         output += "\n"
 
     result_set = []
