@@ -44,10 +44,18 @@ else:
         for message in messages:
             after_id = message["id"]
             messages_counted = messages_counted + 1
-            if (int(user_id) == 0 or message["sender_id"] == user_id): #and message["sender_id"] != "219313":
+            if (int(user_id) == 0 or message["sender_id"] == user_id) and message["sender_id"] != "219313":
                 try:
-                    output_messages.append(message)
-                    #print message["text"]
+                    #output_messages.append(message)
+                    if (message["text"].endswith(".") or
+                        message["text"].endswith("!") or
+                        message["text"].endswith("?") or
+                        message["text"].endswith(". ") or
+                        message["text"].endswith("! ") or
+                        message["text"].endswith("? ")):
+                        print message["text"]
+                    else:
+                        print message["text"] + "."
                 except:
                     pass
 

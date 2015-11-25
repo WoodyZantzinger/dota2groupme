@@ -82,8 +82,9 @@ def buildMapping(wordlist, markovLength):
         else:
             history = wordlist[i - markovLength + 1 : i + 1]
         follow = wordlist[i + 1]
-        # if the last elt was a period, add the next word to the start list
+        # if the last elt was a newline, add the next word to the start list
         if history[-1] == "." and follow not in ".,!?;":
+        #if history[-1] == "\n"
             starts.append(follow)
         addItemToTempMapping(history, follow)
     # Normalize the values in tempMapping, put them into mapping
@@ -117,7 +118,7 @@ def genSentence(markovLength):
     sent = curr.capitalize()
     prevList = [curr]
     # Keep adding words until we hit a period
-    while (curr not in "."):
+    while (curr not in ".?!"):
         curr = next(prevList)
         prevList.append(curr)
         # if the prevList has gotten too long, trim it
