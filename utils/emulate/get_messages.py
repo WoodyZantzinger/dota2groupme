@@ -21,6 +21,7 @@ else:
         total_messages = int(response.json()["response"]["count"])
 
     after_id = -1
+    print total_messages
     while(messages_counted < total_messages):
 
         messages = ""
@@ -36,13 +37,14 @@ else:
                 # We must be done!
                 with open(sys.argv[2], 'w') as outfile:
                     json.dump(output_messages, outfile)
-                    print "Number of messages: " + len(output_messages)
+                    print "Number of messages: " + str(len(output_messages))
+                    break;
 
 
         for message in messages:
             after_id = message["id"]
             messages_counted = messages_counted + 1
-            if int(user_id) == 0 or message["sender_id"] == user_id:
+            if (int(user_id) == 0 or message["sender_id"] == user_id): #and message["sender_id"] != "219313":
                 try:
                     output_messages.append(message)
                     #print message["text"]

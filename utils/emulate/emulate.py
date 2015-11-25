@@ -48,7 +48,8 @@ def generate_response(input, debug = 0):
     sum = 0.0
     if len(result_set) > 0:
         for key in sorted(result_set, key=result_set.get):
-            result_set[key] = result_set[key] ** 3
+            #result_set[key] = result_set[key] ** 3
+            # Above line no longer needed once word value's got fixed
             sum += result_set[key]
 
             #print key, result_set[key]
@@ -65,7 +66,6 @@ def generate_response(input, debug = 0):
             # print result_set
             output += "I don't have confidence in any response"
         else:
-
             for key in keys:
                 word_list.append(key)
             output += "\n" + make_sentence(word_list)
