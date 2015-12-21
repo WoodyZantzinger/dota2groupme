@@ -47,8 +47,8 @@ def wordlist(filename, white_list):
     with open(filename, 'r') as f:
         for line in f:
             for white_word in white_list:
-                if (" " + white_word.lower() + " ") in line.lower():
-                    wordlist += [fixCaps(w) for w in re.findall(r"[\w']+|[.,!?;]", line)]
+                if white_word.lower() in line.lower().split():
+                    wordlist += [fixCaps(w) for w in re.findall(r"[\w']+|[*.,!?;]", line)]
                     break
     f.close()
     return wordlist
