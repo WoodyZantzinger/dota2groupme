@@ -1,6 +1,4 @@
 import re
-import numpy
-import codecs
 from collections import Counter
 import string
 
