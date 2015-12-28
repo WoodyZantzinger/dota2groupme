@@ -1,11 +1,17 @@
 import re
+import numpy
+import codecs
+from collections import Counter
+import string
 
 with open("utils/emulate/stop_words.txt") as inputfile:
         blacklist = inputfile.read().splitlines()
 
-file = open("utils/emulate/rawtext_history.txt","r")
-inputString = file.read()
-word_list = re.split('\s+', inputString.lower())
+word_counter = Counter()
+
+with open("utils/emulate/rawtext_history.txt", "rU") as f:
+    for line in f:
+        word_counter.update(line.lower().split())
 
 def key_words(msg):
 
@@ -14,7 +20,10 @@ def key_words(msg):
 
     for word in msg.lower().split():
         if word not in blacklist:
-            results[word] = word_list.count(word)
-            total_weight = total_weight + word_list.count(word)
+            results[word] = word_counter[word]
+            total_weight = total_weight + word_counter[word]
 
     return results
+
+def word_occurance(word):
+    return word_counter[word]
