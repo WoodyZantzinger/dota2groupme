@@ -56,8 +56,6 @@ def generate_response(input, debug = 0):
     final_words = dict(sorted(result_set.iteritems(), key=operator.itemgetter(1), reverse=True)[:5])
 
     if debug: output += "Response Keywords: " + str(final_words) + "\n\n"
-
-    pdb.set_trace()
     output += make_sentence(final_words.keys())
 
     return output
