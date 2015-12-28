@@ -24,12 +24,15 @@ def generate_response(input, debug = 0):
     key_words = emulate_util.key_words(input)
     total_sentence_weight = sum(key_words.values()) * 1.0
 
+    if len(key_words) < 1: return "I didn't understand your dumbass message"
+
     if debug: output += "Input Keywords: "
 
-    #convert to % then inverse (The result is a %)
-    for key_word in key_words:
-        key_words[key_word] = (1.0 - (key_words[key_word] / total_sentence_weight))
-        if debug: output += key_word + ": " + str(key_words[key_word] * 1) + "\n"
+    #if Multiple words, convert to % then inverse (The result is a %)
+    if len(key_words) > 1:
+        for key_word in key_words:
+            key_words[key_word] = (1.0 - (key_words[key_word] / total_sentence_weight))
+            if debug: output += key_word + ": " + str(key_words[key_word] * 1) + "\n"
 
     #these are the "result words" which come from our key words in the sentence
     #The algorithm = key_word(% score) * (result_word(score) / occurance of results word)
@@ -54,6 +57,7 @@ def generate_response(input, debug = 0):
 
     if debug: output += "Response Keywords: " + str(final_words) + "\n\n"
 
+    pdb.set_trace()
     output += make_sentence(final_words.keys())
 
     return output
