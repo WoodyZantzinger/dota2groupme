@@ -42,10 +42,11 @@ def generate_response(input, debug = 0):
     for key_word in key_words:
         if key_word in relationship_data:
             for result_word in relationship_data[key_word]:
-                occurance = emulate_util.word_occurance(result_word) * 2
+                occurance = emulate_util.word_occurance(result_word) * 1.5
                 word_score = 0
-                if occurance > 0: word_score = key_words[key_word] * ( relationship_data[key_word][result_word] / occurance )
-                if word_score > .4: result_set[result_word] += word_score
+                if occurance > 0:
+                    word_score = key_words[key_word] * ( relationship_data[key_word][result_word] / occurance )
+                    result_set[result_word] += word_score
 
    # for result_word in sorted(result_set, key=result_set.get):
         #print result_word + " : " + str(result_set[result_word])
@@ -55,7 +56,13 @@ def generate_response(input, debug = 0):
     #final_words = {k: v for k, v in result_set.items() if k > MIN_CUTOFF}
     final_words = dict(sorted(result_set.iteritems(), key=operator.itemgetter(1), reverse=True)[:5])
 
+    #pdb.set_trace()
+
     if debug: output += "Response Keywords: " + str(final_words) + "\n\n"
-    output += make_sentence(final_words.keys())
+
+    if len(final_words) < 1:
+        output += "I don't understand..."
+    else:
+        output += make_sentence(final_words.keys())
 
     return output

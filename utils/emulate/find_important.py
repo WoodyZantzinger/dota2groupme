@@ -41,17 +41,21 @@ else:
             #the next message might not have been tied to this one or one of the messages was blank
             #also ignore all messages responding to sUN or from sUN
 
-        #message_weight = emulate_util.key_words(text)
+        message_weight = emulate_util.key_words(text)
         #print "Testing" + previous_message["text"]
         previous_message_weight = emulate_util.key_words(previous_message["text"])
 
-        for keyword in previous_message_weight:
-            if keyword not in relationships:
-                relationships[keyword] = {}
-            if text.lower() not in relationships[keyword]:
-                relationships[keyword][text.lower()] = 1.0/len(previous_message_weight)
-            else:
-                relationships[keyword][text.lower()] += 1.0/len(previous_message_weight)
+        for result_key in message_weight:
+            for next_key in previous_message_weight:
+                #print next_key + " leads to " + result_key
+
+                if next_key not in relationships:
+                    relationships[next_key] = {}
+                if result_key not in relationships[next_key]:
+                    relationships[next_key][result_key] = 0
+                #pdb.set_trace()
+                relationships[next_key][result_key] += message_weight[result_key]
+                #relationships[next_key][result_key] += 1
 
     with open("relationships.json", 'w') as outfile:
         json.dump(relationships, outfile)
