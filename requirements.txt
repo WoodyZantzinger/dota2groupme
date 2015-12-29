@@ -5,3 +5,4 @@ requests>=2.4.3
 pymongo>=2.7.2
 parsedatetime>=1.5
 python-dateutil>=1.5
+nltk>=3.0.5
