@@ -6,6 +6,8 @@ __author__ = 'woodyzantzinger'
 
 request_url = "https://api.groupme.com/v3/groups/13203822/messages?token=xde396cxXkwCQjn2BZQiVojW9XLYd4NxIiYepwwx&limit=100"
 
+output_to_print = False
+
 if(len(sys.argv) < 3):
     print "You need to specify a UserID and output file"
     print "Optional argument for just Text output"
@@ -40,22 +42,23 @@ else:
                     print "Number of messages: " + str(len(output_messages))
                     break;
 
-
         for message in messages:
             after_id = message["id"]
             messages_counted = messages_counted + 1
             if (int(user_id) == 0 or message["sender_id"] == user_id) and message["sender_id"] != "219313":
                 try:
-                    #output_messages.append(message)
-                    if (message["text"].endswith(".") or
-                        message["text"].endswith("!") or
-                        message["text"].endswith("?") or
-                        message["text"].endswith(". ") or
-                        message["text"].endswith("! ") or
-                        message["text"].endswith("? ")):
-                        print message["text"]
+                    if output_to_print:
+                        if (message["text"].endswith(".") or
+                            message["text"].endswith("!") or
+                            message["text"].endswith("?") or
+                            message["text"].endswith(". ") or
+                            message["text"].endswith("! ") or
+                            message["text"].endswith("? ")):
+                            print message["text"]
+                        else:
+                            print message["text"] + "."
                     else:
-                        print message["text"] + "."
+                        output_messages.append(message)
                 except:
                     pass
 
