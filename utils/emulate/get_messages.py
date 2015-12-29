@@ -1,12 +1,13 @@
 import requests
 import sys
 import json
+from progressbar import ProgressBar
 
 __author__ = 'woodyzantzinger'
 
 request_url = "https://api.groupme.com/v3/groups/13203822/messages?token=xde396cxXkwCQjn2BZQiVojW9XLYd4NxIiYepwwx&limit=100"
 
-output_to_print = False
+output_to_print = True
 
 if(len(sys.argv) < 3):
     print "You need to specify a UserID and output file"
@@ -24,6 +25,11 @@ else:
 
     after_id = -1
     print total_messages
+    pbar = ProgressBar(
+        maxval=total_messages,
+    )
+
+    pbar.start()
     while(messages_counted < total_messages):
 
         messages = ""
@@ -37,30 +43,38 @@ else:
                 messages = response.json()["response"]["messages"]
             except ValueError:
                 # We must be done!
-                with open(sys.argv[2], 'w') as outfile:
-                    json.dump(output_messages, outfile)
-                    print "Number of messages: " + str(len(output_messages))
-                    break;
+                pbar.finish()
+                if output_to_print:
+                    with open(sys.argv[2], 'w') as outfile:
+                        for message in output_messages:
+                            if message["text"] is not None:
+                                if (message["text"].endswith(".") or
+                                    message["text"].endswith("!") or
+                                    message["text"].endswith("?") or
+                                    message["text"].endswith(". ") or
+                                    message["text"].endswith("! ") or
+                                    message["text"].endswith("? ")):
+                                    outfile.write(message["text"].encode('utf-8') + "\n")
+                                else:
+                                    outfile.write(message["text"].encode('utf-8') + ".\n")
+                        break;
+                else:
+                    with open(sys.argv[2], 'w') as outfile:
+                        json.dump(output_messages, outfile)
+                        break;
+
 
         for message in messages:
             after_id = message["id"]
             messages_counted = messages_counted + 1
+            pbar.update(messages_counted)
             if (int(user_id) == 0 or message["sender_id"] == user_id) and message["sender_id"] != "219313":
                 try:
-                    if output_to_print:
-                        if (message["text"].endswith(".") or
-                            message["text"].endswith("!") or
-                            message["text"].endswith("?") or
-                            message["text"].endswith(". ") or
-                            message["text"].endswith("! ") or
-                            message["text"].endswith("? ")):
-                            print message["text"]
-                        else:
-                            print message["text"] + "."
-                    else:
-                        output_messages.append(message)
+                    output_messages.append(message)
                 except:
                     pass
+    print "Number of messages: " + str(len(output_messages))
+
 
 
 
