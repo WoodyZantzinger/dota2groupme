@@ -14,6 +14,7 @@ import json
 import datetime
 import pymongo
 import traceback
+import nltk
 
 dummyAR = AbstractResponse.AbstractResponse(None)
 
@@ -254,7 +255,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         if sys.argv[1] == "debug":
             DEBUG = True
-
+    nltk.data.path.append(os.getcwd())
     print(AbstractResponse.AbstractResponse("", "").GroupMeIDs)
     port = int(os.environ.get("PORT", 5000))
     if not DEBUG:
