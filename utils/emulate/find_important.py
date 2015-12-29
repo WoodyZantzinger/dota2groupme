@@ -41,10 +41,28 @@ else:
             #the next message might not have been tied to this one or one of the messages was blank
             #also ignore all messages responding to sUN or from sUN
 
-        message_weight = emulate_util.key_words(text)
-        #print "Testing" + previous_message["text"]
-        previous_message_weight = emulate_util.key_words(previous_message["text"])
+        message_weight = {}
+        previous_message_weight = {}
 
+        #Find Important words
+        message_weight_temp = emulate_util.key_words(text)
+        previous_message_weight_temp = emulate_util.key_words(previous_message["text"])
+
+        #Add Type of Speech
+        message_weight_pos = nltk.pos_tag(nltk.word_tokenize(text))
+        previous_message_weight_pos = nltk.pos_tag(nltk.word_tokenize(previous_message["text"]))
+
+        for word in message_weight_temp:
+            for word_with_pos in message_weight_pos:
+                if word == word_with_pos[0].lower():
+                    message_weight[word + "#" + word_with_pos[1]] = message_weight_temp[word]
+
+        for word in previous_message_weight_temp:
+            for word_with_pos in previous_message_weight_pos:
+                if word == word_with_pos[0].lower():
+                    previous_message_weight[word + "#" + word_with_pos[1]] = previous_message_weight_temp[word]
+
+        #pdb.set_trace()
         for result_key in message_weight:
             for next_key in previous_message_weight:
                 #print next_key + " leads to " + result_key
