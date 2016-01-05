@@ -206,7 +206,7 @@ def past_response(name):
 def remindme_callback():
     try:
         print("callbacking on remindme")
-        conn = pymongo.Connection(remindme.get_db_url())
+        conn = pymongo.MongoClient(remindme.get_db_url(), connectTimeoutMS=1000)
         reminders = conn.mjsunbot.reminders
 
         now = datetime.datetime.now()
