@@ -37,7 +37,7 @@ class ResponseRemindMe(ResponseCooldown):
     def respond(self):
         conn = None
         try:
-            conn = pymongo.MongoClient(remindme.get_db_url(), connectTimeoutMS=1000)
+            conn = pymongo.MongoClient(get_db_url(), connectTimeoutMS=1000)
         except:
             print("failed to connect to reminders-db")
             return None
