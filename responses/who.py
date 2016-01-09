@@ -15,16 +15,18 @@ class ResponseWho(ResponseCooldown):
 
     def respond(self):
         if self.is_sender_off_cooldown():
-            people = []
+            people = set()
             out = None
             for person, steamid in AbstractResponse.GroupMetoSteam.iteritems():
-                people.append(person)
+                people.add(person)
+            for person, xboxid in AbstractResponse.GroupMetoSteam.iteritems():
+                people.add(person)
             if "two thumbs" in self.msg.text:
                 out = "^^ this guy"
             elif "gonna call" in self.msg.text:
                 out = "Ghostbusters!"
             else:
-                out = random.choice(people)
+                out = random.choice(list(people))
             self.note_response(out)
             return out
         else:
