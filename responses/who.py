@@ -19,7 +19,7 @@ class ResponseWho(ResponseCooldown):
             out = None
             for person, steamid in AbstractResponse.GroupMetoSteam.iteritems():
                 people.add(person)
-            for person, xboxid in AbstractResponse.GroupMetoSteam.iteritems():
+            for person, xboxid in AbstractResponse.GroupMetoXbox.iteritems():
                 people.add(person)
             if "two thumbs" in self.msg.text:
                 out = "^^ this guy"
