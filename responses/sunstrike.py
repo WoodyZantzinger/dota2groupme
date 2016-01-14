@@ -25,8 +25,8 @@ class ResponseSunstrike(AbstractResponse):
                       "http://i.imgur.com/HaoJTOE.gif",
                       "http://i.imgur.com/1obfI.gif",
                       "http://i.imgur.com/BWaY6.gif",
-                      "http://i.imgur.com/pKqLWjo.gif"
-
+                      "http://i.imgur.com/pKqLWjo.gif",
+                      "http://i.imgur.com/iXW1nVA.gifv"
                         ]
 
     def __init__(self, msg):
