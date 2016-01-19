@@ -1,0 +1,19 @@
+* get python 2.7
+	* https://www.python.org/download/releases/2.7/
+* get git
+	* https://git-scm.com/download/win
+* get pip	
+	* https://pip.pypa.io/en/stable/installing/
+	* this used to suck. might still suck.
+* get repo
+	* go to where you want to put the folder (in cmd, terminal, etc)
+	* `git clone https://github.com/WoodyZantzinger/dota2groupme.git`
+	* get all required libraries
+		* pip install -r requirements.txt
+* get heroku
+	* https://toolbelt.heroku.com/windows
+	* do `heroku login` to authenticate
+	* I think woody has to add to you the heroku approved list to push to it?
+* get postman
+	* https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en
+	* email me or woody for example requests
