@@ -78,7 +78,7 @@ class ResponseLast(AbstractResponse):
                         try:
                             finalItems += str(data.get_item_name(x["item_" + str(itemNum)])["name"]) + ", "
                         except:
-                            finalItems += "unknown item {}, ".format(itemNum)
+                            finalItems += "unknown item {}, ".format(x["item_" + str(itemNum)])["name"])
 
                 out += finalItems + "\n"
 
