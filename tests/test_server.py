@@ -1,16 +1,15 @@
 from flask import Flask, request
-from multiprocessing import Pool
 
 app = Flask(__name__)
 
-@app.route('/results', methods=['POST'])
+@app.route('/do-test', methods=['POST'])
 def git_event():
     result = request.get_json(force=True)
     print("received event" + repr(result))
     return "ACK"
 
 PORT = 5001
+TARGET_PORT = 5000
 
-p = Pool(5)
-p
+app.run(port=PORT)
 
