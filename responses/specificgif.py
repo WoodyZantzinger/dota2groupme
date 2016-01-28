@@ -17,7 +17,7 @@ class ResponseSpecificGif(ResponseCooldown):
                  "aliens": "http://i0.kym-cdn.com/photos/images/original/000/155/594/yesitis2.gif?1311943181",
                  "pooping": "http://media.tumblr.com/tumblr_m0t0ykVDMu1qzozj1.gif",
                  "tearsofunfathomablesadness": "http://i.imgur.com/X3TeVee.gif",
-                 "whatatimetobealive": "http://i.imgur.com/gKBQ0cg.gif",
+                 "wattba": "http://i.imgur.com/gKBQ0cg.gif",
                  "disappointed": "http://i.imgur.com/AAaiGlu.gif",
                  "myman": "https://media.giphy.com/media/qPVzemjFi150Q/giphy.gif",
                  "ronniedunk": "http://i.imgur.com/HHsjEKL.gif"
