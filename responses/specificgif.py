@@ -4,7 +4,7 @@ from CooldownResponse import *
 
 class ResponseSpecificGif(ResponseCooldown):
 
-    COOLDOWN = 1 * 60 * 60
+    COOLDOWN = 10 * 60
 
     GIF_MAP = { "letsgoalready" : "http://media.giphy.com/media/y4HyxvrP8JRhm/giphy.gif",
                 "neat" : "http://i.imgur.com/zCBQP8s.gif",
@@ -18,7 +18,9 @@ class ResponseSpecificGif(ResponseCooldown):
                  "pooping": "http://media.tumblr.com/tumblr_m0t0ykVDMu1qzozj1.gif",
                  "tearsofunfathomablesadness": "http://i.imgur.com/X3TeVee.gif",
                  "whatatimetobealive": "http://i.imgur.com/gKBQ0cg.gif",
-                 "disappointed": "http://i.imgur.com/AAaiGlu.gif"
+                 "disappointed": "http://i.imgur.com/AAaiGlu.gif",
+                 "myman": "https://media.giphy.com/media/qPVzemjFi150Q/giphy.gif",
+                 "ronniedunk": "http://i.imgur.com/HHsjEKL.gif"
                  }
 
     def __init__(self, msg):
