@@ -33,7 +33,7 @@ def return_emoticons(text):
 
 def parse_message(text):
     values = {
-          'bot_id': 'f906f09e88ff3764c3c8b8c043',
+          'bot_id': '86321846d479dac3c4fe36909b',
     }
     emoticons = return_emoticons(text)
     if len(emoticons) > 0:
