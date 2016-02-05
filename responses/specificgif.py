@@ -22,6 +22,10 @@ class ResponseSpecificGif(ResponseCooldown):
                  "myman": "https://media.giphy.com/media/qPVzemjFi150Q/giphy.gif",
                  "ronniedunk": "http://i.imgur.com/HHsjEKL.gif",
                  "okay": "http://media3.giphy.com/media/uX0xfKdo9LDNK/giphy.gif"
+                 "awesome": "http://reactiongifs.us/wp-content/uploads/2013/02/awesome_to_the_max.gif"
+                 "dontmindme": "http://gifrific.com/wp-content/uploads/2012/08/no-words-homer-into-brush.gif"
+                 "canada":"http://i.imgur.com/8kk5w3c.gifv"
+                 "doyounot":"http://i.imgur.com/SZNZBCv.gif"
                  }
 
     def __init__(self, msg):
