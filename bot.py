@@ -22,6 +22,7 @@ DEBUG = False
 
 app = Flask(__name__)
 
+RESPONSES_CACHE = []
 
 #have the bot do a specific msg in the background constantly (Time in seconds)
 def repeat_task(msg, time):
@@ -55,24 +56,34 @@ def send_message(msg, send=True):
         return 'Win'
 
 
+def load_responses():
+    print("Loading responses...")
+    for cls in AbstractResponse.AbstractResponse.__subclasses__():
+        if cls.ENABLED:
+            RESPONSES_CACHE.append(cls)
+    for cls in RESPONSES_CACHE:
+        for cls2 in cls.__subclasses__():
+            if cls2 not in RESPONSES_CACHE:
+                if cls2.ENABLED:
+                    RESPONSES_CACHE.append(cls2)
+    for cls in sorted([str(cls).lower() for cls in RESPONSES_CACHE]):
+        print("loaded class: {}".format(cls))
+
+
 def get_response_categories(msg):
     if (msg.sender_id == dummyAR.GroupMeIDs["sUN"]):
         return None
     out = []
-    classes = []
-    for cls in AbstractResponse.AbstractResponse.__subclasses__():
-        classes.append(cls)
-    for cls in classes:
-        for cls2 in cls.__subclasses__():
-            if cls2 not in classes:
-                classes.append(cls2)
-    for cls in classes:
+#    for cls in AbstractResponse.AbstractResponse.__subclasses__():
+        #classes.append(cls)
+    #for cls in classes:
+        #for cls2 in cls.__subclasses__():
+            #if cls2 not in classes:
+                #classes.append(cls2)
+    for cls in RESPONSES_CACHE:
         if cls.is_relevant_msg(msg):
             print(cls)
-            if cls.ENABLED:
-                out.append(cls)
-            else:
-                print("ignoring cls {} because cls is disabled".format(cls))
+            out.append(cls)
     if not out:
         return out
     critical_override_threshold = max([cls.OVERRIDE_PRIORITY for cls in out])
@@ -255,6 +266,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         if sys.argv[1] == "debug":
             DEBUG = True
+    load_responses()
     nltk.data.path.append(os.getcwd())
     print(AbstractResponse.AbstractResponse("", "").GroupMeIDs)
     port = int(os.environ.get("PORT", 5000))

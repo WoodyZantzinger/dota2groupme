@@ -6,7 +6,7 @@ class ResponseJonCustom(AbstractResponse):
 
     OVERRIDE_PRIORITY = 5
 
-    ACTIVE = False
+    ENABLED = False
 
     def __init__(self, msg):
         super(ResponseJonCustom, self).__init__(msg)
@@ -16,5 +16,5 @@ class ResponseJonCustom(AbstractResponse):
 
     @classmethod
     def is_relevant_msg(cls, msg):
-        return (msg.sender_id == AbstractResponse.GroupMeIDs['Jonny G']) and ResponseJonCustom.ACTIVE
+        return (msg.sender_id == AbstractResponse.GroupMeIDs['Jonny G'])
 

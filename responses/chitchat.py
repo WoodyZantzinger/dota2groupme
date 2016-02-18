@@ -10,6 +10,8 @@ class chitchat(AbstractResponse):
 
     OVERRIDE_PRIORITY = 5
 
+    ENABLED = False
+
     def __init__(self, msg):
         super(chitchat, self).__init__(msg)
 
@@ -22,6 +24,5 @@ class chitchat(AbstractResponse):
         could_be_url = "http" in msg.text or "www" in msg.text or ".com" in msg.text
         not_self = msg.sender_id != AbstractResponse.GroupMeIDs["sUN"]
         booleans = not could_be_url and not_self
-        return False
         #return random.random() < chitchat.RESPOND_THRESHOLD and booleans
 
