@@ -49,13 +49,16 @@ class ResponseMusic(AbstractResponse):
 
                 last_track = response['recenttracks']['track'][0]
 
-                # returning last played song for everyone
-                # if last_track['@attr']['nowplaying'] != 'true':
-                #     continue
+                on_now = '@attr' in last_track and last_track['@attr']['nowplaying'] == 'true'
+                #if not on_now
+                # continue
 
                 trackname = last_track['name']
                 artist = last_track['artist']['#text']
                 song = u"{} by {}".format(trackname, artist)
+
+                if on_now:
+                    song = song + " (now!)"
 
                 out += person_status_template.format(name=person, song=song)
             except Exception, e:
