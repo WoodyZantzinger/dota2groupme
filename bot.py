@@ -42,7 +42,11 @@ def repeat_task(msg, time):
 
 
 def send_message(msg, send=True):
-    print(u"Sending: '{}".format(msg))
+    try:
+        print(u"Sending: '{}".format(msg))
+    except Exception, e:
+        line_fail = sys.exc_info()[2].tb_lineno
+        print("\tError: {} on line {}".format(repr(e), line_fail))
     if not DEBUG and send:
         url = 'https://api.groupme.com/v3/bots/post'
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
