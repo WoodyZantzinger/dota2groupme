@@ -3,6 +3,7 @@ from AbstractResponse import AbstractResponse
 import requests
 import os
 import json
+import sys
 
 class ResponseMusic(AbstractResponse):
     RESPONSE_KEY = "#music"
@@ -14,7 +15,7 @@ class ResponseMusic(AbstractResponse):
         out = ""
         print("lastfm")
         lastfm_endpoint = "http://ws.audioscrobbler.com/2.0/"
-        person_status_template = "{name} : {song}\n"
+        person_status_template = u"{name} : {song}\n"
         key = None
         try:
             with open('local_variables.json') as f:
@@ -54,10 +55,11 @@ class ResponseMusic(AbstractResponse):
 
                 trackname = last_track['name']
                 artist = last_track['artist']['#text']
-                song = "{} by {}".format(trackname, artist)
+                song = u"{} by {}".format(trackname, artist)
 
                 out += person_status_template.format(name=person, song=song)
             except Exception, e:
-                print("\tError: " + repr(e))
-                pass
+                line_fail = sys.exc_info()[2].tb_lineno
+                print("\tError: {} on line {}".format(repr(e), line_fail))
+
         return out
