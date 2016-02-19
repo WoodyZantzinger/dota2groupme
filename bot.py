@@ -42,7 +42,7 @@ def repeat_task(msg, time):
 
 
 def send_message(msg, send=True):
-    print "Sending: '" + msg + "'"
+    print(u"Sending: '{}".format(msg))
     if not DEBUG and send:
         url = 'https://api.groupme.com/v3/bots/post'
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
