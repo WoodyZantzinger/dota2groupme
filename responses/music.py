@@ -4,6 +4,8 @@ import requests
 import os
 import json
 import sys
+import pprint
+import time
 
 class ResponseMusic(AbstractResponse):
     RESPONSE_KEY = "#music"
@@ -16,6 +18,7 @@ class ResponseMusic(AbstractResponse):
         print("lastfm")
         lastfm_endpoint = "http://ws.audioscrobbler.com/2.0/"
         person_status_template = u"{name} : {song}\n"
+        MAX_TIME_DIFFERENCE = 60 * 60 # an hour in seconds
         key = None
         try:
             with open('local_variables.json') as f:
@@ -33,6 +36,8 @@ class ResponseMusic(AbstractResponse):
         req_data['limit'] = 1
         req_data['method'] = "user.getRecentTracks"
 
+        time_now = time.time()
+
         for person, username in AbstractResponse.GroupMetoLastfm.iteritems():
             try:
                 if not username:
@@ -48,6 +53,11 @@ class ResponseMusic(AbstractResponse):
                     continue
 
                 last_track = response['recenttracks']['track'][0]
+                t_diff = time_now - int(last_track['date']['uts'])
+
+                if t_diff > MAX_TIME_DIFFERENCE:
+                    print("\t song out of date ({0:.0f}s)".format(t_diff))
+                    continue
 
                 on_now = '@attr' in last_track and last_track['@attr']['nowplaying'] == 'true'
                 #if not on_now
