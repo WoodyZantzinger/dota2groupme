@@ -53,11 +53,11 @@ class ResponseMusic(AbstractResponse):
                     continue
 
                 last_track = response['recenttracks']['track'][0]
-                t_diff = time_now - int(last_track['date']['uts'])
-
-                if t_diff > MAX_TIME_DIFFERENCE:
-                    print("\t song out of date ({0:.0f}s)".format(t_diff))
-                    continue
+                #t_diff = time_now - int(last_track['date']['uts'])
+                #
+                #if t_diff > MAX_TIME_DIFFERENCE:
+                #    print("\t song out of date ({0:.0f}s)".format(t_diff))
+                #    continue
 
                 on_now = '@attr' in last_track and last_track['@attr']['nowplaying'] == 'true'
                 #if not on_now
