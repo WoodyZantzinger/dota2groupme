@@ -20,7 +20,7 @@ class ResponseSpecificGif(ResponseCooldown):
                  "wattba": "http://i.imgur.com/gKBQ0cg.gif",
                  "disappointed": "http://i.imgur.com/AAaiGlu.gif",
                  "myman": "https://media.giphy.com/media/qPVzemjFi150Q/giphy.gif",
-                 "ronniedunk": "http://i.imgur.com/HHsjEKL.gif",
+                 "ronniedunk": "Fuck Mike",
                  "okay": "http://media3.giphy.com/media/uX0xfKdo9LDNK/giphy.gif"
                  }
 
