@@ -20,7 +20,7 @@ class last_move(AbstractResponse):
         super(last_move, self).__init__(msg)
 
     def respond(self):
-        conn = pymongo.Connection(auth_strava.get_db_url())
+        conn = pymongo.MongoClient(auth_strava.get_db_url())
         StravaUsers = conn.dota2bot.strava
         temp = StravaUsers.find_one({'GroupmeID': self.msg.sender_id})
         if temp is not None:
