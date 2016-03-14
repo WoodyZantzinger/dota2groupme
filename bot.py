@@ -186,7 +186,7 @@ def strava():
     StravaData['GroupmeID'] = GroupmeID
     conn_start_time = time.time()
     print "1"
-    conn = pymongo.Connection(auth_strava.get_db_url())
+    conn = pymongo.MongoClient(auth_strava.get_db_url())
     print auth_strava.get_db_url()
     conn_time = time.time() - conn_start_time
     print("took {} seconds to connect to mongo".format(conn_time))
