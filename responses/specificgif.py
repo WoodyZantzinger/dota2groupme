@@ -21,7 +21,8 @@ class ResponseSpecificGif(ResponseCooldown):
                  "disappointed": "http://i.imgur.com/AAaiGlu.gif",
                  "myman": "https://media.giphy.com/media/qPVzemjFi150Q/giphy.gif",
                  "ronniedunk": "http://i.imgur.com/hBFg8GD.gif",
-                 "okay": "http://media3.giphy.com/media/uX0xfKdo9LDNK/giphy.gif"
+                 "okay": "http://media3.giphy.com/media/uX0xfKdo9LDNK/giphy.gif",
+                 "awesome": "http://i.imgur.com/kTfyKCL.gif",
                  }
 
     def __init__(self, msg):
