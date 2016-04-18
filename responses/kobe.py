@@ -14,16 +14,16 @@ class kobe(ResponseCooldown):
     NAMES_10 = ["liz", "erika", "paulina"]
 
     kobe_url = [
-        #"http://i.imgur.com/thhgY.gif",
-        #"http://i.imgur.com/dECdK.gif",
-        #"http://i.imgur.com/hr8r3.gif",
-        #"http://i.imgur.com/Sv9tv.gif",
-        #"http://i.imgur.com/qIJB5.gif",
-        #"http://i.imgur.com/QYVa6.gif",
+        "http://i.imgur.com/thhgY.gif",
+        "http://i.imgur.com/dECdK.gif",
+        "http://i.imgur.com/hr8r3.gif",
+        "http://i.imgur.com/Sv9tv.gif",
+        "http://i.imgur.com/qIJB5.gif",
+        "http://i.imgur.com/QYVa6.gif",
         "http://i.imgur.com/G3b53.gif",
-        #"http://i.imgur.com/7cB7V.gif",
-        #"http://i.imgur.com/uUpX3.gif",
-        #"http://i.imgur.com/eTCwx.gif"  # 10
+        "http://i.imgur.com/7cB7V.gif",
+        "http://i.imgur.com/uUpX3.gif",
+        "http://i.imgur.com/eTCwx.gif"  # 10
     ]
 
     COOLDOWN = 1 * 60 * 60 / 2
