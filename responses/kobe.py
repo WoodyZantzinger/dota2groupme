@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import *
+from CooldownResponse import *
 from random import randint
 
 
-class kobe(AbstractResponse):
+class kobe(ResponseCooldown):
 
     message = "#kobe"
 
@@ -26,16 +26,23 @@ class kobe(AbstractResponse):
         #"http://i.imgur.com/eTCwx.gif"  # 10
     ]
 
+    COOLDOWN = 1 * 60 * 60 / 2
+
     def __init__(self, msg):
-        super(kobe, self).__init__(msg)
+        super(kobe, self).__init__(msg, self.__module__, kobe.COOLDOWN)
 
     def respond(self):
-        names10_in_msg = [name for name in kobe.NAMES_10 if name in self.msg.text.lower()]
-        if len(names10_in_msg):
-            return kobe.kobe_url[-1]
-        names1_in_msg = [name for name in kobe.NAMES_1 if name in self.msg.text.lower()]
-        if len(names1_in_msg):
-            return kobe.kobe_url[0]
-        return kobe.kobe_url[randint(0, len(kobe.kobe_url) - 1)]
+        if self.is_sender_off_cooldown():
+            out = None
+            names10_in_msg = [name for name in kobe.NAMES_10 if name in self.msg.text.lower()]
+            if len(names10_in_msg):
+                out = kobe.kobe_url[-1]
+            names1_in_msg = [name for name in kobe.NAMES_1 if name in self.msg.text.lower()]
+            if len(names1_in_msg):
+                out = kobe.kobe_url[0]
+            out = kobe.kobe_url[randint(0, len(kobe.kobe_url) - 1)]
+            self.note_response(out)
+            return out
+        print("not responding to kobe because sender {} is on cooldown".format(self.msg.name))
 
 
