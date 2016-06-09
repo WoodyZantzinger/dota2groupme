@@ -23,6 +23,7 @@ class ResponseSpecificGif(ResponseCooldown):
                  "ronniedunk": "http://i.imgur.com/hBFg8GD.gif",
                  "okay": "http://media3.giphy.com/media/uX0xfKdo9LDNK/giphy.gif",
                  "awesome": "http://i.imgur.com/kTfyKCL.gif",
+                 "fdfb": "http://i.imgur.com/rl6mt.gifv",
                  }
 
     def __init__(self, msg):
@@ -44,4 +45,3 @@ class ResponseSpecificGif(ResponseCooldown):
         for word in msg.text.split(" "):
             if word.startswith("#") and word[1:] in ResponseSpecificGif.GIF_MAP:
                 return True
-
