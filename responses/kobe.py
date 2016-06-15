@@ -14,16 +14,16 @@ class kobe(ResponseCooldown):
     NAMES_10 = ["liz", "erika", "paulina"]
 
     kobe_url = [
-        "http://i.imgur.com/thhgY.gifv",
-        "http://i.imgur.com/dECdK.gifv",
-        "http://i.imgur.com/hr8r3.gifv",
-        "http://i.imgur.com/Sv9tv.gifv",
-        "http://i.imgur.com/qIJB5.gifv",
-        "http://i.imgur.com/QYVa6.gifv",
-        "http://i.imgur.com/G3b53.gifv",
-        "http://i.imgur.com/7cB7V.gifv",
-        "http://i.imgur.com/uUpX3.gifv",
-        "http://i.imgur.com/eTCwx.gifv"  # 10
+        "http://i.imgur.com/thhgY.gif",
+        "http://i.imgur.com/dECdK.gif",
+        "http://i.imgur.com/hr8r3.gif",
+        "http://i.imgur.com/Sv9tv.gif",
+        "http://i.imgur.com/qIJB5.gif",
+        "http://i.imgur.com/QYVa6.gif",
+        "http://i.imgur.com/G3b53.gif",
+        "http://i.imgur.com/7cB7V.gif",
+        "http://i.imgur.com/uUpX3.gif",
+        "http://i.imgur.com/eTCwx.gif"  # 10
     ]
 
     COOLDOWN = 1 * 60 * 60 / 2
@@ -37,10 +37,15 @@ class kobe(ResponseCooldown):
             names10_in_msg = [name for name in kobe.NAMES_10 if name in self.msg.text.lower()]
             if len(names10_in_msg):
                 out = kobe.kobe_url[-1]
-            names1_in_msg = [name for name in kobe.NAMES_1 if name in self.msg.text.lower()]
-            if len(names1_in_msg):
-                out = kobe.kobe_url[0]
-            out = kobe.kobe_url[randint(0, len(kobe.kobe_url) - 1)]
+            else:
+                names1_in_msg = [name for name in kobe.NAMES_1 if name in self.msg.text.lower()]
+                if len(names1_in_msg):
+                    out = kobe.kobe_url[0]
+                else:
+                    if "pot of greed" in self.msg.text.lower():
+                        out = kobe.kobe_url[1]
+                    else:
+                        out = kobe.kobe_url[randint(0, len(kobe.kobe_url) - 1)]
             self.note_response(out)
             return out
         print("not responding to kobe because sender {} is on cooldown".format(self.msg.name))
