@@ -38,7 +38,7 @@ class ResponseCooldown(AbstractResponse):
     def note_response(self, response):
         try:
             print(u"noting a response for name of {} and id = {}".format(self.msg.name, self.msg.sender_id))
-        except TypeError:
+        except UnicodeEncodeError:
             print(u"noting a response for some asshole with a fancy name and id = {}".format(self.msg.sender_id))
         self.get_usage()[self.msg.sender_id][-1].response = response
         #self.print_responses()
