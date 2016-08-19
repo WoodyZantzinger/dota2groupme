@@ -35,7 +35,7 @@ def repeat_task(msg, time):
         for output in output_messages:
             if output:
                 if output != "":
-                    send_message(output)
+                    send_message(output, "0")
         threading.Timer(time, repeat_task, [msg, time]).start()
     except:
         print("repeat task failed: {}".format(msg))
@@ -112,8 +112,9 @@ def message():
     msg = rawmessage.RawMessage(new_message)
     print("received message: ")
     print(new_message)
-    #sender = new_message["name"]
-    #msg = new_message["text"]
+
+    groupID = new_message["group_id"]
+
     active_response_categories = get_response_categories(msg)
     if active_response_categories:
         output_messages = make_responses(active_response_categories, msg)
@@ -122,7 +123,7 @@ def message():
         time.sleep(1)
         for output in output_messages:
             if output:
-                send_message(output)
+                send_message(output, groupID)
         return 'OK - Respon se Sent'
     else:
         return 'No Response'
@@ -134,8 +135,9 @@ def debug_message():
     msg = rawmessage.RawMessage(new_message)
     print("received message: ")
     print(new_message)
-    #sender = new_message["name"]
-    #msg = new_message["text"]
+
+    groupID = new_message["group_id"]
+
     active_response_categories = get_response_categories(msg)
     output_messages = make_responses(active_response_categories, msg)
 
@@ -144,7 +146,7 @@ def debug_message():
     time.sleep(1)
     for output in output_messages:
         if output:
-            send_message(output, send=False)
+            send_message(output, groupID, send=False)
 
     return 'OK'
 
@@ -258,7 +260,7 @@ def git_event():
     updates_buffer = "I've been updated!\n"
     for commit in new_event["commits"]:
         updates_buffer += "'" + commit["message"] + "' - " + commit["author"]["name"] + "\n"
-    send_message(updates_buffer)
+    send_message(updates_buffer, "0")
     return updates_buffer
 
 

@@ -4,6 +4,12 @@ emoji_data_file = "utils/groupme_emojis.json"
 
 emojis_temp = None
 
+GroupToBot = {}
+GroupToBot["0"] = "f906f09e88ff3764c3c8b8c043" #Default
+
+GroupToBot["13203822"] = "f906f09e88ff3764c3c8b8c043" #Main Group
+GroupToBot["19216747"] = "200ba085c2b7a953cb74f849ad" #DnD Group
+
 # read the file to memory
 with open(emoji_data_file) as f:
     emojis_temp = json.load(f)
@@ -31,9 +37,9 @@ def return_emoticons(text):
     return return_val
 
 
-def parse_message(text):
+def parse_message(text, groupID):
     values = {
-          'bot_id': 'f906f09e88ff3764c3c8b8c043',
+          'bot_id': GroupToBot[groupID],
     }
     emoticons = return_emoticons(text)
     if len(emoticons) > 0:
