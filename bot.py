@@ -41,7 +41,7 @@ def repeat_task(msg, time):
         print("repeat task failed: {}".format(msg))
 
 
-def send_message(msg, send=True):
+def send_message(msg, groupID, send=True):
     try:
         print(u"Sending: '{}".format(msg))
     except Exception, e:
@@ -51,7 +51,7 @@ def send_message(msg, send=True):
         url = 'https://api.groupme.com/v3/bots/post'
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         header = {'User-Agent': user_agent, 'Content-Type': 'application/json'}
-        values = GroupMeMessage.parse_message(msg)
+        values = GroupMeMessage.parse_message(msg, groupID)
         req = urllib2.Request(url, json.dumps(values), header)
         response = urllib2.urlopen(req)
         #print "msg"
