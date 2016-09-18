@@ -11,7 +11,7 @@ class kobe(ResponseCooldown):
 
     NAMES_1 = ["dick", "penis"]
 
-    NAMES_10 = ["liz", "erika", "paulina"]
+    NAMES_10 = ["liz", "erika", "paulina", "nat", "natalie", "lynds", "lyndsey"]
 
     kobe_url = [
         "http://i.imgur.com/thhgY.gif",
