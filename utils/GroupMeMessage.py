@@ -10,6 +10,7 @@ GroupToBot["0"] = "f906f09e88ff3764c3c8b8c043" #Default
 GroupToBot["13203822"] = "f906f09e88ff3764c3c8b8c043" #Main Group
 GroupToBot["19216747"] = "200ba085c2b7a953cb74f849ad" #DnD Group
 GroupToBot["23635322"] = "b9b8594507d45452e13dcb4012" #Cville Group
+GroupToBot["13203822"] = "f906f09e88ff3764c3c8b8c043" #Dick.com group
 
 # read the file to memory
 with open(emoji_data_file) as f:
