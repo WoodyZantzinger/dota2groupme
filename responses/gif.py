@@ -77,6 +77,3 @@ class ResponseGif(ResponseCooldown):
                     out = response.json()["data"]["image_url"]
                     self.note_response(out)
                     return out
-                else
-                    print("not responding to gif because sender {} is on cooldown".format(self.msg.name))
-                    
