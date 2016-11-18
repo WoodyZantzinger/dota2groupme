@@ -11,7 +11,10 @@ class ResponseGif(ResponseCooldown):
 
     RESPONSE_KEY = "#gif"
 
-    COOLDOWN = 1 * 60 * 60 * 3 / 2
+    if  (datetime.datetime.utcnow().weekday() /= 4) then
+        COOLDOWN = 1 * 60 * 60 * 3 / 2
+    else
+        COOLDOWN = 1 * 60 * 60 * 1 / 2
 
     url = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}'
     url_9to5 = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}&rating=pg'
