@@ -20,63 +20,33 @@ class ResponseGif(ResponseCooldown):
         super(ResponseGif, self).__init__(msg, self.__module__, ResponseGif.COOLDOWN)
 
     def respond(self):
-        if datetime.datetime.utcnow().weekday() is not 4
-            if self.is_sender_off_cooldown():
-                out = ""
-                search_term = self.msg.text.partition(' ')[2].lower()
-                if "spider" in search_term:
-                    return "fuck spiders, fuck you"
-#               if "ariana" in search_term and "grande" in search_term:
-#		return "her?"
-                hour = datetime.datetime.utcnow().hour
-                is_weekday = datetime.datetime.utcnow().weekday() < 5
-                EST_9AM = 8 + 5  # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
-                EST_5PM = 4 + 12 + 5
-                is_during_workday = EST_9AM < hour < EST_5PM
-                print("hour is: {}".format(hour))
-                print("is it a weekday? {}".format(is_weekday))
-                url_to_format = ResponseGif.url
-                if (is_weekday and is_during_workday):
-                    print("PG-ifying the gif response")
-                    url_to_format = ResponseGif.url_9to5
-
-                request_url = url_to_format.format(term=search_term)
-                response = requests.get(request_url)
-                try:
-                    print request_url
-                    out = response.json()["data"]["image_url"]
-                except Exception:
-                out = "Something went wrong"
-                self.note_response(out)
-                return out
-            else:
-                print("not responding to gif because sender {} is on cooldown".format(self.msg.name))
-        else
-           out = ""
+        if self.is_sender_off_cooldown():
+            out = ""
             search_term = self.msg.text.partition(' ')[2].lower()
             if "spider" in search_term:
                 return "fuck spiders, fuck you"
-            if "ariana" in search_term and "grande" in search_term:  
-                return "her?"
+#            if "ariana" in search_term and "grande" in search_term:
+#		return "her?"
             hour = datetime.datetime.utcnow().hour
             is_weekday = datetime.datetime.utcnow().weekday() < 5
-            EST_9AM = 8 + 5
+            EST_9AM = 8 + 5  # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
             EST_5PM = 4 + 12 + 5
             is_during_workday = EST_9AM < hour < EST_5PM
             print("hour is: {}".format(hour))
             print("is it a weekday? {}".format(is_weekday))
             url_to_format = ResponseGif.url
-                if (is_weekday and is_during_workday):
-                    print("PG-ifying the gif response")
-                    url_to_format = ResponseGif.url_9to5
-                    
-                request_url = url_to_format.format(term=search_term)
-                response = requests.get(request_url)
-                try:
-                    print request_url
-                    out = response.json()["data"]["image_url"]
-                    self.note_response(out)
-                    return out
-                else
-                    print("not responding to gif because sender {} is on cooldown".format(self.msg.name))
-                    
+            if (is_weekday and is_during_workday):
+                print("PG-ifying the gif response")
+                url_to_format = ResponseGif.url_9to5
+
+            request_url = url_to_format.format(term=search_term)
+            response = requests.get(request_url)
+            try:
+                print request_url
+                out = response.json()["data"]["image_url"]
+            except Exception:
+                out = "Something went wrong"
+            self.note_response(out)
+            return out
+        else:
+            print("not responding to gif because sender {} is on cooldown".format(self.msg.name))
