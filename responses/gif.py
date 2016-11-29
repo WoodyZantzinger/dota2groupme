@@ -13,7 +13,7 @@ class ResponseGif(ResponseCooldown):
 
     COOLDOWN = 1 * 60 * 60 * 3 / 2
 
-    url = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}'
+    url = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}&rating=pg-13'
     url_9to5 = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}&rating=pg'
 
     def __init__(self, msg):
