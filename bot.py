@@ -42,7 +42,7 @@ def repeat_task(msg, time):
 
 # added a bodge to default to sending the messages to boyschat
 
-def send_message(msg, groupID=13203822, send=True):
+def send_message(msg, groupID="13203822", send=True):
     try:
         print(u"Sending: '{}".format(msg))
     except Exception, e:
