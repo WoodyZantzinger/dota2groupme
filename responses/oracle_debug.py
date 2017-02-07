@@ -6,7 +6,7 @@ class oracle(ResponseCooldown):
 
     RESPONSE_KEY = "#debugoracle"
 
-    COOLDOWN = 10 * 60
+    COOLDOWN = 11 * 60
 
     def __init__(self, msg):
         super(oracle, self).__init__(msg, self.__module__, oracle.COOLDOWN)
@@ -14,6 +14,8 @@ class oracle(ResponseCooldown):
     def respond(self):
         if self.is_sender_off_cooldown():
             message = self.msg.text.partition("#debugoracle")[2]
-            return generate_response(message, 1)
+            out = generate_response(message, 1)
+            self.note_response(out)
+            return out
         else:
             print("not responding to #oracle because sender {} is on cooldown".format(self.msg.name))
