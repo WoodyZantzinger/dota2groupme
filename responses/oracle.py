@@ -6,7 +6,7 @@ class oracle(ResponseCooldown):
 
     RESPONSE_KEY = "#oracle"
 
-    COOLDOWN = 11 * 60
+    COOLDOWN = 30 * 60
 
     def __init__(self, msg):
         super(oracle, self).__init__(msg, self.__module__, oracle.COOLDOWN)
