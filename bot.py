@@ -66,7 +66,7 @@ def send_message(msg, groupID="13203822", send=True):
     else:
         return 'Win'
 
-@app.route('/statistics/')
+@app.route('/statistics')
 def do_last_day_message_statistics():
     # get all messages from the last day
 
