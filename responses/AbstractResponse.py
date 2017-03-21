@@ -51,6 +51,9 @@ class AbstractResponse(object):
         conn_time = time.time() - conn_start_time
         print("took {} seconds to connect to mongo".format(conn_time))
     except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
+        local_var = dict()
+        for key in os.environ.keys():
+            local_var[key] = os.environ[key]
         conn_start_time = time.time()
         mongo_connection = None
         try:
