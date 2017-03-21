@@ -5,9 +5,12 @@ import time
 import threading
 import sys
 from flask import Flask, request
-from responses import *
 import difflib
 from responses import AbstractResponse
+from responses import *
+from statistics import *
+from statistics import AbstractStatistics
+
 from utils import rawmessage
 from utils import GroupMeMessage
 import json
@@ -15,6 +18,7 @@ import datetime
 import pymongo
 import traceback
 import nltk
+import requests
 
 dummyAR = AbstractResponse.AbstractResponse(None)
 
@@ -23,6 +27,7 @@ DEBUG = False
 app = Flask(__name__)
 
 RESPONSES_CACHE = []
+STATISTICS_CACHE = []
 
 #have the bot do a specific msg in the background constantly (Time in seconds)
 def repeat_task(msg, time):
@@ -42,6 +47,7 @@ def repeat_task(msg, time):
 
 # added a bodge to default to sending the messages to boyschat
 
+
 def send_message(msg, groupID="13203822", send=True):
     try:
         print(u"Sending: '{}".format(msg))
@@ -60,6 +66,48 @@ def send_message(msg, groupID="13203822", send=True):
     else:
         return 'Win'
 
+@app.route('/statistics/')
+def do_last_day_message_statistics():
+    # get all messages from the last day
+
+    now = datetime.datetime.utcnow()
+    td = datetime.timedelta(hours=5) #DST can go fuck itself
+    EST_NOW = now - td
+    td = datetime.timedelta(hours=24)
+    EST_1_DAY_AGO = EST_NOW - td
+
+    url = 'https://api.groupme.com/v3/groups/13203822/messages'
+    found_a_day_ago = False
+    key = AbstractResponse.AbstractResponse.local_var["GROUPME_AUTH"]
+    values = {"token": key}
+    req = requests.get(url, params=values)
+    response = json.loads(req.text)
+    messages = []
+    print("\t[ Loading last day's messages ]")
+    while not found_a_day_ago:
+        for item in response["response"]["messages"]:
+            parsed_msg = rawmessage.RawMessage(item)
+            messages.append(parsed_msg)
+            if datetime.datetime.fromtimestamp(parsed_msg.created_at) < EST_1_DAY_AGO:
+                found_a_day_ago = True
+                break
+        values = {"token": key, "before_id": messages[-1].id}
+        req = requests.get(url, params=values)
+        response = json.loads(req.text)
+    # run all the statistics
+    print("\t[ Last day had {} messages ]".format(len(messages)))
+
+    out_message = ""
+    print(len(STATISTICS_CACHE))
+    for statistic in STATISTICS_CACHE:
+        instance = statistic(messages)
+        resp = instance.respond()
+        if resp:
+            print(resp)
+            out_message = out_message + resp + "\n"
+    send_message(out_message)
+    return out_message
+
 
 def load_responses():
     print("Loading responses...")
@@ -71,8 +119,16 @@ def load_responses():
             if cls2 not in RESPONSES_CACHE:
                 if cls2.ENABLED:
                     RESPONSES_CACHE.append(cls2)
+    print("Loaded {} response classes".format(len(RESPONSES_CACHE)))
     for cls in sorted([str(cls).lower() for cls in RESPONSES_CACHE]):
-        print("loaded class: {}".format(cls))
+        print("loaded response class: {}".format(cls))
+
+    for cls in AbstractStatistics.AbstractStatistics.__subclasses__():
+        STATISTICS_CACHE.append(cls)
+
+    print("Loaded {} statistic classes".format(len(STATISTICS_CACHE)))
+    for cls in sorted([str(cls).lower() for cls in STATISTICS_CACHE]):
+        print("loaded statistics class: {}".format(cls))
 
 
 def get_response_categories(msg):

@@ -6,7 +6,13 @@ class RawMessage(object):
 
     def __init__(self, rawjson):
         super(RawMessage, self).__init__()
+
         self.rawjson = rawjson
+
+        for item in self.rawjson.keys():
+            setattr(self, item, self.rawjson[item])
+        """
+
         self.attachments = self.rawjson['attachments']
         self.avatar_url = self.rawjson['avatar_url']
         self.created_at = self.rawjson['created_at']
@@ -19,15 +25,18 @@ class RawMessage(object):
         self.system = self.rawjson['system']
         self.text = self.rawjson['text']
         self.user_id = self.rawjson['user_id']
+        """
         self.replace_emojis()
 
     def replace_emojis(self):
         #note the escape character for groupme emojis
         esc = u'\ufffd'
         #split the message on the escape character -- each item needs an :emoji: put between them
+        if not self.text:
+            return
         splittext = self.text.split(esc)
 
-        #allocate a varaible for the replacement mappings
+        #allocate a variable for the replacement mappings
         replacemap = None
 
         for attachment in self.attachments:
