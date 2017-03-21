@@ -33,7 +33,7 @@ class StatisticMostHearted(AbstractStatistics):
                 text = msg.text
                 OUTMSG = ONE_MESSAGE_FMT.format(user=user, nhearts=most_hearts, msg=text)
             else:
-                bodymsg = None
+                bodymsg = ""
                 if len(msgs_with_hearts) > 3:
                     bodymsg = "Too many!"
                 else:
