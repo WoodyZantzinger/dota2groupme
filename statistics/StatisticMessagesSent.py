@@ -6,7 +6,7 @@ class StatisticMessagesSent(AbstractStatistics):
     ENABLED = True
 
     def __init__(self, messages, mod=None):
-        super(StatisticMostMessagesSent, self).__init__(messages)
+        super(StatisticMessagesSent, self).__init__(messages)
         self.messages = messages
 
     def respond(self):
