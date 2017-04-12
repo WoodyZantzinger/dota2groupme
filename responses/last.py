@@ -37,7 +37,7 @@ class ResponseLast(AbstractResponse):
             return "I don't know your DOTA ID! Set it with '#setDota ID'"
 
         print "Setting Key & Account ID"
-        api.set_api_key(AbstractResponse.key)
+        api.set_api_key(AbstractResponse.local_var["DOTA_KEY"])
 
         account_id = AbstractResponse.name_to_steamID(canonical_name)
 

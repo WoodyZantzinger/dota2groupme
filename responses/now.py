@@ -8,7 +8,7 @@ import json
 
 class ResponseNow(AbstractResponse):
 
-    api = steamapi.core.APIConnection(AbstractResponse.key)
+    api = steamapi.core.APIConnection(AbstractResponse.local_var["DOTA_KEY"])
 
     person_status_template = "{name} : {status} on {system}\n"
 
