@@ -269,7 +269,10 @@ def spotify():
 
     spotify_data = urllib.urlencode(values)
     spotify_req = urllib2.Request(url, spotify_data)
+    print spotify_req
+
     spotify_response = urllib2.urlopen(spotify_req)
+
 
     SpotifyData = json.load(spotify_response)
     SpotifyData['GroupmeID'] = GroupmeID
