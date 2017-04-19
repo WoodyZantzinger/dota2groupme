@@ -15,27 +15,28 @@ class nowmusic(AbstractResponse):
 
     COOLDOWN = 1 * 60 * 60 * 3 / 2
 
-    url = "TODO"
+    url = "https://api.spotify.com/v1/me/player/currently-playing"
 
     def __init__(self, msg):
         super(nowmusic, self).__init__(msg)
 
     def respond(self):
         conn = pymongo.MongoClient(oAuth_util.get_db_url())
-        StravaUsers = conn.dota2bot.strava
-        temp = StravaUsers.find_one({'GroupmeID': self.msg.sender_id})
+        SpotifyUsers = conn.dota2bot.spotify
+        temp = SpotifyUsers.find_one({'GroupmeID': self.msg.sender_id})
         if temp is not None:
             Token = temp["access_token"]
-            request_url = nowmusic.url.format(token=Token)
+            request_url = nowmusic.url.format(Authorization=Token)
             response = requests.get(request_url)
             try:
                 print(request_url)
-                miles = response.json()[0]["distance"] / 1609.34
-                time = response.json()[0]["elapsed_time"] / 60 / miles
-                location = response.json()[0]["location_city"]
-                move_type = response.json()[0]["type"]
-                date = dateutil.parser.parse(response.json()[0]["start_date_local"]).date()
-                out = str(date) + ": You went " + "{0:.2f}".format(miles) + " miles at a " + "{0:.2f}".format(time) + "minute/mile pace in " + location + " (" + move_type + ")"
+                currently_playing = response.json()["is_playing"]
+                song = response.json()["item"]["name"]
+                artist = response.json()["artists"][0]["name"]
+                if currently_playing:
+                    out = "Currently listening to " + song + " by " + artist
+                else:
+                    out = "Last listened to " + song + " by " + artist
             except Exception as e:
                 out = "Something went wrong: " + str(e)
             return out
