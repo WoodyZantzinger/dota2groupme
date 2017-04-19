@@ -15,7 +15,7 @@ class nowmusic(AbstractResponse):
 
     COOLDOWN = 1 * 60 * 60 * 3 / 2
 
-    url = "https://api.spotify.com/v1/me/player/currently-playing"
+    url = "https://api.spotify.com/v1/me/player/currently-playing?Authorization={token}"
 
     def __init__(self, msg):
         super(nowmusic, self).__init__(msg)
@@ -26,10 +26,9 @@ class nowmusic(AbstractResponse):
         temp = SpotifyUsers.find_one({'GroupmeID': self.msg.sender_id})
         if temp is not None:
             Token = temp["access_token"]
-            request_url = nowmusic.url.format(Authorization=Token)
-            response = requests.get(request_url)
+            headers = {'Authorization': 'Bearer ' + str(Token)}
             try:
-                print(request_url)
+                response = requests.get(nowmusic.url, headers=headers)
                 currently_playing = response.json()["is_playing"]
                 song = response.json()["item"]["name"]
                 artist = response.json()["artists"][0]["name"]
