@@ -8,7 +8,7 @@ import pprint
 import time
 
 class ResponseMusic(AbstractResponse):
-    RESPONSE_KEY = "#music"
+    RESPONSE_KEY = "#old_music"
 
     def __init__(self, msg):
         super(ResponseMusic, self).__init__(msg)

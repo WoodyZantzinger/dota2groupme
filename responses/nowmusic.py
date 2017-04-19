@@ -26,7 +26,7 @@ class nowmusic(AbstractResponse):
         temp = StravaUsers.find_one({'GroupmeID': self.msg.sender_id})
         if temp is not None:
             Token = temp["access_token"]
-            request_url = last_move.url.format(token=Token)
+            request_url = nowmusic.url.format(token=Token)
             response = requests.get(request_url)
             try:
                 print(request_url)
