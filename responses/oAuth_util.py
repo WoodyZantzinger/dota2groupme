@@ -25,6 +25,15 @@ def get_strava_key():
     except:
         return None
 
+def get_spotify_key():
+    try:
+        with open('local_variables.json') as f:
+            local_var = json.load(f)
+        return local_var["SPOTIFY_KEY"]
+    except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
+        return os.getenv('SPOTIFY_KEY')
+    except:
+        return None
 
 class ResponseNow(AbstractResponse):
 

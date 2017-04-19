@@ -1,3 +1,4 @@
+__author__ = 'woodyzantzinger'
 # -*- coding: utf-8 -*
 from AbstractResponse import *
 from CooldownResponse import *
@@ -6,23 +7,23 @@ import oAuth_util
 import dateutil.parser
 
 
-class last_move(AbstractResponse):
+class nowmusic(AbstractResponse):
 
-    message = "#move"
+    message = "#music"
 
-    RESPONSE_KEY = "#move"
+    RESPONSE_KEY = "#music"
 
     COOLDOWN = 1 * 60 * 60 * 3 / 2
 
-    url = "https://www.strava.com/api/v3/activities?access_token={token}"
+    url = "TODO"
 
     def __init__(self, msg):
-        super(last_move, self).__init__(msg)
+        super(nowmusic, self).__init__(msg)
 
     def respond(self):
         conn = pymongo.MongoClient(oAuth_util.get_db_url())
-        SpotifyUsers = conn.dota2bot.spotify
-        temp = SpotifyUsers.find_one({'GroupmeID': self.msg.sender_id})
+        StravaUsers = conn.dota2bot.strava
+        temp = StravaUsers.find_one({'GroupmeID': self.msg.sender_id})
         if temp is not None:
             Token = temp["access_token"]
             request_url = last_move.url.format(token=Token)
@@ -39,12 +40,10 @@ class last_move(AbstractResponse):
                 out = "Something went wrong: " + str(e)
             return out
         else:
-            URL = ("You need to Auth\nhttps://www.strava.com/oauth/authorize?"
-            "client_id=7477"
+            URL = ("You need to Auth\nhhttps://accounts.spotify.com/authorize?"
+            "client_id=f8597c3f9afb4c1f9f0d3e8d5b53d4ae"
             "&response_type=code"
-            "&redirect_uri=https://young-fortress-3393.herokuapp.com/strava_token"
-            "&scope=view_private"
-            "&state=" + self.msg.sender_id +
-            "&approval_prompt=force"
+            "&redirect_uri=https://young-fortress-3393.herokuapp.com/spotify_callback"
+            "&state=" + self.msg.sender_id
             )
             return URL

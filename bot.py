@@ -234,7 +234,7 @@ def strava():
     url = 'https://www.strava.com/oauth/token'
     values = {
           'client_id': '7477',
-          'client_secret': auth_strava.get_strava_key(),
+          'client_secret': oAuth_util.get_strava_key(),
           'code': code
     }
     strava_data = urllib.urlencode(values)
@@ -245,12 +245,40 @@ def strava():
     StravaData['GroupmeID'] = GroupmeID
     conn_start_time = time.time()
     print "1"
-    conn = pymongo.MongoClient(auth_strava.get_db_url())
-    print auth_strava.get_db_url()
+    conn = pymongo.MongoClient(oAuth_util.get_db_url())
+    print oAuth_util.get_db_url()
     conn_time = time.time() - conn_start_time
     print("took {} seconds to connect to mongo".format(conn_time))
     StravaUsers = conn.dota2bot.strava
     result = StravaUsers.insert(StravaData)
+    print result
+    return "Success! GroupMe, sUN and Strava are synched"
+
+@app.route("/spotify_callback")
+def spotify():
+    GroupmeID = request.args.get('state')
+    code = request.args.get('code')
+    url = 'https://accounts.spotify.com/api/token'
+    values = {
+          'grant_type': 'authorization_code',
+          'client_id': 'f8597c3f9afb4c1f9f0d3e8d5b53d4ae',
+          'client_secret': oAuth_util.get_spotify_key(),
+          'code': code
+    }
+
+    spotify_data = urllib.urlencode(values)
+    spotify_req = urllib2.Request(url, spotify_data)
+    spotify_response = urllib2.urlopen(spotify_req)
+    SpotifyData = json.load(spotify_response)
+    SpotifyData['GroupmeID'] = GroupmeID
+
+    conn_start_time = time.time()
+    conn = pymongo.MongoClient(oAuth_util.get_db_url())
+    conn_time = time.time() - conn_start_time
+    print("took {} seconds to connect to mongo".format(conn_time))
+
+    SpotifyUsers = conn.dota2bot.spotify
+    result = SpotifyUsers.insert(SpotifyData)
     print result
     return "Success! GroupMe, sUN and Strava are synched"
 
