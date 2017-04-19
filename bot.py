@@ -262,6 +262,7 @@ def spotify():
     values = {
           'grant_type': 'authorization_code',
           'client_id': 'f8597c3f9afb4c1f9f0d3e8d5b53d4ae',
+          'redirect_uri ': 'https://young-fortress-3393.herokuapp.com/spotify_callback',
           'client_secret': oAuth_util.get_spotify_key(),
           'code': code
     }
@@ -269,6 +270,7 @@ def spotify():
     spotify_data = urllib.urlencode(values)
     spotify_req = urllib2.Request(url, spotify_data)
     spotify_response = urllib2.urlopen(spotify_req)
+
     SpotifyData = json.load(spotify_response)
     SpotifyData['GroupmeID'] = GroupmeID
 
@@ -280,7 +282,7 @@ def spotify():
     SpotifyUsers = conn.dota2bot.spotify
     result = SpotifyUsers.insert(SpotifyData)
     print result
-    return "Success! GroupMe, sUN and Strava are synched"
+    return "Success! GroupMe, sUN and Spotify are synched"
 
 
 @app.route("/past_response/<name>")
