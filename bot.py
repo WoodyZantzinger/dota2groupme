@@ -269,8 +269,8 @@ def spotify():
     )
     response = requests.get(request_url)
 
-    print request_url + "\n"
-    print response + "\n"
+    print request_url
+    print response
 
     SpotifyData = response.json()
     SpotifyData['GroupmeID'] = GroupmeID
