@@ -258,23 +258,18 @@ def strava():
 def spotify():
     GroupmeID = request.args.get('state')
     code = request.args.get('code')
-    url = 'https://accounts.spotify.com/api/token'
-    values = {
-          'grant_type': 'authorization_code',
-          'client_id': 'f8597c3f9afb4c1f9f0d3e8d5b53d4ae',
-          'redirect_uri ': 'https://young-fortress-3393.herokuapp.com/spotify_callback',
-          'client_secret': oAuth_util.get_spotify_key(),
-          'code': code
-    }
+    url = 'https://accounts.spotify.com/api/token?grant_type={grant_type}&client_id={client_id}&redirect_uri={redirect_uri}&client_secret={client_secret}&code={code}'
 
-    spotify_data = urllib.urlencode(values)
-    spotify_req = urllib2.Request(url, spotify_data)
-    print spotify_req
+    request_url = url.format(
+        grant_type="authorization_code",
+        client_id="f8597c3f9afb4c1f9f0d3e8d5b53d4ae",
+        redirect_uri ="https://young-fortress-3393.herokuapp.com/spotify_callback",
+        client_secret = oAuth.util.get_spotify_key(),
+        code = code
+    )
+    response = requests.get(request_url)
 
-    spotify_response = urllib2.urlopen(spotify_req)
-
-
-    SpotifyData = json.load(spotify_response)
+    SpotifyData = response.json()
     SpotifyData['GroupmeID'] = GroupmeID
 
     conn_start_time = time.time()
