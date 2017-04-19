@@ -44,7 +44,7 @@ class nowmusic(AbstractResponse):
             "client_id=f8597c3f9afb4c1f9f0d3e8d5b53d4ae"
             "&response_type=code"
             "&redirect_uri=https://young-fortress-3393.herokuapp.com/spotify_callback"
-            "&scope=user-read-currently-playing user-read-playback-state"
+            "&scope=user-read-currently-playing%20user-read-playback-state"
             "&state=" + self.msg.sender_id
             )
             return URL
