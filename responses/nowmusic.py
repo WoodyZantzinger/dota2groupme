@@ -31,7 +31,7 @@ class nowmusic(AbstractResponse):
                 response = requests.get(nowmusic.url, headers=headers)
                 currently_playing = response.json()["is_playing"]
                 song = response.json()["item"]["name"]
-                artist = response.json()["artists"][0]["name"]
+                artist = response.json()["item"]["artists"][0]["name"]
                 if currently_playing:
                     out = "Currently listening to " + song + " by " + artist
                 else:
