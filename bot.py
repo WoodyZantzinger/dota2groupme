@@ -264,7 +264,7 @@ def spotify():
         grant_type="authorization_code",
         client_id="f8597c3f9afb4c1f9f0d3e8d5b53d4ae",
         redirect_uri ="https://young-fortress-3393.herokuapp.com/spotify_callback",
-        client_secret = oAuth.util.get_spotify_key(),
+        client_secret = oAuth_util.get_spotify_key(),
         code = code
     )
     response = requests.get(request_url)
