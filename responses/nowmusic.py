@@ -30,16 +30,16 @@ class nowmusic(AbstractResponse):
                 response = requests.get(nowmusic.url, headers=headers)
                 if (response.status_code == 401):
                     r = requests.post('https://accounts.spotify.com/api/token', data = {
-                        'grant_type':'authorization_code',
+                        'grant_type':'refresh_token',
                         'client_id':'f8597c3f9afb4c1f9f0d3e8d5b53d4ae',
                         'redirect_uri':'https://young-fortress-3393.herokuapp.com/spotify_callback',
                         'client_secret': oAuth_util.get_spotify_key(),
-                        'code': temp["refresh_token"]})
-
+                        'refresh_token': temp["refresh_token"]})
 
                     SpotifyData = r.json()
                     temp["access_token"] = SpotifyData["access_token"]
-                    temp["refresh_token"] = SpotifyData["refresh_token"]
+                    if "refresh_token" in SpotifyData:
+                        temp["refresh_token"] = SpotifyData["refresh_token"]
 
                     SpotifyUsers.update({'_id': temp["_id"]}, {"$set": temp}, upsert=True)
 
