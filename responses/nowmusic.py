@@ -60,7 +60,6 @@ class nowmusic(AbstractResponse):
 
             except Exception as e:
                 out = "Something went wrong: " + str(e)
-            self.note_response(out)
             return out
         else:
             URL = ("You need to Auth\nhhttps://accounts.spotify.com/authorize?"
