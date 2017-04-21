@@ -47,7 +47,8 @@ class nowmusic(AbstractResponse):
                     #Try again
                     headers = {'Authorization': 'Bearer ' + str(temp["access_token"])}
                     response = requests.get(nowmusic.url, headers=headers)
-                elif (response.status_code == 200):
+
+                if (response.status_code == 200):
                     currently_playing = response.json()["is_playing"]
                     song = response.json()["item"]["name"]
                     artist = response.json()["item"]["artists"][0]["name"]
