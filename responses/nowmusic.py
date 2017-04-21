@@ -24,6 +24,7 @@ class nowmusic(AbstractResponse):
         conn = pymongo.MongoClient(oAuth_util.get_db_url())
         SpotifyUsers = conn.dota2bot.spotify
         temp = SpotifyUsers.find_one({'GroupmeID': self.msg.sender_id})
+        out = ""
         if temp is not None:
             headers = {'Authorization': 'Bearer ' + str(temp["access_token"])}
             try:
@@ -59,6 +60,7 @@ class nowmusic(AbstractResponse):
 
             except Exception as e:
                 out = "Something went wrong: " + str(e)
+            self.note_response(out)
             return out
         else:
             URL = ("You need to Auth\nhhttps://accounts.spotify.com/authorize?"
