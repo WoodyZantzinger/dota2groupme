@@ -1,4 +1,3 @@
-import os
 import urllib2
 import urllib
 import time
@@ -7,7 +6,6 @@ import sys
 from flask import Flask, request
 import difflib
 from responses import AbstractResponse
-from responses import *
 from statistics import *
 from statistics import AbstractStatistics
 
@@ -28,25 +26,6 @@ app = Flask(__name__)
 
 RESPONSES_CACHE = []
 STATISTICS_CACHE = []
-
-#have the bot do a specific msg in the background constantly (Time in seconds)
-def repeat_task(msg, time):
-    try:
-        #have the bot do a specific msg in the background constantly
-        print "Running Repeat Task: " + msg
-        active_response_categories = get_response_categories(msg, "sUN-self")
-        output_messages = make_responses(active_response_categories, msg, "sUN-self")
-
-        for output in output_messages:
-            if output:
-                if output != "":
-                    send_message(output, "0")
-        threading.Timer(time, repeat_task, [msg, time]).start()
-    except:
-        print("repeat task failed: {}".format(msg))
-
-# added a bodge to default to sending the messages to boyschat
-
 
 def send_message(msg, groupID="13203822", send=True):
     try:
@@ -361,6 +340,5 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     if not DEBUG:
         app.run(host='0.0.0.0', port=port, debug=True)
-        repeat_task('#update', 60 * 30)  # repeat every half an hour
     else:
         app.run(host='0.0.0.0', port=port, debug=True)
