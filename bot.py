@@ -1,7 +1,6 @@
 import urllib2
 import urllib
 import time
-import threading
 import sys
 from flask import Flask, request
 import difflib
@@ -17,8 +16,6 @@ import pymongo
 import traceback
 import nltk
 import requests
-
-dummyAR = AbstractResponse.AbstractResponse(None)
 
 DEBUG = False
 
@@ -111,7 +108,7 @@ def load_responses():
 
 
 def get_response_categories(msg):
-    if (msg.sender_id == dummyAR.GroupMeIDs["sUN"]):
+    if (AbstractResponse.AbstractResponse.GroupMeIDs["sUN"]):
         return None
     out = []
 #    for cls in AbstractResponse.AbstractResponse.__subclasses__():
