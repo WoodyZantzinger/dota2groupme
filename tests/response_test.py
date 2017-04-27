@@ -1,7 +1,7 @@
 __author__ = 'woodyzantzinger'
 
 import unittest
-from .. import bot
+import bot
 
 msg = """{
   "attachments": [],
@@ -24,7 +24,7 @@ class FlaskTestCase(unittest.TestCase):
         bot.app.config['TESTING'] = True
         self.app = bot.app.test_client()
 
-    def test_empty_db(self):
+    def test_hello_world_db(self):
         rv = self.app.get('/')
         assert b'Hello world!' in rv.data
 
