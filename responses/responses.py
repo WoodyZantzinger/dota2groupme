@@ -11,6 +11,9 @@ class ResponseResponses(AbstractResponse):
 
     def respond(self):
         parts = self.msg.text.split(" ")
-        name = parts[1]
-        url = "http://young-fortress-3393.herokuapp.com/past_response/{}".format(name)
-        return url
+        if len(parts) > 1:
+            name = parts[1]
+            url = "http://young-fortress-3393.herokuapp.com/past_response/{}".format(name)
+            return url
+        else:
+            return "Supply a name"

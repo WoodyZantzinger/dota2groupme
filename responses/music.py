@@ -10,6 +10,8 @@ import time
 class ResponseMusic(AbstractResponse):
     RESPONSE_KEY = "#old_music"
 
+    ENABLED = False
+
     def __init__(self, msg):
         super(ResponseMusic, self).__init__(msg)
 

@@ -108,7 +108,7 @@ def load_responses():
 
 
 def get_response_categories(msg):
-    if (AbstractResponse.AbstractResponse.GroupMeIDs["sUN"]):
+    if (msg.sender_id == AbstractResponse.AbstractResponse.GroupMeIDs["sUN"]):
         return None
     out = []
 #    for cls in AbstractResponse.AbstractResponse.__subclasses__():
@@ -117,6 +117,7 @@ def get_response_categories(msg):
         #for cls2 in cls.__subclasses__():
             #if cls2 not in classes:
                 #classes.append(cls2)
+    print len(RESPONSES_CACHE)
     for cls in RESPONSES_CACHE:
         if cls.is_relevant_msg(msg):
             print(cls)
@@ -143,11 +144,11 @@ def make_responses(categories, msg):
 def message():
     new_message = request.get_json(force=True)
     msg = rawmessage.RawMessage(new_message)
-    print("received message: ")
-    print(new_message)
+    #print("received message: ")
+    #print(new_message)
 
     groupID = new_message["group_id"]
-
+    print (msg.text)
     active_response_categories = get_response_categories(msg)
     if active_response_categories:
         output_messages = make_responses(active_response_categories, msg)
@@ -157,7 +158,7 @@ def message():
         for output in output_messages:
             if output:
                 send_message(output, groupID)
-        return 'OK - Respon se Sent'
+        return 'OK - Response Sent'
     else:
         return 'No Response'
 
@@ -338,4 +339,4 @@ if __name__ == "__main__":
     if not DEBUG:
         app.run(host='0.0.0.0', port=port, debug=True)
     else:
-        app.run(host='0.0.0.0', port=port, debug=True)
+        app.run(host='0.0.0.0', port=port, debug=False)

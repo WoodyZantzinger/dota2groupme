@@ -14,7 +14,7 @@ class Update(AbstractResponse):
 
     HELP_RESPONSE = "Update ones's last games"
 
-    ENABLED = True
+    ENABLED = False
 
     def __init__(self, msg):
         super(Update, self).__init__(msg)
