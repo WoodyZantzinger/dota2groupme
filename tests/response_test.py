@@ -6,8 +6,8 @@ import sys
 import json
 
 import bot
-from responses import *
-from responses import AbstractResponse
+
+#
 
 MSG_TEMPLATE = {
   "attachments": [],
