@@ -4,6 +4,7 @@ import pymongo
 from dota2py import data
 import time
 import sys
+import difflib
 
 class AbstractResponse(object):
 
@@ -136,7 +137,7 @@ class AbstractResponse(object):
             data.load_heroes()
 
         for key in data.HEROES_CACHE.items():
-            if msg_name.lower() == (key[1]['localized_name'].lower()):
+            if difflib.SequenceMatcher(None, msg_name.lower(), key[1]['localized_name'].lower()).ratio() > .5 :
                 return key[0]
 
     @classmethod

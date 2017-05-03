@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*
 from AbstractResponse import *
 from dota2py import data
+import difflib
 
 
 class Best(AbstractResponse):
@@ -28,7 +29,6 @@ class Best(AbstractResponse):
         if len(hero_name) < 2:
             out = "You need a hero name"
         else:
-
             hero_num = AbstractResponse.get_hero_id(hero_name[1])
             if hero_num < 0:
                 name = hero_name[1].lower()

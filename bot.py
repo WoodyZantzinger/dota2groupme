@@ -2,6 +2,9 @@ import urllib2
 import urllib
 import time
 import sys
+import logging
+import logging.handlers
+from optparse import OptionParser
 import os
 from flask import Flask, request
 import difflib
@@ -19,19 +22,35 @@ import traceback
 import nltk
 import requests
 
-DEBUG = False
+DEBUG = True
 
 app = Flask(__name__)
+logger = logging.getLogger(__name__)
 
 RESPONSES_CACHE = []
 STATISTICS_CACHE = []
 
+def set_debug(debug_level):
+    DEBUG = debug_level
+    logger = logging.getLogger(__name__)
+
+    if(debug_level):
+        logging.basicConfig(format='%(levelname)s in %(funcName)s (%(module)s): \t %(message)s', level=logging.DEBUG)
+    else:
+        logging.basicConfig(format='%(levelname)s in %(funcName)s (%(module)s): \t %(message)s', level=logging.WARNING)
+        handler = logging.handlers.RotatingFileHandler(
+              "LOG_FILE", maxBytes=20, backupCount=5)
+        handler.setLevel(logging.DEBUG)
+        logger.addHandler(handler)
+    logger.warning("test warning")
+    logger.debug("test debug")
+
 def send_message(msg, groupID="13203822", send=True):
     try:
-        print(u"Sending: '{}".format(msg))
+        logger.info(u"Sending: '{}".format(msg))
     except Exception, e:
         line_fail = sys.exc_info()[2].tb_lineno
-        print("\tError: {} on line {}".format(repr(e), line_fail))
+        logger.debug("\tError: {} on line {}".format(repr(e), line_fail))
     if not DEBUG and send:
         url = 'https://api.groupme.com/v3/bots/post'
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
@@ -39,7 +58,6 @@ def send_message(msg, groupID="13203822", send=True):
         values = GroupMeMessage.parse_message(msg, groupID)
         req = urllib2.Request(url, json.dumps(values), header)
         response = urllib2.urlopen(req)
-        #print "msg"
         return response
     else:
         return 'Win'
@@ -61,7 +79,7 @@ def do_last_day_message_statistics():
     req = requests.get(url, params=values)
     response = json.loads(req.text)
     messages = []
-    print("\t[ Loading last day's messages ]")
+    logger.info("\t[ Loading last day's messages ]")
     while not found_a_day_ago:
         for item in response["response"]["messages"]:
             parsed_msg = rawmessage.RawMessage(item)
@@ -73,7 +91,7 @@ def do_last_day_message_statistics():
         req = requests.get(url, params=values)
         response = json.loads(req.text)
     # run all the statistics
-    print("\t[ Last day had {} messages ]".format(len(messages)))
+    logger.info("\t[ Last day had {} messages ]".format(len(messages)))
 
     out_message = ""
     print(len(STATISTICS_CACHE))
@@ -88,7 +106,7 @@ def do_last_day_message_statistics():
 
 
 def load_responses():
-    print("Loading responses...")
+    logger.info("Loading responses...")
     for cls in AbstractResponse.AbstractResponse.__subclasses__():
         if cls.ENABLED:
             RESPONSES_CACHE.append(cls)
@@ -97,16 +115,16 @@ def load_responses():
             if cls2 not in RESPONSES_CACHE:
                 if cls2.ENABLED:
                     RESPONSES_CACHE.append(cls2)
-    print("Loaded {} response classes".format(len(RESPONSES_CACHE)))
+    logger.info("Loaded {} response classes".format(len(RESPONSES_CACHE)))
     for cls in sorted([str(cls).lower() for cls in RESPONSES_CACHE]):
-        print("loaded response class: {}".format(cls))
+        logger.info("loaded response class: {}".format(cls))
 
     for cls in AbstractStatistics.AbstractStatistics.__subclasses__():
         STATISTICS_CACHE.append(cls)
 
-    print("Loaded {} statistic classes".format(len(STATISTICS_CACHE)))
+    logger.info("Loaded {} statistic classes".format(len(STATISTICS_CACHE)))
     for cls in sorted([str(cls).lower() for cls in STATISTICS_CACHE]):
-        print("loaded statistics class: {}".format(cls))
+        logger.info("loaded statistics class: {}".format(cls))
 
 
 def get_response_categories(msg):
@@ -137,7 +155,7 @@ def get_response_categories(msg):
 def make_responses(categories, msg):
     out = []
     for cls in categories:
-        print("sending msg for {}".format(cls))
+        logger.info("sending msg for {}".format(cls))
         out.append(cls(msg).respond())
     return out
 
@@ -220,17 +238,15 @@ def strava():
     strava_req = urllib2.Request(url, strava_data)
     strava_response = urllib2.urlopen(strava_req)
     StravaData = json.load(strava_response)
-    print StravaData
+    logger.info(StravaData)
     StravaData['GroupmeID'] = GroupmeID
     conn_start_time = time.time()
-    print "1"
     conn = pymongo.MongoClient(oAuth_util.get_db_url())
-    print oAuth_util.get_db_url()
     conn_time = time.time() - conn_start_time
-    print("took {} seconds to connect to mongo".format(conn_time))
+    logger.info("took {} seconds to connect to mongo".format(conn_time))
     StravaUsers = conn.dota2bot.strava
     result = StravaUsers.insert(StravaData)
-    print result
+    logger.info(result)
     return "Success! GroupMe, sUN and Strava are synched"
 
 @app.route("/spotify_callback")
@@ -252,11 +268,11 @@ def spotify():
     conn_start_time = time.time()
     conn = pymongo.MongoClient(oAuth_util.get_db_url())
     conn_time = time.time() - conn_start_time
-    print("took {} seconds to connect to mongo".format(conn_time))
+    logger.info("took {} seconds to connect to mongo".format(conn_time))
 
     SpotifyUsers = conn.dota2bot.spotify
     result = SpotifyUsers.insert(SpotifyData)
-    print result
+    logger.info(result)
     return "Success! GroupMe, sUN and Spotify are synched"
 
 
@@ -284,7 +300,7 @@ def past_response(name):
 @app.route("/remindme")
 def remindme_callback():
     try:
-        print("callbacking on remindme")
+        logger.info("callbacking on remindme")
         conn = pymongo.MongoClient(remindme.get_db_url(), connectTimeoutMS=1000)
         reminders = conn.mjsunbot.reminders
 
@@ -304,15 +320,15 @@ def remindme_callback():
                         out.append("Hey, {}: {}".format(name, msg))
                         break
                 except:
-                    print("error reverse-looking up name: " + name)
-            print("triggering message:")
+                    logger.warning("error reverse-looking up name: " + name)
+            logger.info("triggering message:")
             reminders.remove(item)
         for msg in out:
             send_message(msg)
         return out.__str__()
     except Exception, e:
         (e)
-        print(traceback.format_exc())
+        logger.warning(traceback.format_exc())
         return "remindme failed!ex"
 
 
@@ -331,14 +347,22 @@ def hello():
     return "Hello world!"
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        if sys.argv[1] == "debug":
-            DEBUG = True
+
+    parser = OptionParser()
+    parser.add_option("-d", "--debug", action="store_true", dest="debug", default=True,
+                      help="Set the bot to debug mode")
+    parser.add_option("-p", "--production", action="store_false", dest="debug",
+                      help="Set the bot to production mode")
+
+    (options, args) = parser.parse_args()
+
+    set_debug(options.debug)
+
     load_responses()
     nltk.data.path.append(os.getcwd())
-    print(AbstractResponse.AbstractResponse("", "").GroupMeIDs)
+    logger.info(AbstractResponse.AbstractResponse("", "").GroupMeIDs)
+
     port = int(os.environ.get("PORT", 5000))
-    if not DEBUG:
-        app.run(host='0.0.0.0', port=port, debug=True)
-    else:
-        app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=DEBUG)
+
+
