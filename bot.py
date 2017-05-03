@@ -8,19 +8,22 @@ from optparse import OptionParser
 import os
 from flask import Flask, request
 import difflib
-from responses import AbstractResponse
-from responses import *
-from statistics import *
-from statistics import AbstractStatistics
-
-from utils import rawmessage
-from utils import GroupMeMessage
 import json
 import datetime
 import pymongo
 import traceback
 import nltk
 import requests
+import pdb
+
+
+from responses import *
+from responses import AbstractResponse
+from statistics import *
+from statistics import AbstractStatistics
+from utils import rawmessage
+from utils import GroupMeMessage
+
 
 DEBUG = True
 
@@ -31,6 +34,7 @@ RESPONSES_CACHE = []
 STATISTICS_CACHE = []
 
 def set_debug(debug_level):
+    global DEBUG
     DEBUG = debug_level
     logger = logging.getLogger(__name__)
 
@@ -349,7 +353,7 @@ def hello():
 if __name__ == "__main__":
 
     parser = OptionParser()
-    parser.add_option("-d", "--debug", action="store_true", dest="debug", default=True,
+    parser.add_option("-d", "--debug", action="store_true", dest="debug",
                       help="Set the bot to debug mode")
     parser.add_option("-p", "--production", action="store_false", dest="debug",
                       help="Set the bot to production mode")
