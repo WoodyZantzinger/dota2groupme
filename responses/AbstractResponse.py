@@ -136,9 +136,13 @@ class AbstractResponse(object):
         if len(data.HEROES_CACHE) < 1:
             data.load_heroes()
 
+        matches = []
+
         for key in data.HEROES_CACHE.items():
-            if difflib.SequenceMatcher(None, msg_name.lower(), key[1]['localized_name'].lower()).ratio() > .5 :
-                return key[0]
+            ratio = difflib.SequenceMatcher(None, msg_name.lower(), key[1]['localized_name'].lower()).ratio()
+            if ratio > .5 :
+                matches.append([key, ratio])
+        return sorted(matches, key = lambda x: x[1], reverse = True)[0][0][0]
 
     @classmethod
     def has_dotaID(cls, name):
