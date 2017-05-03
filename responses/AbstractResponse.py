@@ -142,7 +142,11 @@ class AbstractResponse(object):
             ratio = difflib.SequenceMatcher(None, msg_name.lower(), key[1]['localized_name'].lower()).ratio()
             if ratio > .7 :
                 matches.append([key, ratio])
-        return sorted(matches, key = lambda x: x[1], reverse = True)[0][0][0]
+                
+        if len(matches) < 1:
+            return -1
+        else:
+            return sorted(matches, key = lambda x: x[1], reverse = True)[0][0][0]
 
     @classmethod
     def has_dotaID(cls, name):
