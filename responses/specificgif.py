@@ -25,6 +25,7 @@ class ResponseSpecificGif(ResponseCooldown):
                  "awesome": "http://i.imgur.com/kTfyKCL.gif",
                  "fdfb": "http://i.imgur.com/rl6mt.gifv",
                  "nofriends": "http://i.imgur.com/3J9uUC8.gif",
+                 "slowpoke": "http://i.imgur.com/HcT37.png",
                  }
 
     def __init__(self, msg):
