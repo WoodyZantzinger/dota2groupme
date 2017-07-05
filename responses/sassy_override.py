@@ -11,7 +11,7 @@ class ResponseSassyOverride(AbstractResponse):
 
     mean_names = ["bitch", "loser", "jabroni", "fudgepacker", "dipshit", "idiot", "assjacker", "axwound", "boner",
                   "butt-pirate", "cockface", "dickbag", "fuckstick", "jackass", "muffdiver", "prick", "queef", "rimjob",
-                  "shitstain", "thundercunt", "unclefucker"]
+                  "shitstain", "thundercunt", "unclefucker","chickenfucker","taint licker","gaping cock-socket","fat fuck"]
 
     def __init__(self, msg):
         super(ResponseSassyOverride, self).__init__(msg)
