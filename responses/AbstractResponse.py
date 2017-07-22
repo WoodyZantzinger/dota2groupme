@@ -142,7 +142,7 @@ class AbstractResponse(object):
             ratio = difflib.SequenceMatcher(None, msg_name.lower(), key[1]['localized_name'].lower()).ratio()
             if ratio > .7 :
                 matches.append([key, ratio])
-                
+
         if len(matches) < 1:
             return -1
         else:
