@@ -22,7 +22,6 @@ class ResponseJaJa(ResponseCooldown):
             return out
         print("not responding to jaja because sender {} is on cooldown".format(self.msg.name))
 
-        return "Get a job"
 
     @classmethod
     def is_relevant_msg(cls, msg):
