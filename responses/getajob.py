@@ -31,6 +31,11 @@ class ResponseGetAJob(AbstractResponse):
         debugstr = debugstr + "\n" + fmt.format("games in msg", "games" in msg.text)
 
         print(debugstr)
+        boolean = is_during_workday and "games" in msg.text and is_weekday and "?" in msg.text
+        boolean2 = is_during_workday and ("games" in msg.text) and (is_weekday) and ("?" in msg.text)
+
+        debugstr = debugstr + "\n" + fmt.format("boolean", boolean)
+        debugstr = debugstr + "\n" + fmt.format("boolean2", boolean2)
 
         return is_during_workday and "games" in msg.text and is_weekday and "?" in msg.text
 
