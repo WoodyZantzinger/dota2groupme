@@ -21,8 +21,8 @@ class ResponseLol(ResponseCooldown):
 
     @classmethod
     def is_relevant_msg(cls, msg):
-        if msg.text != ResponseLol.NOTED_RESPONSE:
-            ResponseLol.NOTED_RESPONSE = msg.text
+        if msg.text.lower() != ResponseLol.NOTED_RESPONSE:
+            ResponseLol.NOTED_RESPONSE = msg.text.lower()
             ResponseLol.RESPONSE_TOTAL = 1
         else:
             ResponseLol.RESPONSE_TOTAL = ResponseLol.RESPONSE_TOTAL + 1
