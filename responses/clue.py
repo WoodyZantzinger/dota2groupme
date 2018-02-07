@@ -4,11 +4,11 @@ from CooldownResponse import *
 import random
 
 things = []
-with open(os.path.join("utils", "things.txt")) as f:
+with open(os.path.join(os.path.dirname(__file__), '../utils/things.txt')) as f:
     things = [line.rstrip('\n') for line in f]
 
 places = []
-with open(os.path.join("utils", "places.txt")) as f:
+with open(os.path.join(os.path.dirname(__file__), '../utils/places.txt')) as f:
     places = [line.rstrip('\n') for line in f]
 
 people = []

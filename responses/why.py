@@ -4,7 +4,7 @@ from CooldownResponse import *
 import random
 
 reasons = []
-with open(os.path.join("utils", "reasons.txt")) as f:
+with open(os.path.join(os.path.dirname(__file__), '../utils/reasons.txt')) as f:
     reasons = [line.rstrip('\n') for line in f]
 
 

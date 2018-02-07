@@ -21,28 +21,28 @@ class AbstractResponse(object):
     # default help response
     HELP_RESPONSE = "Not implemented for " + RESPONSE_KEY
 
-    with open('./responses/GroupMetoSteam.json') as f:
+    with open(os.path.join(os.path.dirname(__file__), 'GroupMetoSteam.json')) as f:
         GroupMetoSteam = json.load(f)
 
-    with open('./responses/GroupMetoDOTA.json') as f:
+    with open(os.path.join(os.path.dirname(__file__), 'GroupMetoDOTA.json')) as f:
         GroupMetoDOTA = json.load(f)
 
-    with open('./responses/GroupMetoXbox.json') as f:
+    with open(os.path.join(os.path.dirname(__file__), 'GroupMetoXbox.json')) as f:
         GroupMetoXbox = json.load(f)
 
-    with open('./responses/GroupMetoLastfm.json') as f:
+    with open(os.path.join(os.path.dirname(__file__), 'GroupMetoLastfm.json')) as f:
         GroupMetoLastfm = json.load(f)
 
-    with open('./responses/GroupMetoXboxName.json') as f:
+    with open(os.path.join(os.path.dirname(__file__), 'GroupMetoXboxName.json')) as f:
         GroupMetoXboxName = json.load(f)
 
-    with open('./utils/GroupMeIDs.json') as f:
+    with open(os.path.join(os.path.dirname(__file__), '../utils/GroupMeIDs.json')) as f:
         GroupMeIDs = json.load(f)
 
     mongo_connection = None
 
     try:
-        with open('local_variables.json') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../local_variables.json')) as f:
             local_var = json.load(f)
         print local_var["MONGOLAB_URL"]
         conn_start_time = time.time()

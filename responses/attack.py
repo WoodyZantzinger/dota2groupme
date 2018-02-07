@@ -4,7 +4,8 @@ from CooldownResponse import *
 import random
 
 moves = []
-with open(os.path.join("utils", "moves.txt")) as f:
+
+with open(os.path.join(os.path.dirname(__file__), '../utils/moves.txt')) as f:
     moves = [line.rstrip('\n') for line in f]
 
 

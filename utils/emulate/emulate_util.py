@@ -1,13 +1,14 @@
 import re
+import os
 from collections import Counter
 import string
 
-with open("utils/emulate/stop_words.txt") as inputfile:
+with open(os.path.join(os.path.dirname(__file__), 'stop_words.txt')) as inputfile:
         blacklist = inputfile.read().splitlines()
 
 word_counter = Counter()
 
-with open("utils/emulate/rawtext_history.txt", "rU") as f:
+with open(os.path.join(os.path.dirname(__file__), 'rawtext_history.txt'), "rU") as f:
     for line in f:
         word_counter.update(line.lower().split())
 

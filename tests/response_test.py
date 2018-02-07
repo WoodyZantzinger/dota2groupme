@@ -32,6 +32,7 @@ class FlaskTestCase(unittest.TestCase):
         bot.app.config['TESTING'] = True
         bot.DEBUG = True
         self.app = bot.app.test_client()
+        bot.load_responses()
 
     def test_hello_world(self):
         rv = self.app.get('/')
@@ -47,10 +48,12 @@ class FlaskTestCase(unittest.TestCase):
         assert 'No Response' in result.data
 
     def test_responses(self):
-
-        log = logging.getLogger( "FlaskTestCase.test_responses" )
+        logging.basicConfig( stream=sys.stderr )
+        logging.getLogger("FlaskTestCase.test_responses").setLevel(logging.DEBUG)
+        log = logging.getLogger("FlaskTestCase.test_responses")
 
         test_msg = dict(MSG_TEMPLATE)
+        log.debug(u"Testing Responses")
 
         for res in bot.RESPONSES_CACHE:
             if res.RESPONSE_KEY != "\0":
@@ -61,7 +64,8 @@ class FlaskTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
 
-    bot.load_responses()
-    logging.basicConfig( stream=sys.stderr )
-    logging.getLogger( "FlaskTestCase.test_responses" ).setLevel( logging.DEBUG )
-    unittest.main()
+    #logging.basicConfig( stream=sys.stderr )
+    logging.getLogger("FlaskTestCase.test_responses").setLevel( logging.DEBUG )
+    print("Hi")
+    suite = unittest.TestLoader().loadTestsFromTestCase(FlaskTestCase)
+    unittest.TextTestRunner(verbosity=2).run(suite)

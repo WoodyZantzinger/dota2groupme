@@ -4,7 +4,7 @@ from CooldownResponse import *
 import random
 
 prophecy = []
-with open(os.path.join("utils", "prophecy.txt")) as f:
+with open(os.path.join(os.path.dirname(__file__), '../utils/prophecy.txt')) as f:
     prophecy = [line.rstrip('\n') for line in f]
 
 

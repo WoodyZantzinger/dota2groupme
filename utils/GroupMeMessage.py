@@ -1,8 +1,11 @@
 import json
+import os
 
-emoji_data_file = "utils/groupme_emojis.json"
+emoji_data_file = "groupme_emojis.json"
 
 emojis_temp = None
+
+
 
 GroupToBot = {}
 GroupToBot["0"] = "f906f09e88ff3764c3c8b8c043" #Default
@@ -15,7 +18,7 @@ GroupToBot["11861464"] = "3498b59720bc9473c86f631600" #Test group
 
 
 # read the file to memory
-with open(emoji_data_file) as f:
+with open(os.path.join(os.path.dirname(__file__), emoji_data_file)) as f:
     emojis_temp = json.load(f)
 
 # parse the strings to integers
