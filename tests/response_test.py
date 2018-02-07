@@ -28,11 +28,17 @@ RESPONSES_CACHE = []
 
 class FlaskTestCase(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         bot.app.config['TESTING'] = True
         bot.DEBUG = True
+        bot.set_debug(True)
         self.app = bot.app.test_client()
         bot.load_responses()
+
+    def setUp(self):
+        #do nothing right now
+        logging.info("Running new test")
 
     def test_hello_world(self):
         rv = self.app.get('/')
@@ -49,23 +55,13 @@ class FlaskTestCase(unittest.TestCase):
 
     def test_responses(self):
         logging.basicConfig( stream=sys.stderr )
-        logging.getLogger("FlaskTestCase.test_responses").setLevel(logging.DEBUG)
-        log = logging.getLogger("FlaskTestCase.test_responses")
 
         test_msg = dict(MSG_TEMPLATE)
-        log.debug(u"Testing Responses")
+        logging.debug(u"Testing Responses")
 
         for res in bot.RESPONSES_CACHE:
             if res.RESPONSE_KEY != "\0":
                 test_msg["text"] = res.RESPONSE_KEY
                 result = self.app.post('/message/', data=json.dumps(test_msg), content_type='application/json')
-                log.debug( u"Testing: {0} \t\t got \t '{1}'".format (res.RESPONSE_KEY, result.data))
+                logging.debug( u"Testing: {0} \t\t got \t '{1}'".format (res.RESPONSE_KEY, result.data))
                 assert "OK - Response Sent" in result.data
-
-if __name__ == '__main__':
-
-    #logging.basicConfig( stream=sys.stderr )
-    logging.getLogger("FlaskTestCase.test_responses").setLevel( logging.DEBUG )
-    print("Hi")
-    suite = unittest.TestLoader().loadTestsFromTestCase(FlaskTestCase)
-    unittest.TextTestRunner(verbosity=2).run(suite)
