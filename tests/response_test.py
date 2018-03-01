@@ -30,11 +30,7 @@ class FlaskTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        bot.app.config['TESTING'] = True
-        bot.DEBUG = True
-        bot.set_debug(True)
         self.app = bot.app.test_client()
-        bot.load_responses()
 
     def setUp(self):
         #do nothing right now
@@ -53,15 +49,34 @@ class FlaskTestCase(unittest.TestCase):
         result = self.app.post('/message/', data=json.dumps(test_msg), content_type='application/json')
         assert 'No Response' in result.data
 
-    def test_responses(self):
-        logging.basicConfig( stream=sys.stderr )
 
+
+def test_responses_generator(msg):
+    def test(self):
         test_msg = dict(MSG_TEMPLATE)
         logging.debug(u"Testing Responses")
+        test_msg["text"] = msg
+        result = self.app.post('/message/', data=json.dumps(test_msg), content_type='application/json')
+        logging.debug(u"Testing: {0} \t\t got \t '{1}'".format(res.RESPONSE_KEY, result.data))
+        assert "OK - Response Sent" in result.data
 
-        for res in bot.RESPONSES_CACHE:
-            if res.RESPONSE_KEY != "\0":
-                test_msg["text"] = res.RESPONSE_KEY
-                result = self.app.post('/message/', data=json.dumps(test_msg), content_type='application/json')
-                logging.debug( u"Testing: {0} \t\t got \t '{1}'".format (res.RESPONSE_KEY, result.data))
-                assert "OK - Response Sent" in result.data
+    return test
+
+if __name__ == '__main__':
+    print("Spa")
+
+    bot.app.config['TESTING'] = True
+    bot.DEBUG = True
+    bot.set_debug(True)
+    bot.load_responses()
+
+    for res in bot.RESPONSES_CACHE:
+        if res.RESPONSE_KEY != "\0":
+            print("xx")
+            test_name = 'test_%s' % str(res).split(".")[2]
+            test_name = filter(str.isalnum, test_name)
+            test = test_responses_generator(res.RESPONSE_KEY)
+            setattr(FlaskTestCase, test_name, test)
+
+    unittest.main()
+

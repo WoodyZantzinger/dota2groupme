@@ -20,17 +20,21 @@ class ResponsePUBGLast(AbstractResponse):
 
         key = None
         try:
-            with open('local_variables.json') as f:
+            with open(os.path.join(os.path.dirname(__file__), "../local_variables.json")) as f:
                 local_var = json.load(f)
                 key = local_var["PUBG_KEY"]
         except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
             key = os.getenv('PUBG_KEY')
         except:
-            print "Something went very wrong in #halolast for the Halo key"
+            print "Something went very wrong in #pubgkey for the PUBG key"
 
         # get player results
         api = core.PUBGAPI(key)
         steamdata = api.player_s(steamid)
+
+        if steamdata == None:
+            return "What - Something went wrong"
+
         nick = steamdata['Nickname']
         time.sleep(1.5)
         playerdata = api.player(nick)
