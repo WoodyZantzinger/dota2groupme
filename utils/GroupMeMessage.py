@@ -12,6 +12,7 @@ GroupToBot["19216747"] = "200ba085c2b7a953cb74f849ad" #DnD Group
 GroupToBot["23635322"] = "b9b8594507d45452e13dcb4012" #Cville Group
 GroupToBot["16905359"] = "2cfa6c35347bffeb718a9061d2" #Dick.com group
 GroupToBot["11861464"] = "3498b59720bc9473c86f631600" #Test group
+GroupToBot["32229954"] = "bd982e70861fa051c78e389565" #PUBG
 
 
 # read the file to memory
