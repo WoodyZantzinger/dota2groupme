@@ -2,11 +2,10 @@
 from AbstractResponse import AbstractResponse
 import os
 import json
-from pypubg import core
-import time
+import requests
+
 
 class ResponsePUBGLast(AbstractResponse):
-
     RESPONSE_KEY = "#pubglast"
 
     def __init__(self, msg):
@@ -14,9 +13,12 @@ class ResponsePUBGLast(AbstractResponse):
 
     def respond(self):
         out = ""
+
+        template = "{name} did {damage} damage for {numKills} kills (placing {killRank} in kills) to finish {result} in a {gameType}\n"
+
         canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).next()
 
-        steamid = AbstractResponse.GroupMetoSteam[canonical_name]
+        PUBGname = AbstractResponse.GroupMetoPUBGName[canonical_name]
 
         key = None
         try:
@@ -26,72 +28,34 @@ class ResponsePUBGLast(AbstractResponse):
         except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
             key = os.getenv('PUBG_KEY')
         except:
-            print "Something went very wrong in #halolast for the Halo key"
+            print "Something went very wrong in #pubglast for the PUBG key"
 
-        # get player results
-        api = core.PUBGAPI(key)
-        steamdata = api.player_s(steamid)
-        nick = steamdata['Nickname']
-        time.sleep(1.5)
-        playerdata = api.player(nick)
-        lastmatch = playerdata['MatchHistory'][0]
+        playerUrl = "https://api.pubg.com/shards/pc-na/players?filter[playerNames]={name}"
+        matchUrl = "https://api.pubg.com/shards/pc-na/matches/{matchID}"
 
-        mode = lastmatch['MatchDisplay']
-        rating = lastmatch['Rating']
-        delta = lastmatch['RatingChange']
-        sign = "+" if delta > 0 else "-"
-        delta = abs(delta)
-        kills = lastmatch['Kills']
-        assists = lastmatch['Assists']
-        damage = lastmatch['Damage']
-        headshots = lastmatch['Headshots']
-        distance = str(lastmatch['MoveDistance'] / 1000) + " km"
-        survival_time = lastmatch['TimeSurvived']
-        surv_min = int(survival_time // 60)
-        surv_sec = int(survival_time - surv_min * 60)
-        duration = '{}:{}'.format(surv_min, surv_sec)
 
-        statsfmt = \
-"""
-Mode: {mode}
-Rating: {rating} [{sign}{delta}]
-Kills: {kills}
-Assists: {assists}
-Damage: {damage}
-Headshots: {headshots}
-Distance: {distance}
-Duration: {duration}
-"""
+        header = {"Authorization": "Bearer " + key, "Accept": "application/vnd.api+json"}
+        playerRequest = requests.get(playerUrl.format(name = PUBGname), headers=header)
 
-        resp = statsfmt.format(
-                    mode=mode,
-                    rating=rating,
-                    sign=sign,
-                    delta=delta,
-                    kills=kills,
-                    assists=assists,
-                    damage=damage,
-                    headshots=headshots,
-                    distance=distance,
-                    duration=duration
-            )
+        lastMatch = playerRequest.json()["data"][0]["relationships"]["matches"]["data"][0]["id"]
+        userID = playerRequest.json()["data"][0]["id"]
 
-        winstr = "You won!"
-        t10str = "You placed in the top 10!"
-        genstr = "You generally sucked."
+        matchRequest = requests.get(matchUrl.format(matchID = lastMatch), headers=header)
 
-        top10 = lastmatch['Top10']
-        won = lastmatch['Wins']
+        for player in matchRequest.json()["included"]:
+            if player["type"] == "participant":
+                if player["attributes"]["stats"]["playerId"] == userID:
 
-        resstr = ""
-        if won:
-            resstr = winstr
-        elif top10:
-            resstr = t10str
-        else:
-            resstr = genstr
+                    stats = player["attributes"]["stats"]
 
-        out = resstr + '\n~~~~~~~~~~~' + resp
+                    out = template.format(name = stats["name"],
+                                          damage = stats["damageDealt"],
+                                          numKills = stats["kills"],
+                                          killRank = stats["killPlace"],
+                                          result = stats["winPlace"],
+                                          gameType = matchRequest.json()["data"]["attributes"]["mapName"])
+
+                    print out
 
         return out
 

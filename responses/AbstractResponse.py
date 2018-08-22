@@ -33,6 +33,9 @@ class AbstractResponse(object):
     with open('./responses/GroupMetoLastfm.json') as f:
         GroupMetoLastfm = json.load(f)
 
+    with open('./responses/GroupMetoPUBG.json') as f:
+        GroupMetoPUBGName= json.load(f)
+
     with open('./responses/GroupMetoXboxName.json') as f:
         GroupMetoXboxName = json.load(f)
 
