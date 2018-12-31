@@ -28,7 +28,8 @@ class ResponseGif(ResponseCooldown):
 #            if "ariana" in search_term and "grande" in search_term:
 #		return "her?"
             hour = datetime.datetime.utcnow().hour
-            is_weekday = 1 <= datetime.datetime.utcnow().weekday() <= 5
+            # 0 == MONDAY for weekday()
+            is_weekday = 0 <= datetime.datetime.utcnow().weekday() <= 4
             EST_9AM = 6 + 5  # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
             EST_5PM = 7 + 12 + 5
             is_during_workday = EST_9AM < hour < EST_5PM
