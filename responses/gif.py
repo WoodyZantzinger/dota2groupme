@@ -13,14 +13,24 @@ class ResponseGif(ResponseCooldown):
 
     COOLDOWN = 1 * 60 * 60 * 3 / 2
 
-    url = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}&rating=r'
-    url_9to5 = 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag={term}&rating=pg'
+    url = 'http://api.giphy.com/v1/gifs/random?api_key={key}&tag={term}&rating=r'
+    url_9to5 = 'http://api.giphy.com/v1/gifs/random?api_key={key}&tag={term}&rating=pg'
+
 
     def __init__(self, msg):
         super(ResponseGif, self).__init__(msg, self.__module__, ResponseGif.COOLDOWN)
 
     def respond(self):
         if self.is_sender_off_cooldown():
+
+            key = None
+            try:
+                with open('local_variables.json') as f:
+                    local_var = json.load(f)
+                    key = local_var["GIPHY_KEY"]
+            except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
+                key = os.getenv('GIPHY_KEY')
+
             out = ""
             search_term = self.msg.text.partition(' ')[2].lower()
             if "spider" in search_term:
@@ -39,7 +49,7 @@ class ResponseGif(ResponseCooldown):
                 print("PG-ifying the gif response")
                 url_to_format = ResponseGif.url_9to5
 
-            request_url = url_to_format.format(term=search_term)
+            request_url = url_to_format.format(term=search_term, key=key)
             response = requests.get(request_url)
             try:
                 print request_url
