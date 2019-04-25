@@ -13,9 +13,8 @@ class ResponseGif(ResponseCooldown):
 
     COOLDOWN = 1 * 60 * 60 * 3 / 2
 
-    url = 'http://api.giphy.com/v1/gifs/random?api_key={key}&tag={term}&rating=r'
-    url_9to5 = 'http://api.giphy.com/v1/gifs/random?api_key={key}&tag={term}&rating=pg'
-
+    url = 'http://api.giphy.com/v1/gifs/random?api_key={key}&tag={term}&rating=pg'
+    url_9to5 = 'http://api.giphy.com/v1/gifs/random?api_key={key}&tag={term}&rating=g'
 
     def __init__(self, msg):
         super(ResponseGif, self).__init__(msg, self.__module__, ResponseGif.COOLDOWN)
@@ -38,9 +37,10 @@ class ResponseGif(ResponseCooldown):
 #            if "ariana" in search_term and "grande" in search_term:
 #		return "her?"
             hour = datetime.datetime.utcnow().hour
-            is_weekday = datetime.datetime.utcnow().weekday() < 5
-            EST_9AM = 8 + 5  # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
-            EST_5PM = 4 + 12 + 5
+            # 0 == MONDAY for weekday()
+            is_weekday = 0 <= datetime.datetime.utcnow().weekday() <= 4
+            EST_9AM = 6 + 5  # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
+            EST_5PM = 7 + 12 + 5
             is_during_workday = EST_9AM < hour < EST_5PM
             print("hour is: {}".format(hour))
             print("is it a weekday? {}".format(is_weekday))
