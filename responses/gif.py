@@ -3,6 +3,7 @@ from AbstractResponse import *
 from CooldownResponse import *
 import requests
 import datetime
+from random import randrange
 from azure.cognitiveservices.search.imagesearch import ImageSearchAPI
 from msrest.authentication import CognitiveServicesCredentials
 
@@ -75,7 +76,8 @@ class ResponseGif(ResponseCooldown):
                 image_results = client.images.search(query=search_term, image_type="AnimatedGif")
 
                 if image_results.value:
-                    first_image_result = image_results.value[0]
+                    total_num = min(len(image_results.value), 200)
+                    first_image_result = image_results.value[randrange(total_num)]
                     out = first_image_result.content_url
                 else:
                     out = "Found nothing"
