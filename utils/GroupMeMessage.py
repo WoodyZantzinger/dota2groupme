@@ -60,4 +60,11 @@ def parse_message(text, groupID):
                                  }]
 
     values["text"] = text
+    if ("https://i.groupme.com/" in text and " " not in text):
+        values["attachments"] = [{
+            'type': 'image',
+            'url': text
+        }]
+        values["text"] = ""
+
     return values

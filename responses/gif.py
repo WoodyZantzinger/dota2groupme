@@ -92,7 +92,7 @@ class ResponseGif(ResponseCooldown):
             else:
                 #use Azure
                 client = ImageSearchAPI(CognitiveServicesCredentials(azure_key))
-                image_results = client.images.search(query=search_term, image_type="AnimatedGif")
+                image_results = client.images.search(query=search_term, safe_search="Strict", image_type="AnimatedGif")
 
                 if image_results.value:
                     total_num = min(len(image_results.value), 200)
