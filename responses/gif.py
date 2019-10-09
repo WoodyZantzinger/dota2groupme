@@ -3,9 +3,28 @@ from AbstractResponse import *
 from CooldownResponse import *
 import requests
 import datetime
+import urllib2
 from random import randrange
 from azure.cognitiveservices.search.imagesearch import ImageSearchAPI
 from msrest.authentication import CognitiveServicesCredentials
+
+def HostImage(url):
+    GM_key = None
+    try:
+        with open('local_variables.json') as f:
+            local_var = json.load(f)
+            GM_key = local_var["GROUPME_AUTH"]
+    except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
+        GM_key = os.getenv('GROUPME_AUTH')
+
+    r = requests.get(url)
+    url = 'https://image.groupme.com/pictures'
+    user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+    header = {'X-Access-Token': GM_key, 'Content-Type': 'image/gif'}
+    req = urllib2.Request(url, r.content, header)
+    response = urllib2.urlopen(req)
+    JSON_response = json.load(response)
+    return (JSON_response["payload"]["picture_url"])
 
 
 class ResponseGif(ResponseCooldown):
@@ -78,7 +97,7 @@ class ResponseGif(ResponseCooldown):
                 if image_results.value:
                     total_num = min(len(image_results.value), 200)
                     first_image_result = image_results.value[randrange(total_num)]
-                    out = first_image_result.content_url
+                    out = HostImage(first_image_result.content_url)
                 else:
                     out = "Found nothing"
 
