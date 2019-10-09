@@ -3,6 +3,8 @@ from AbstractResponse import *
 from CooldownResponse import *
 import requests
 import datetime
+from azure.cognitiveservices.search.imagesearch import ImageSearchAPI
+from msrest.authentication import CognitiveServicesCredentials
 
 
 class ResponseGif(ResponseCooldown):
@@ -21,6 +23,14 @@ class ResponseGif(ResponseCooldown):
 
     def respond(self):
         if self.is_sender_off_cooldown():
+
+            azure_key = None
+            try:
+                with open('local_variables.json') as f:
+                    local_var = json.load(f)
+                    azure_key = local_var["AZURE_KEY"]
+            except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
+                azure_key = os.getenv('AZURE_KEY')
 
             key = None
             try:
@@ -49,14 +59,28 @@ class ResponseGif(ResponseCooldown):
                 print("PG-ifying the gif response")
                 url_to_format = ResponseGif.url_9to5
 
-            request_url = url_to_format.format(term=search_term, key=key)
-            response = requests.get(request_url)
-            try:
-                print request_url
-                out = response.json()["data"]["image_url"]
-            except Exception:
-                out = "Something went wrong"
-            self.note_response(out)
-            return out
+            if search_term == "":
+                #use Giphy
+                request_url = url_to_format.format(term=search_term, key=key)
+                response = requests.get(request_url)
+                try:
+                    print request_url
+                    out = response.json()["data"]["image_url"]
+                except Exception:
+                    out = "Something went wrong"
+
+            else:
+                #use Azure
+                client = ImageSearchAPI(CognitiveServicesCredentials(azure_key))
+                image_results = client.images.search(query=search_term, image_type="AnimatedGif")
+
+                if image_results.value:
+                    first_image_result = image_results.value[0]
+                    out = first_image_result.content_url
+                else:
+                    out = "Found nothing"
+
+                self.note_response(out)
+                return out
         else:
             print("not responding to gif because sender {} is on cooldown".format(self.msg.name))
