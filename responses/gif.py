@@ -21,10 +21,15 @@ def HostImage(url):
     url = 'https://image.groupme.com/pictures'
     user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
     header = {'X-Access-Token': GM_key, 'Content-Type': 'image/gif'}
-    req = urllib2.Request(url, r.content, header)
-    response = urllib2.urlopen(req)
-    JSON_response = json.load(response)
-    return (JSON_response["payload"]["picture_url"])
+    try:
+        req = urllib2.Request(url, r.content, header)
+        response = urllib2.urlopen(req)
+        JSON_response = json.load(response)
+        return (JSON_response["payload"]["picture_url"])
+    except urllib2.HTTPError:
+        print "There was some sort of error uploading the photo"
+        print r.content
+        return ""
 
 
 class ResponseGif(ResponseCooldown):
