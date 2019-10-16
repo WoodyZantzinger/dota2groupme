@@ -6,7 +6,7 @@ import logging
 import logging.handlers
 from optparse import OptionParser
 import os
-from flask import Flask, request
+from flask import Flask, request, render_template
 import difflib
 import json
 import datetime
@@ -14,7 +14,6 @@ import pymongo
 import traceback
 import nltk
 import requests
-import pdb
 
 
 from responses import *
@@ -348,7 +347,7 @@ def git_event():
 
 @app.route("/")
 def hello():
-    return "Hello world!"
+    return render_template('login.html', title='Home')
 
 if __name__ == "__main__":
 
