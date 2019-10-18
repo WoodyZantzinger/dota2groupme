@@ -6,7 +6,7 @@ import logging
 import logging.handlers
 from optparse import OptionParser
 import os
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 import difflib
 import json
 import datetime
@@ -14,7 +14,9 @@ import pymongo
 import traceback
 import nltk
 import requests
-
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired
 
 from responses import *
 from responses import AbstractResponse
@@ -22,6 +24,7 @@ from statistics import *
 from statistics import AbstractStatistics
 from utils import rawmessage
 from utils import GroupMeMessage
+from models import users
 
 
 DEBUG = True
@@ -344,6 +347,22 @@ def git_event():
     send_message(updates_buffer, "0")
     return updates_buffer
 
+@app.route("/createlogin", methods=['GET', 'POST'])
+def create_login():
+
+    class SignupForm(FlaskForm):
+        username = StringField('Username', validators=[DataRequired()])
+        password = PasswordField('Password', validators=[DataRequired()])
+        submit = SubmitField('Sign-up')
+
+    form = SignupForm()
+
+    if form.validate_on_submit():
+        users.create_user(form.username.data, form.password.data)
+        return redirect("/")
+
+    return render_template('createuser.html', title='Create New User', form=form)
+
 
 @app.route("/")
 def hello():
@@ -366,6 +385,14 @@ if __name__ == "__main__":
     logger.info(AbstractResponse.AbstractResponse("", "").GroupMeIDs)
 
     port = int(os.environ.get("PORT", 5000))
+
+    try:
+        with open('local_variables.json') as f:
+            local_var = json.load(f)
+        app.config['SECRET_KEY'] = local_var["SECRET_KEY"]
+    except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
+        app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+
     app.run(host='0.0.0.0', port=port, debug=DEBUG)
 
 
