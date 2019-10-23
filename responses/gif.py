@@ -7,6 +7,7 @@ import urllib2
 from random import randrange
 from azure.cognitiveservices.search.imagesearch import ImageSearchAPI
 from msrest.authentication import CognitiveServicesCredentials
+import urllib
 
 def HostImage(url):
     GM_key = None
@@ -67,6 +68,7 @@ class ResponseGif(ResponseCooldown):
 
             out = ""
             search_term = self.msg.text.partition(' ')[2].lower()
+            req_term = self.msg.text.partition(' ')[0].lower()
             if "spider" in search_term:
                 return "fuck spiders, fuck you"
 #            if "ariana" in search_term and "grande" in search_term:
@@ -96,17 +98,21 @@ class ResponseGif(ResponseCooldown):
 
             else:
                 #use Azure
+                search_term = search_term.encode("utf-8")
                 client = ImageSearchAPI(CognitiveServicesCredentials(azure_key))
                 image_results = client.images.search(query=search_term, safe_search="Strict", image_type="AnimatedGif")
 
                 if image_results.value:
-                    total_num = min(len(image_results.value), 200)
-                    first_image_result = image_results.value[randrange(total_num)]
-                    out = HostImage(first_image_result.content_url)
+                    out = ""
+                    while(out == ""):
+                        if req_term == "#gif": max = min(len(image_results.value), 50)
+                        if req_term == "#gifone": max = 1
+                        first_image_result = image_results.value[randrange(max)]
+                        out = HostImage(first_image_result.content_url)
                 else:
                     out = "Found nothing"
 
                 self.note_response(out)
                 return out
         else:
-            print("not responding to gif because sender {} is on cooldown".format(self.msg.name))
+            print("not responding to gif because sender {} is on cooldown".format(self.msg.name.encode("utf-8")))
