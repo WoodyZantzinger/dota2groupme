@@ -49,7 +49,7 @@ class ResponsePUBGLast(AbstractResponse):
                     stats = player["attributes"]["stats"]
 
                     out = template.format(name = stats["name"],
-                                          damage = stats["damageDealt"],
+                                          damage = round(stats["damageDealt"], 0),
                                           numKills = stats["kills"],
                                           killRank = stats["killPlace"],
                                           result = stats["winPlace"],
