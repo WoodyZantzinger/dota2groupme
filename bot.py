@@ -159,7 +159,7 @@ def make_responses(categories, msg):
     out = []
     for cls in categories:
         logger.info("sending msg for {}".format(cls))
-        out.append(cls(msg).respond)
+        out.append(cls(msg).respond())
     return out
 
 
