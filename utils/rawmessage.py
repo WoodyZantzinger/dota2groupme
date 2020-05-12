@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import GroupMeMessage
+from utils import GroupMeMessage
 
 
 class RawMessage(object):

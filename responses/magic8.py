@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-from CooldownResponse import *
+from .CooldownResponse import *
 import random
 
 

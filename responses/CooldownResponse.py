@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import *
+from .AbstractResponse import *
 import sys
 import time
 from utils import cachedmessage

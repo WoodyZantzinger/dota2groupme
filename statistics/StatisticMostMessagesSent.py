@@ -1,5 +1,5 @@
 
-from AbstractStatistics import *
+from .AbstractStatistics import *
 
 class StatisticMostMessagesSent(AbstractStatistics):
 

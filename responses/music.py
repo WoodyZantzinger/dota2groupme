@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from AbstractResponse import AbstractResponse
+from .AbstractResponse import AbstractResponse
 import requests
 import os
 import json
@@ -73,7 +73,7 @@ class ResponseMusic(AbstractResponse):
                     song = song + " (now!)"
 
                 out += person_status_template.format(name=person, song=song)
-            except Exception, e:
+            except Exception as e:
                 line_fail = sys.exc_info()[2].tb_lineno
                 print("\tError: {} on line {}".format(repr(e), line_fail))
 

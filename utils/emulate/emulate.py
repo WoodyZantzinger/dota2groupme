@@ -2,9 +2,9 @@ import sys
 import json
 import re
 import pdb
-from senGen import *
+from .senGen import *
 from collections import defaultdict
-import emulate_util
+from utils.emulate import emulate_util
 import operator
 import nltk
 

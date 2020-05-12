@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import *
-from CooldownResponse import *
+from .AbstractResponse import *
+from .CooldownResponse import *
 import random
 
 prophecy = []
-with open(os.path.join("utils", "prophecy.txt")) as f:
+with open(os.path.join("utils", "prophecy.txt"), encoding="utf-8") as f:
     prophecy = [line.rstrip('\n') for line in f]
 
 

@@ -47,7 +47,7 @@ class AbstractResponse(object):
     try:
         with open('local_variables.json') as f:
             local_var = json.load(f)
-        print local_var["MONGOLAB_URL"]
+        print(local_var["MONGOLAB_URL"])
         conn_start_time = time.time()
         mongo_connection = pymongo.MongoClient(local_var["MONGOLAB_URL"], connectTimeoutMS=1000)
         conn_time = time.time() - conn_start_time
@@ -61,7 +61,7 @@ class AbstractResponse(object):
         try:
             print("trying...")
             mongo_connection = pymongo.MongoClient(os.getenv('MONGOLAB_URL'), connectTimeoutMS=1000)
-        except Exception, e:
+        except Exception as e:
             print("connection to remote db using os.getenv failed!")
             print(e)
         if mongo_connection is not None:
@@ -104,10 +104,10 @@ class AbstractResponse(object):
         fdata = AbstractResponse.mongo_db.sUN_data
         if time.has_key('_id'):
             fdata.update({'_id': time["_id"]}, {"$set": time}, upsert=True)
-            print "Inserted (Update): " + str(time['last_update'])
+            print("Inserted (Update): " + str(time['last_update']))
         else:
             fdata.insert(time)
-            print "Inserted (New): " + str(time['last_update'])
+            print("Inserted (New): " + str(time['last_update']))
         return True
 
     @classmethod

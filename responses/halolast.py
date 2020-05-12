@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import AbstractResponse
+from .AbstractResponse import AbstractResponse
 import requests
 import os
 import json
@@ -32,7 +32,7 @@ class ResponseHaloLast(AbstractResponse):
         except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
             key = os.getenv('HALO_KEY')
         except:
-            print "Something went very wrong in #halolast for the Halo key"
+            print("Something went very wrong in #halolast for the Halo key")
 
         response = requests.get(halo_url.format(name=xbox_live_name), headers={'Ocp-Apim-Subscription-Key': key})
 

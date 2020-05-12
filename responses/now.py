@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import AbstractResponse
+from .AbstractResponse import AbstractResponse
 import requests
 import steamapi
 import os
@@ -40,9 +40,9 @@ class ResponseNow(AbstractResponse):
         except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
             key = os.getenv('XBOX_KEY')
         except:
-            print "Something went very wrong in #now for the Xbox key"
+            print("Something went very wrong in #now for the Xbox key")
         #Get Xbox Second
-        for person, xboxid in AbstractResponse.GroupMetoXbox.iteritems():
+        for person, xboxid in AbstractResponse.GroupMetoXbox.items():
             xbox_url = "https://xboxapi.com/v2/{id}/presence"
             print(person)
 

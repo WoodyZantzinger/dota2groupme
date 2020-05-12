@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import AbstractResponse
+from .AbstractResponse import AbstractResponse
 import os
 import json
 import requests
@@ -28,7 +28,7 @@ class ResponsePUBGLast(AbstractResponse):
         except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
             key = os.getenv('PUBG_KEY')
         except:
-            print "Something went very wrong in #pubglast for the PUBG key"
+            print("Something went very wrong in #pubglast for the PUBG key")
 
         playerUrl = "https://api.pubg.com/shards/pc-na/players?filter[playerNames]={name}"
         matchUrl = "https://api.pubg.com/shards/pc-na/matches/{matchID}"
@@ -55,7 +55,7 @@ class ResponsePUBGLast(AbstractResponse):
                                           result = stats["winPlace"],
                                           gameType = matchRequest.json()["data"]["attributes"]["mapName"])
 
-                    print out
+                    print(out)
 
         return out
 

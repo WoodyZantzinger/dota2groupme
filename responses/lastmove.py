@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import *
-from CooldownResponse import *
+from .AbstractResponse import *
+from .CooldownResponse import *
 import requests
-import oAuth_util
+from responses import oAuth_util
 import dateutil.parser
 
 

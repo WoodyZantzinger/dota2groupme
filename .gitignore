@@ -51,6 +51,12 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+#Venv
+venv/
+
+#PyCharm stuff
+.idea/
+
 # linux temp files
 *~
 *.save

@@ -1,5 +1,5 @@
 
-from AbstractStatistics import *
+from .AbstractStatistics import *
 import pprint
 
 class StatisticMostHeartsGiven(AbstractStatistics):

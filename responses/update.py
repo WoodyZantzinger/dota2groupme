@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import *
+from .AbstractResponse import *
 from threading import Thread
 from dota2py import api
 from dota2py import data
@@ -20,7 +20,7 @@ class Update(AbstractResponse):
         super(Update, self).__init__(msg)
 
     def respond(self):
-        print "Starting"
+        print("Starting")
 
         # Use the Thread if we are going to be updating like 1,000 records, shouldn't be needed.
         #
@@ -38,22 +38,22 @@ class Update(AbstractResponse):
         last_update_time = AbstractResponse.get_last_update_time()
         new_records = ""
         for name, account_id in AbstractResponse.GroupMetoDOTA.items():
-            print "Starting: {0}".format(name)
+            print("Starting: {0}".format(name))
             # Get a list of recent matches for the player
 
             matches = api.get_match_history(account_id=account_id)["result"]["matches"]
 
             #Go through every match
             for match in matches:
-                print "\tChecking: " + str(match["match_id"])
+                print("\tChecking: " + str(match["match_id"]))
 
                 if match["start_time"] < last_update_time["last_update"]:
-                    print "\tWe've seen these matches"
+                    print("\tWe've seen these matches")
                     break
 
                 if (not AbstractResponse.has_dotaMatch(match["match_id"])):
                     single_match = api.get_match_details(match["match_id"])["result"]
-                    print "\t\tAdding: " + str(single_match["match_id"])
+                    print("\t\tAdding: " + str(single_match["match_id"]))
                     AbstractResponse.add_dotaMatch(single_match)
                     total_added += 1
 
@@ -63,7 +63,7 @@ class Update(AbstractResponse):
                         if AbstractResponse.has_dotaID_num(int(player["account_id"])):
                             #Yes! Check if they broke a record
                             old_record = AbstractResponse.get_record(player["hero_id"])
-                            print player["hero_id"]
+                            print(player["hero_id"])
                             hero_dict = data.get_hero_name(player["hero_id"])
                             if not hero_dict:
                                 print("For hero id = {}, not in dota2py".format(player["hero_id"]))
@@ -127,9 +127,9 @@ class Update(AbstractResponse):
                                 AbstractResponse.set_record(new_record)
 
                 else:
-                    print "\t Was Duplicate"
+                    print("\t Was Duplicate")
 
-            print "Updated {0} Matches".format(total_added)
+            print("Updated {0} Matches".format(total_added))
         if last_update_time == None:
             time_dict = {'last_update' : current_time}
         else:

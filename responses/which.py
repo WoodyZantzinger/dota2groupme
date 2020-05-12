@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import *
+from .AbstractResponse import *
 import random
-from CooldownResponse import *
+from .CooldownResponse import *
 
 
 class ResponseWhich(ResponseCooldown):

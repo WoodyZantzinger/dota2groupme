@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-from CooldownResponse import *
+from .CooldownResponse import *
 from random import randint
 
 
@@ -24,11 +24,11 @@ class kobe(ResponseCooldown):
 
     def respond(self):
         if self.is_sender_off_cooldown():
-			out = None
-			# kobe was #1
-			out = kobe.kobe_url[0]                    
-			self.note_response(out)
-			return out
+            out = None
+            # kobe was #1
+            out = kobe.kobe_url[0]
+            self.note_response(out)
+            return out
         print("not responding to kobe because sender {} is on cooldown".format(self.msg.name))
 
 

@@ -7,7 +7,7 @@ with open("utils/emulate/stop_words.txt") as inputfile:
 
 word_counter = Counter()
 
-with open("utils/emulate/rawtext_history.txt", "rU") as f:
+with open("utils/emulate/rawtext_history.txt", "rU", encoding="utf-8") as f:
     for line in f:
         word_counter.update(line.lower().split())
 

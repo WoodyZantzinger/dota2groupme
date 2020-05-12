@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import *
+from .AbstractResponse import *
 from dota2py import api
 from dota2py import data
 import random
@@ -26,7 +26,7 @@ class ResponseLast(AbstractResponse):
             print("#last - sassy override")
             return "Bitch, you can't last for shit"
 
-        print "Starting"
+        print("Starting")
 
         canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).next()
 
@@ -36,12 +36,12 @@ class ResponseLast(AbstractResponse):
         if not AbstractResponse.has_dotaID(canonical_name):
             return "I don't know your DOTA ID! Set it with '#setDota ID'"
 
-        print "Setting Key & Account ID"
+        print("Setting Key & Account ID")
         api.set_api_key(AbstractResponse.local_var["DOTA_KEY"])
 
         account_id = AbstractResponse.name_to_steamID(canonical_name)
 
-        print "Got Account ID"
+        print("Got Account ID")
         # Get a list of recent matches for the player
         matches = api.get_match_history(account_id=account_id)["result"]["matches"]
 
@@ -52,16 +52,16 @@ class ResponseLast(AbstractResponse):
 
         dotabuff_link = ResponseLast.DOTABUFF_LINK_TEMPLATE.format(id=match_id)
 
-        print "Got Match Details"
+        print("Got Match Details")
         player_num = 0
 
         for x in match["result"]["players"]:
             if int(x["account_id"]) == AbstractResponse.name_to_dotaID(canonical_name):
                 out = ""
-                print "Got self.sender Data"
+                print("Got self.sender Data")
 
                 #Stats?
-                print player_num
+                print(player_num)
                 msg = ResponseLast.match_performance_template.format(hero=data.get_hero_name(x["hero_id"])["localized_name"],
                                                             k=str(x["kills"]),
                                                             d=str(x["deaths"]),

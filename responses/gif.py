@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import *
-from CooldownResponse import *
+from .AbstractResponse import *
+from .CooldownResponse import *
 import requests
 import datetime
-import urllib2
+import urllib
 from random import randrange
-from azure.cognitiveservices.search.imagesearch import ImageSearchAPI
+from azure.cognitiveservices.search.imagesearch import ImageSearchClient
 from msrest.authentication import CognitiveServicesCredentials
 import urllib
 
@@ -23,13 +23,13 @@ def HostImage(url):
     user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
     header = {'X-Access-Token': GM_key, 'Content-Type': 'image/gif'}
     try:
-        req = urllib2.Request(url, r.content, header)
-        response = urllib2.urlopen(req)
+        req = urllib.Request(url, r.content, header)
+        response = urllib.urlopen(req)
         JSON_response = json.load(response)
         return (JSON_response["payload"]["picture_url"])
-    except urllib2.HTTPError:
-        print "There was some sort of error uploading the photo"
-        print r.content
+    except urllib.HTTPError:
+        print("There was some sort of error uploading the photo")
+        print(r.content)
         return ""
 
 
@@ -91,7 +91,7 @@ class ResponseGif(ResponseCooldown):
                 request_url = url_to_format.format(term=search_term, key=key)
                 response = requests.get(request_url)
                 try:
-                    print request_url
+                    print(request_url)
                     out = response.json()["data"]["image_url"]
                 except Exception:
                     out = "Something went wrong"
@@ -99,7 +99,7 @@ class ResponseGif(ResponseCooldown):
             else:
                 #use Azure
                 search_term = search_term.encode("utf-8")
-                client = ImageSearchAPI(CognitiveServicesCredentials(azure_key))
+                client = ImageSearchClient(CognitiveServicesCredentials(azure_key))
                 image_results = client.images.search(query=search_term, safe_search="Strict", image_type="AnimatedGif")
 
                 if image_results.value:

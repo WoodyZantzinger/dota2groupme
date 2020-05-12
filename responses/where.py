@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import *
-from CooldownResponse import *
+from .AbstractResponse import *
+from .CooldownResponse import *
 import random
 
 places = []

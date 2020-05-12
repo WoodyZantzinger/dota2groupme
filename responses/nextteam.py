@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import AbstractResponse
-from nexthero import ResponseNext
+from .AbstractResponse import AbstractResponse
+from .nexthero import ResponseNext
 
 
 class ResponseNextTeam(AbstractResponse):

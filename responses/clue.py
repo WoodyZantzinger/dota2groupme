@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import *
-from CooldownResponse import *
+from .AbstractResponse import *
+from .CooldownResponse import *
 import random
 
 things = []
@@ -12,7 +12,7 @@ with open(os.path.join("utils", "places.txt")) as f:
     places = [line.rstrip('\n') for line in f]
 
 people = []
-for person, steamid in AbstractResponse.GroupMetoSteam.iteritems():
+for person, steamid in AbstractResponse.GroupMetoSteam.items():
     people.append(person)
 
 

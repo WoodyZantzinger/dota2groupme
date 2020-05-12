@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-from AbstractResponse import AbstractResponse
+from .AbstractResponse import AbstractResponse
 
 
 class ResponseHelp(AbstractResponse):

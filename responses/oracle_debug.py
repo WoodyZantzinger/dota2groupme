@@ -1,4 +1,4 @@
-from CooldownResponse import *
+from .CooldownResponse import *
 from utils.emulate.emulate import *
 
 

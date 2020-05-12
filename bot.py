@@ -1,4 +1,3 @@
-import urllib2
 import urllib
 import time
 import sys
@@ -52,7 +51,7 @@ def set_debug(debug_level):
 def send_message(msg, groupID="13203822", send=True):
     try:
         logger.info(u"Sending: '{}".format(msg))
-    except Exception, e:
+    except Exception as e:
         line_fail = sys.exc_info()[2].tb_lineno
         logger.debug("\tError: {} on line {}".format(repr(e), line_fail))
     if not DEBUG and send:
@@ -60,8 +59,8 @@ def send_message(msg, groupID="13203822", send=True):
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         header = {'User-Agent': user_agent, 'Content-Type': 'application/json'}
         values = GroupMeMessage.parse_message(msg, groupID)
-        req = urllib2.Request(url, json.dumps(values), header)
-        response = urllib2.urlopen(req)
+        req = urllib.Request(url, json.dumps(values), header)
+        response = urllib.urlopen(req)
         return response
     else:
         return 'Win'
@@ -101,7 +100,7 @@ def do_last_day_message_statistics():
     print(len(STATISTICS_CACHE))
     for statistic in STATISTICS_CACHE:
         instance = statistic(messages)
-        resp = instance.respond()
+        resp = instance.respond
         if resp:
             print(resp)
             out_message = out_message + resp + "\n"
@@ -141,7 +140,7 @@ def get_response_categories(msg):
         #for cls2 in cls.__subclasses__():
             #if cls2 not in classes:
                 #classes.append(cls2)
-    print len(RESPONSES_CACHE)
+    print(len(RESPONSES_CACHE))
     for cls in RESPONSES_CACHE:
         if cls.is_relevant_msg(msg):
             print(cls)
@@ -160,7 +159,7 @@ def make_responses(categories, msg):
     out = []
     for cls in categories:
         logger.info("sending msg for {}".format(cls))
-        out.append(cls(msg).respond())
+        out.append(cls(msg).respond)
     return out
 
 
@@ -330,7 +329,7 @@ def remindme_callback():
         for msg in out:
             send_message(msg)
         return out.__str__()
-    except Exception, e:
+    except Exception as e:
         (e)
         logger.warning(traceback.format_exc())
         return "remindme failed!ex"
