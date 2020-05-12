@@ -28,7 +28,7 @@ class ResponseLast(AbstractResponse):
 
         print("Starting")
 
-        canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).next()
+        canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).__next__()
 
         if not AbstractResponse.has_steamID(canonical_name):
             return "I don't know your SteamID! Set it with '#set ID'"

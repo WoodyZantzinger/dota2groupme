@@ -13,6 +13,7 @@ import pymongo
 import traceback
 import nltk
 import requests
+from responses import oAuth_util
 import pdb
 
 
@@ -59,8 +60,12 @@ def send_message(msg, groupID="13203822", send=True):
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         header = {'User-Agent': user_agent, 'Content-Type': 'application/json'}
         values = GroupMeMessage.parse_message(msg, groupID)
-        req = urllib.Request(url, json.dumps(values), header)
-        response = urllib.urlopen(req)
+        #url_values = urllib.parse.urlencode(values).encode("utf-8")
+
+        url_values = json.dumps(values).encode('utf-8')
+
+        req = urllib.request.Request(url, url_values, headers = header)
+        response = urllib.request.urlopen(req)
         return response
     else:
         return 'Win'
@@ -238,8 +243,8 @@ def strava():
           'code': code
     }
     strava_data = urllib.urlencode(values)
-    strava_req = urllib2.Request(url, strava_data)
-    strava_response = urllib2.urlopen(strava_req)
+    strava_req = urllib.Request(url, strava_data)
+    strava_response = urllib.urlopen(strava_req)
     StravaData = json.load(strava_response)
     logger.info(StravaData)
     StravaData['GroupmeID'] = GroupmeID

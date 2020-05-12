@@ -7,7 +7,7 @@ import urllib
 from random import randrange
 from azure.cognitiveservices.search.imagesearch import ImageSearchClient
 from msrest.authentication import CognitiveServicesCredentials
-import urllib
+import urllib.request
 
 def HostImage(url):
     GM_key = None
@@ -20,14 +20,14 @@ def HostImage(url):
 
     r = requests.get(url)
     url = 'https://image.groupme.com/pictures'
-    user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+
     header = {'X-Access-Token': GM_key, 'Content-Type': 'image/gif'}
     try:
-        req = urllib.Request(url, r.content, header)
-        response = urllib.urlopen(req)
+        req = urllib.request.Request(url, r.content, header)
+        response = urllib.request.urlopen(req)
         JSON_response = json.load(response)
         return (JSON_response["payload"]["picture_url"])
-    except urllib.HTTPError:
+    except urllib.error.HTTPError:
         print("There was some sort of error uploading the photo")
         print(r.content)
         return ""
@@ -99,7 +99,7 @@ class ResponseGif(ResponseCooldown):
             else:
                 #use Azure
                 search_term = search_term.encode("utf-8")
-                client = ImageSearchClient(CognitiveServicesCredentials(azure_key))
+                client = ImageSearchClient(endpoint="https://api.cognitive.microsoft.com", credentials=CognitiveServicesCredentials(azure_key))
                 image_results = client.images.search(query=search_term, safe_search="Strict", image_type="AnimatedGif")
 
                 if image_results.value:

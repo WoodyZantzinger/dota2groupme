@@ -62,7 +62,7 @@ def generate_response(input, debug = 0):
     #Trim anything that doesn't make the cut of AT LEAST the MIN_CUTOFF value
 
     #final_words = {k: v for k, v in result_set.items() if k > MIN_CUTOFF}
-    sorted_words = dict(sorted(result_set.iteritems(), key=operator.itemgetter(1), reverse=True)[:5])
+    sorted_words = dict(sorted(result_set.items(), key=operator.itemgetter(1), reverse=True)[:5])
     final_words = []
 
     for word in sorted_words:
