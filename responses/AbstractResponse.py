@@ -102,7 +102,7 @@ class AbstractResponse(object):
     @classmethod
     def set_last_update_time(cls, time):
         fdata = AbstractResponse.mongo_db.sUN_data
-        if time.has_key('_id'):
+        if '_id' in time:
             fdata.update({'_id': time["_id"]}, {"$set": time}, upsert=True)
             print("Inserted (Update): " + str(time['last_update']))
         else:
@@ -113,7 +113,7 @@ class AbstractResponse(object):
     @classmethod
     def set_record(cls, record):
         records = AbstractResponse.mongo_db.dota2hero_records
-        if record.has_key('_id'):
+        if '_id' in record:
             records.update({'_id': record["_id"]}, {"$set": record}, upsert=True)
         else:
             records.insert(record)
@@ -153,7 +153,7 @@ class AbstractResponse(object):
 
     @classmethod
     def has_dotaID(cls, name):
-        return AbstractResponse.GroupMetoDOTA.has_key(name)
+        return name in AbstractResponse.GroupMetoDOTA
 
     @classmethod
     def has_dotaID_num(cls, int):
@@ -161,7 +161,7 @@ class AbstractResponse(object):
 
     @classmethod
     def has_steamID(cls, name):
-        return AbstractResponse.GroupMetoSteam.has_key(name)
+        return name in AbstractResponse.GroupMetoSteam
 
     @classmethod
     def name_to_steamID(cls, name):

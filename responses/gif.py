@@ -113,6 +113,6 @@ class ResponseGif(ResponseCooldown):
                     out = "Found nothing"
 
                 self.note_response(out)
-                return out
+            return out
         else:
             print("not responding to gif because sender {} is on cooldown".format(self.msg.name.encode("utf-8")))

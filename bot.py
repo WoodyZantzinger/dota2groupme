@@ -186,7 +186,10 @@ def message():
         for output in output_messages:
             if output:
                 send_message(output, groupID)
-        return 'OK - Response Sent'
+        if output == None:
+            return 'WARNING - Response triggered but not sent'
+        else:
+            return 'OK - Response Sent: ' + output
     else:
         return 'No Response'
 

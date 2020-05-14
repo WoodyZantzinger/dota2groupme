@@ -26,9 +26,11 @@ class ResponseLast(AbstractResponse):
             print("#last - sassy override")
             return "Bitch, you can't last for shit"
 
-        print("Starting")
-
-        canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).__next__()
+        #canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).__next__()
+        try:
+            canonical_name = list(AbstractResponse.GroupMeIDs.keys())[list(AbstractResponse.GroupMeIDs.values()).index(self.msg.sender_id)]
+        except ValueError:
+            return "I don't know who you are"
 
         if not AbstractResponse.has_steamID(canonical_name):
             return "I don't know your SteamID! Set it with '#set ID'"
