@@ -41,13 +41,11 @@ def set_debug(debug_level):
     if(debug_level):
         logging.basicConfig(format='%(levelname)s in %(funcName)s (%(module)s): \t %(message)s', level=logging.DEBUG)
     else:
-        logging.basicConfig(format='%(levelname)s in %(funcName)s (%(module)s): \t %(message)s', level=logging.WARNING)
+        logging.basicConfig(format='%(levelname)s in %(funcName)s (%(module)s): \t %(message)s', level=logging.INFO)
         handler = logging.handlers.RotatingFileHandler(
               "LOG_FILE", maxBytes=20, backupCount=5)
         handler.setLevel(logging.DEBUG)
         logger.addHandler(handler)
-    logger.warning("test warning")
-    logger.debug("test debug")
 
 def send_message(msg, groupID="13203822", send=True):
     try:
