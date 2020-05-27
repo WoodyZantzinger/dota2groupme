@@ -145,10 +145,8 @@ def get_response_categories(msg):
         #for cls2 in cls.__subclasses__():
             #if cls2 not in classes:
                 #classes.append(cls2)
-    print(len(RESPONSES_CACHE))
     for cls in RESPONSES_CACHE:
         if cls.is_relevant_msg(msg):
-            print(cls)
             out.append(cls)
     if not out:
         return out
@@ -176,7 +174,7 @@ def message():
     #print(new_message)
 
     groupID = new_message["group_id"]
-    print (msg.text)
+    logger.info("Msg [{id}]: {msg}".format(msg = msg.text, id = msg.sender_id))
     active_response_categories = get_response_categories(msg)
     if active_response_categories:
         output_messages = make_responses(active_response_categories, msg)
