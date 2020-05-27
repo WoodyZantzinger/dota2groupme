@@ -21,7 +21,7 @@ class ResponseNow(AbstractResponse):
         out = ""
 
         #Get Steam First
-        for person, steamid in AbstractResponse.GroupMetoSteam.iteritems():
+        for person, steamid in AbstractResponse.GroupMetoSteam.items():
             steamuser = steamapi.user.SteamUser(steamid)
 
             playing = steamuser.currently_playing
