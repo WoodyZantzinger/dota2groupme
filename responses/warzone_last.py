@@ -15,7 +15,11 @@ class WarzoneLast(AbstractResponse):
         self.auth_session = None
 
     def get_match(self, session, name):
-        URL = "https://my.callofduty.com/api/papi-client/crm/cod/v2/title/mw/platform/battle/gamer/{name}/matches/warzone/start/0/end/0/details".format(name = name)
+
+        platform = name.split(":")[0]
+        username = name.split(":")[1]
+
+        URL = "https://my.callofduty.com/api/papi-client/crm/cod/v2/title/mw/platform/{platform}/gamer/{name}/matches/warzone/start/0/end/0/details".format(name = username, platform = platform)
         matches = session.get(URL)
         return matches
 
@@ -76,17 +80,18 @@ class WarzoneLast(AbstractResponse):
             matches_data = match_history.json()["data"]["matches"][0]
 
 
-            match_performance_template = "{name} of clan {clan} finished {place}th with {kills} kills and {damage} damage. He finished {kill_rank}th in kills and "
+            match_performance_template = "{name} of clan {clan} finished {place}th with {kills} kills and {damage} damage. He "
             gulag = "didn't go to the gulag"
 
             if matches_data["playerStats"]["gulagKills"] > 0: gulag = "won his gulag (ez)"
             if matches_data["playerStats"]["gulagDeaths"] > 0: gulag = "lost his gulag (bitch)"
+
+            if "clantag" not in matches_data["player"]: matches_data["player"]["clantag"] = "looking for love"
 
             return match_performance_template.format(
                 name = matches_data["player"]["username"],
                 clan = matches_data["player"]["clantag"],
                 place = int(matches_data["playerStats"]["teamPlacement"]),
                 damage = matches_data["playerStats"]["damageDone"],
-                kills = int(matches_data["playerStats"]["kills"]),
-                kill_rank = int(matches_data["playerStats"]["rank"])
+                kills = int(matches_data["playerStats"]["kills"])
             ) + gulag
