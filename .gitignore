@@ -61,4 +61,8 @@ venv/
 *~
 *.save
 
+#no logs
+logs/
+
+
 #Comment

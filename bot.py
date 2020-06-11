@@ -43,7 +43,7 @@ def set_debug(debug_level):
     else:
         logging.basicConfig(format='%(levelname)s in %(funcName)s (%(module)s): \t %(message)s', level=logging.INFO)
         handler = logging.handlers.RotatingFileHandler(
-              "LOG_FILE", maxBytes=20, backupCount=5)
+              "logs/LOG_FILE", maxBytes=20, backupCount=5)
         handler.setLevel(logging.DEBUG)
         logger.addHandler(handler)
 

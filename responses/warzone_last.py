@@ -71,7 +71,7 @@ class WarzoneLast(AbstractResponse):
             print("Auth is set")
             match_history = self.get_match(self.auth_session, COD_name)
 
-            if match_history.status_code != 200:
+            if match_history.status_code != 200 or "matches" not in match_history.json()["data"]:
                 #Maybe the Authentication is stale? Reauthenticate and try again
 
                 self.reauth()
