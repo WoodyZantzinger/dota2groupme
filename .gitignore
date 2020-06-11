@@ -62,7 +62,7 @@ venv/
 *.save
 
 #no logs
-logs/
+LOGFILE*
 
 
 #Comment
