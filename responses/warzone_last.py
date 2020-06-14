@@ -81,17 +81,22 @@ class WarzoneLast(AbstractResponse):
 
 
             match_performance_template = "{name} of clan {clan} finished {place}th with {kills} kills and {damage} damage. He "
-            gulag = "didn't go to the gulag"
 
-            if matches_data["playerStats"]["gulagKills"] > 0: gulag = "won his gulag (ez)"
-            if matches_data["playerStats"]["gulagDeaths"] > 0: gulag = "lost his gulag (bitch)"
+            gulag = "didn't go to the gulag"
+            place = "?"
+            if "gulagKills" in matches_data["playerStats"]:
+                if matches_data["playerStats"]["gulagKills"] > 0: gulag = "won his gulag (ez)"
+                if matches_data["playerStats"]["gulagDeaths"] > 0: gulag = "lost his gulag (bitch)"
+                place = int(matches_data["playerStats"]["teamPlacement"])
+            else:
+                gulag = "played some wierd mode"
 
             if "clantag" not in matches_data["player"]: matches_data["player"]["clantag"] = "looking for love"
 
             return match_performance_template.format(
                 name = matches_data["player"]["username"],
                 clan = matches_data["player"]["clantag"],
-                place = int(matches_data["playerStats"]["teamPlacement"]),
+                place = place,
                 damage = matches_data["playerStats"]["damageDone"],
                 kills = int(matches_data["playerStats"]["kills"])
             ) + gulag
