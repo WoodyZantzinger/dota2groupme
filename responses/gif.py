@@ -71,6 +71,10 @@ class ResponseGif(ResponseCooldown):
             req_term = self.msg.text.partition(' ')[0].lower()
             if "spider" in search_term:
                 return "fuck spiders, fuck you"
+            while search_term.find(".com") + search_term.find(".net") + search_term.find(".porn") > 0:
+                search_term = search_term.replace(".com", "")
+                search_term = search_term.replace(".net", "")
+                search_term = search_term.replace(".porn", "")
 #            if "ariana" in search_term and "grande" in search_term:
 #		return "her?"
             hour = datetime.datetime.utcnow().hour
