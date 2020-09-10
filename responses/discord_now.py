@@ -34,8 +34,10 @@ class DiscordNow(AbstractResponse):
             await client.logout()
 
         key = AbstractResponse.local_var["DISCORD"]
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(client.start(key))
 
-        client.run(key)
+        #asyncio.run(client.start(key))
 
         if not out:
             return "Nobody's online :("
