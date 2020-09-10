@@ -8,3 +8,4 @@ parsedatetime>=1.5
 python-dateutil>=1.5
 nltk>=3.0.5
 azure-cognitiveservices-search-imagesearch>=1.0
+discord.py>=1.4.1
