@@ -29,7 +29,7 @@ class DiscordNow(AbstractResponse):
         async def on_ready():
             global out
             global msg
-            print('We have logged in as {0.user}'.format(client))
+            # print('We have logged in as {0.user}'.format(client))
 
             activity_groups = dict()
             for member in client.guilds[0].members:
