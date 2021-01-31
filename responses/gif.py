@@ -109,8 +109,11 @@ class ResponseGif(ResponseCooldown):
                 if image_results.value:
                     out = ""
                     while(out == ""):
-                        if req_term == "#gif": max = min(len(image_results.value), 50)
-                        if req_term == "#gifone": max = 1
+                        max = 1
+                        if req_term == "#gif":
+                            max = min(len(image_results.value), 50)
+                        if req_term == "#gifone":
+                            max = 1
                         first_image_result = image_results.value[randrange(max)]
                         out = HostImage(first_image_result.content_url)
                 else:
