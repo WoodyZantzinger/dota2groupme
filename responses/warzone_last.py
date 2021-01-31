@@ -19,6 +19,7 @@ class WarzoneLast(AbstractResponse):
         platform = name.split(":")[0]
         username = name.split(":")[1]
 
+
         URL = "https://my.callofduty.com/api/papi-client/crm/cod/v2/title/mw/platform/{platform}/gamer/{name}/matches/warzone/start/0/end/0/details".format(name = username, platform = platform)
         matches = session.get(URL)
         return matches
@@ -53,7 +54,7 @@ class WarzoneLast(AbstractResponse):
             print("Printing session file")
 
     def respond(self):
-
+        print(f"msg.senderID = {self.msg.sender_id}")
         canonical_name = next(key for key, value in AbstractResponse.GroupMeIDs.items() if value == self.msg.sender_id)
         COD_name = AbstractResponse.GroupMetoCODName[canonical_name]
 

@@ -39,6 +39,7 @@ def set_debug(debug_level):
     logger = logging.getLogger(__name__)
 
     if(debug_level):
+        os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
         logging.basicConfig(format='%(levelname)s in %(funcName)s (%(module)s): \t %(message)s', level=logging.DEBUG)
     else:
         logging.basicConfig(format='%(levelname)s in %(funcName)s (%(module)s): \t %(message)s', level=logging.INFO)
@@ -230,6 +231,22 @@ def cooldown():
                         response += "Cooldown Remaining for <b>" + name + "</b>: " + time_left + "<br>"
     return response
 
+@app.route("/oauth_callback")
+def oauth_callback():
+    code = request.args.get('code')
+    state = request.args.get('state')
+    print(f"rq.args = {request.args}")
+    parts = state.split("|")
+    source_clazz_name = parts[0]
+    sender_id = parts[1]
+    matched_clazz = None
+    for clazz in RESPONSES_CACHE:
+        if clazz.__name__ == source_clazz_name:
+            matched_clazz = clazz
+    dummy_msg = rawmessage.RawMessage({"sender_id": sender_id, 'text': ''})
+    clazz_obj = matched_clazz(dummy_msg)
+    matched_clazz.exchange_code_for_first_key(code, clazz_obj, sender_id)
+    return "hello"
 
 @app.route("/strava_token")
 def strava():
@@ -237,7 +254,7 @@ def strava():
     code = request.args.get('code')
     url = 'https://www.strava.com/oauth/token'
     values = {
-          'client_id': '7477',
+          'client_id': '60934',
           'client_secret': oAuth_util.get_strava_key(),
           'code': code
     }

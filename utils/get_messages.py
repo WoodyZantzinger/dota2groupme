@@ -2,6 +2,7 @@ import requests
 import sys
 import json
 from progressbar import ProgressBar
+from ..responses import AbstractResponse
 
 __author__ = 'woodyzantzinger'
 
@@ -10,8 +11,8 @@ request_url = "https://api.groupme.com/v3/groups/13203822/messages?token=xde396c
 output_to_print = True
 
 if(len(sys.argv) < 3):
-    print "You need to specify a UserID and output file"
-    print "Optional argument for just Text output"
+    print("You need to specify a UserID and output file")
+    print("Optional argument for just Text output")
 else:
     output_messages = []
     user_id = sys.argv[1]
@@ -24,7 +25,7 @@ else:
         total_messages = int(response.json()["response"]["count"])
 
     after_id = -1
-    print total_messages
+    print(total_messages)
     pbar = ProgressBar(
         maxval=total_messages,
     )
@@ -73,7 +74,7 @@ else:
                     output_messages.append(message)
                 except:
                     pass
-    print "Number of messages: " + str(len(output_messages))
+    print("Number of messages: " + str(len(output_messages)))
 
 
 

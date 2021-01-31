@@ -21,6 +21,8 @@ class AbstractResponse(object):
     # default help response
     HELP_RESPONSE = "Not implemented for " + RESPONSE_KEY
 
+    print(f"working directory = {os.getcwd()}")
+
     with open('./responses/GroupMetoSteam.json') as f:
         GroupMetoSteam = json.load(f)
 

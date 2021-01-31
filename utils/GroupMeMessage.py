@@ -42,7 +42,7 @@ def return_emoticons(text):
     return return_val
 
 
-def parse_message(text, groupID):
+def parse_message(text, targetID):
     values = {
           'bot_id': GroupToBot[groupID],
     }

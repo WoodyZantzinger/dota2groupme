@@ -1,12 +1,22 @@
 # -*- coding: utf-8 -*
 from .AbstractResponse import *
 from .CooldownResponse import *
+from .SSOResponse import *
 import requests
-from responses import oAuth_util
+from responses import oAuth_util, SSOResponse
 import dateutil.parser
+from data import SSO_Manager
+import pprint
 
 
-class last_move(AbstractResponse):
+class Strava_Last(SSO_Response):
+
+    AUTH_URL = r"https://www.strava.com/oauth/authorize"
+    TOKEN_REFRESH_URL = r"https://www.strava.com/oauth/token"
+    DATA_ACCESS_URL = r"https://www.strava.com/api/v3/activities"
+    REQUEST_SCOPES = [
+        "activity:read_all"
+    ]
 
     message = "#move"
 
@@ -17,34 +27,21 @@ class last_move(AbstractResponse):
     url = "https://www.strava.com/api/v3/activities?access_token={token}"
 
     def __init__(self, msg):
-        super(last_move, self).__init__(msg)
+
+        self.response = None
+        super(Strava_Last, self).__init__(msg, self)
 
     def respond(self):
-        conn = pymongo.MongoClient(oAuth_util.get_db_url())
-        SpotifyUsers = conn.dota2bot.spotify
-        temp = SpotifyUsers.find_one({'GroupmeID': self.msg.sender_id})
-        if temp is not None:
-            Token = temp["access_token"]
-            request_url = last_move.url.format(token=Token)
-            response = requests.get(request_url)
-            try:
-                print(request_url)
-                miles = response.json()[0]["distance"] / 1609.34
-                time = response.json()[0]["elapsed_time"] / 60 / miles
-                location = response.json()[0]["location_city"]
-                move_type = response.json()[0]["type"]
-                date = dateutil.parser.parse(response.json()[0]["start_date_local"]).date()
-                out = str(date) + ": You went " + "{0:.2f}".format(miles) + " miles at a " + "{0:.2f}".format(time) + "minute/mile pace in " + location + " (" + move_type + ")"
-            except Exception as e:
-                out = "Something went wrong: " + str(e)
-            return out
-        else:
-            URL = ("You need to Auth\nhttps://www.strava.com/oauth/authorize?"
-            "client_id=7477"
-            "&response_type=code"
-            "&redirect_uri=https://young-fortress-3393.herokuapp.com/strava_token"
-            "&scope=view_private"
-            "&state=" + self.msg.sender_id +
-            "&approval_prompt=force"
-            )
-            return URL
+        # should already have data???
+        if self.outcome.data:
+            data = self.outcome.data
+            miles = data[0]["distance"] / 1609.34
+            time = data[0]["elapsed_time"] / 60 / miles
+            location = data[0]["location_city"]
+            if not location:
+                location = "<Unknown location>"
+            move_type = data[0]["type"]
+            date = dateutil.parser.parse(data[0]["start_date_local"]).date()
+            self.response = str(date) + ": You went " + "{0:.2f}".format(miles) + " miles at a " + "{0:.2f}".format(time) + "minute/mile pace in " + location + " (" + move_type + ")"
+        super(Strava_Last, self).respond()
+        return self.response
