@@ -47,10 +47,10 @@ def get_secrets():
     try:
         with open(os.path.join(os.getcwd(), "local_variables.json")) as f:
             secrets = json.load(f)
-    except:
+    except EnvironmentError:
         secrets = dict()
         for key in os.environ.keys():
-            local_var[key] = os.environ[key]
+            secrets[key] = os.environ[key]
     return secrets
 
 def get_secret_keys(clazz):
