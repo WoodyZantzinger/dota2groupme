@@ -9,8 +9,10 @@ class DataAccess():
     def __init__(self):
         secrets = get_secrets()
         self.client = pymongo.MongoClient(secrets['SUNDATA_URL'])
-        self.db = self.client['sUN_users']
-        self.users = self.db['users']
+        self.sUN = self.client['sUN_users']
+        self.users = self.sUN['users']
+        self.admin = self.sUN['admin']
+
 
     def get_users(self):
         users_list = list(self.users.find({}))
@@ -26,6 +28,13 @@ class DataAccess():
             return found
         else:
             return sUN_user(found)
+
+    def get_admins(self):
+        admins = list(self.admin.find({}))
+        out = {}
+        for admin in admins:
+            out[admin['username']] = admin['hashedpw']
+        return out
 
     def update_user(self, user):
         query = {"GROUPME_ID": user.values["GROUPME_ID"]}
@@ -71,11 +80,14 @@ def get_current_token(clazz, id):
 
 if __name__ == "__main__":
     access = DataAccess()
-    print("[Getting user Kevin]")
+    #print("[Getting user Kevin]")
     user = access.get_user("Name", "Kevin")
-    print(user)
+    #print(user)
 
-    print("[All Users]")
+    print(access.get_admins())
+
+    #print("[All Users]")
     users = access.get_users()
     for user in users:
-        print(user)
+        pass
+        #print(user)

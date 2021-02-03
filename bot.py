@@ -5,7 +5,12 @@ import logging
 import logging.handlers
 from optparse import OptionParser
 import os
-from flask import Flask, request
+from flask import Flask, render_template, redirect, request, url_for, session
+# import flask.ext.login as flask_login
+# from flask_login import flask
+# from flask.ext.login import LoginManager, UserMixin
+from flask_login import LoginManager, UserMixin
+import flask_login
 import difflib
 import json
 import datetime
@@ -15,7 +20,8 @@ import nltk
 import requests
 from responses import oAuth_util
 import pdb
-
+from data import DataAccess
+import hashlib
 
 from responses import *
 from responses import AbstractResponse
@@ -28,6 +34,15 @@ from utils import GroupMeMessage
 DEBUG = True
 
 app = Flask(__name__)
+app.secret_key = 'key'
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+users = {'user1':{'pw':'pass1'},
+         'user2':{'pw':'pass2'},
+         'user3':{'pw':'pass3'}}
+
 logger = logging.getLogger(__name__)
 
 RESPONSES_CACHE = []
@@ -369,6 +384,78 @@ def git_event():
 @app.route("/")
 def hello():
     return "Hello world!"
+
+
+class User(UserMixin):
+  pass
+
+
+@login_manager.user_loader
+def user_loader(username):
+    da = DataAccess.DataAccess()
+    users = da.get_admins()
+    if username not in users:
+        return
+
+    user = User()
+    user.id = username
+    return user
+
+
+@login_manager.request_loader
+def request_loader(req):
+    print("RLLLL")
+    da = DataAccess.DataAccess()
+    admins = da.get_admins()
+    username = req.form.get('username')
+    pw = req.form.get('pw')
+    if username not in admins:
+        return
+
+    user = User()
+    user.id = username
+
+    hashed_entry = hashlib.sha256(pw.encode('utf-8')).hexdigest()
+
+    if hashed_entry == admins[username]:
+        return user
+    else:
+        return None
+
+    return user
+
+
+@app.route('/home', methods=['GET', 'POST'])
+def index():
+    da = DataAccess.DataAccess()
+    admins = da.get_admins()
+    if request.method == 'POST':
+        username = request.form.get('username')
+        pw = request.form.get('pw')
+        if username not in admins:
+            return redirect("/home")
+        hashed_entry = hashlib.sha256(pw.encode('utf-8')).hexdigest()
+        if hashed_entry == admins[username]:
+            user = User()
+            user.id = username
+            flask_login.login_user(user)
+            session['user'] = username
+            return redirect(url_for('protect'))
+    return render_template('index.html')
+
+
+@app.route('/protect')
+@flask_login.login_required
+def protect():
+    user = session['user']
+    return render_template('protected.html', user=user)
+
+
+@app.route('/logout')
+def logout():
+    flask_login.logout_user()
+    return 'Logged out'
+
 
 if __name__ == "__main__":
 
