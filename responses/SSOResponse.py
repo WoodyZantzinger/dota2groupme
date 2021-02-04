@@ -31,11 +31,10 @@ class SSO_Response(AbstractResponse):
 
 
     def __init__(self, msg, obj):
-        super(SSO_Response, self).__init__(msg)
+        super(SSO_Response, self).__init__(msg, obj)
         self.msg = msg
         self.data = None
         self.obj = obj
-        self.clazzname = obj.__class__.__name__
         self.outcome = None
         self.authenticate(obj, msg)
 

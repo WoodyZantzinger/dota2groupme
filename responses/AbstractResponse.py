@@ -6,8 +6,8 @@ import time
 import sys
 import difflib
 
-class AbstractResponse(object):
 
+class AbstractResponse(object):
     # default response key
     # should respond to no messages
     RESPONSE_KEY = "\0"
@@ -36,7 +36,7 @@ class AbstractResponse(object):
         GroupMetoLastfm = json.load(f)
 
     with open('./responses/GroupMetoPUBG.json') as f:
-        GroupMetoPUBGName= json.load(f)
+        GroupMetoPUBGName = json.load(f)
 
     with open('./responses/GroupMetoXboxName.json') as f:
         GroupMetoXboxName = json.load(f)
@@ -136,7 +136,6 @@ class AbstractResponse(object):
     def name_to_dotaID(cls, name):
         return int(AbstractResponse.GroupMetoDOTA[name])
 
-    #TODO: We need to optimize, this is a poor was to do reverse lookups
     @classmethod
     def dotaID_to_name(cls, id):
         for name, key in AbstractResponse.GroupMetoDOTA.items():
@@ -152,13 +151,13 @@ class AbstractResponse(object):
 
         for key in data.HEROES_CACHE.items():
             ratio = difflib.SequenceMatcher(None, msg_name.lower(), key[1]['localized_name'].lower()).ratio()
-            if ratio > .7 :
+            if ratio > .7:
                 matches.append([key, ratio])
 
         if len(matches) < 1:
             return -1
         else:
-            return sorted(matches, key = lambda x: x[1], reverse = True)[0][0][0]
+            return sorted(matches, key=lambda x: x[1], reverse=True)[0][0][0]
 
     @classmethod
     def has_dotaID(cls, name):
@@ -196,17 +195,18 @@ class AbstractResponse(object):
         del AbstractResponse.GroupMetoDOTA[old]
         AbstractResponse.cache_GroupMetoDOTA()
 
-    def __init__(self, msg, mod=None):
+    def __init__(self, msg, obj):
         super(AbstractResponse, self).__init__()
+        self.clazzname = obj.__class__.__name__
         self.msg = msg
 
-    def get_last_used_time(self, sender, mod=None):
-        if mod is not None:
-            return getattr(sys.modules[mod], 'last_used')[sender]
-
-    def set_last_used_time(self, sender, mod=None):
-        if mod is not None:
-            getattr(sys.modules[mod], 'last_used')[sender] = time.time()
+    # def get_last_used_time(self, sender, mod=None):
+    #     if mod is not None:
+    #         return getattr(sys.modules[mod], 'last_used')[sender]
+    #
+    # def set_last_used_time(self, sender, mod=None):
+    #     if mod is not None:
+    #         getattr(sys.modules[mod], 'last_used')[sender] = time.time()
 
     def respond(self):
         return None

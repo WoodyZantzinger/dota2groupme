@@ -8,11 +8,12 @@ USAGE_MEMBER_NAME = "usage_history"
 
 
 class ResponseCooldown(AbstractResponse):
+    usage = {}
 
-    def __init__(self, msg, mod, cooldown):
-        super(ResponseCooldown, self).__init__(msg, mod)
+    def __init__(self, msg, obj, cooldown):
+        super(ResponseCooldown, self).__init__(msg, obj)
         self.cooldown = cooldown
-        self.mod = mod
+        # self.mod = mod
         if not self.has_usage():
             self.set_usage(dict())
             self.get_usage()[self.msg.sender_id] = []
@@ -49,13 +50,16 @@ class ResponseCooldown(AbstractResponse):
             print(_)
 
     def get_usage(self):
-        return getattr(sys.modules[self.mod], USAGE_MEMBER_NAME)
+        return ResponseCooldown.usage[self.clazzname]
+        #return getattr(sys.modules[self.mod], USAGE_MEMBER_NAME)
 
     def has_usage(self):
-        return hasattr(sys.modules[self.mod], USAGE_MEMBER_NAME)
+        return self.clazzname in ResponseCooldown.usage
+        # return hasattr(sys.modules[self.mod], USAGE_MEMBER_NAME)
 
     def set_usage(self, obj):
-        setattr(sys.modules[self.mod], USAGE_MEMBER_NAME, obj)
+        ResponseCooldown.usage[self.clazzname] = obj
+        # setattr(sys.modules[self.mod], USAGE_MEMBER_NAME, obj)
 
     def respond(self):
         pass
