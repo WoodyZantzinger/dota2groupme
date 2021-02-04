@@ -182,9 +182,10 @@ def get_first_token(clazz, id, code):
     DataAccess.store_token(clazz, id, token)
 
 def get_SSO_data(clazz, msg):
+    da = DataAccess.DataAccess()
     user_groupme_id = msg.sender_id
     client_id, client_secret = DataAccess.get_secret_keys(clazz)
-    token = DataAccess.get_current_token(clazz, user_groupme_id)
+    token = da.get_current_token(clazz, user_groupme_id)
     if not token:
         auth_url = start_original_token_generation(clazz, user_groupme_id, client_id, client_secret)
         return SSO_Outcome(SSO_Outcome_Type.NO_TOKEN, None, auth_url)
@@ -192,6 +193,6 @@ def get_SSO_data(clazz, msg):
         token = refresh_token(clazz, user_groupme_id, token)
         if not token:
             return SSO_Outcome(SSO_Outcome_Type.REJECTED, None, None)
-        DataAccess.store_token(clazz, user_groupme_id, token)
+        da.store_token(clazz, user_groupme_id, token)
         data = do_data_request(clazz, user_groupme_id, token)
         return SSO_Outcome(SSO_Outcome_Type.SUCCESS, data, None)
