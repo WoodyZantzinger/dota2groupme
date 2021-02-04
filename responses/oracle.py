@@ -2,14 +2,14 @@ from .CooldownResponse import *
 from utils.emulate.emulate import *
 
 
-class oracle(ResponseCooldown):
+class Oracle(ResponseCooldown):
 
     RESPONSE_KEY = "#oracle"
 
     COOLDOWN = 30 * 60
 
     def __init__(self, msg):
-        super(oracle, self).__init__(msg, self.__module__, oracle.COOLDOWN)
+        super(Oracle, self).__init__(msg, self.__module__, Oracle.COOLDOWN)
 
     def respond(self):
         if self.is_sender_off_cooldown():
