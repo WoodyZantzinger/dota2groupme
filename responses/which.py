@@ -13,7 +13,7 @@ class ResponseWhich(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseWhich, self).__init__(msg, self, ResponseWhich.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             start = self.msg.text.find("(")
             end = self.msg.text[start:].find(")")

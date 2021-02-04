@@ -9,7 +9,7 @@ class ResponseResponses(AbstractResponse):
     def __init__(self, msg):
         super(ResponseResponses, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         parts = self.msg.text.split(" ")
         if len(parts) > 1:
             name = parts[1]

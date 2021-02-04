@@ -16,7 +16,7 @@ class ResponseSassyOverride(AbstractResponse):
     def __init__(self, msg):
         super(ResponseSassyOverride, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         return "No, you {}".format(random.choice(ResponseSassyOverride.mean_names))
 
     @classmethod

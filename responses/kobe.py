@@ -22,7 +22,7 @@ class kobe(ResponseCooldown):
     def __init__(self, msg):
         super(kobe, self).__init__(msg, self, kobe.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             out = None
             # kobe was #1

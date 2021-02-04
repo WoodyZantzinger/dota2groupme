@@ -47,7 +47,7 @@ class ResponseGif(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseGif, self).__init__(msg, self, ResponseGif.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
 
             azure_key = None

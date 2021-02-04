@@ -11,7 +11,7 @@ class ResponseSetSteam(AbstractResponse):
     def __init__(self, msg):
         super(ResponseSetSteam, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         #@TODO make this work
         #i doubt this works :(
         canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).next()

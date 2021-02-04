@@ -11,7 +11,7 @@ class Oracle_Debug(ResponseCooldown):
     def __init__(self, msg):
         super(Oracle_Debug, self).__init__(msg, self, Oracle_Debug.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             message = self.msg.text.partition("#debugoracle")[2]
             out = generate_response(message, 1)

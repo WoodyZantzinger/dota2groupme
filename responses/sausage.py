@@ -9,7 +9,7 @@ class ResponseSausage(AbstractResponse):
     def __init__(self, msg):
         super(ResponseSausage, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         return "But, {}, you don't even have any money".format(self.msg.name)
 
     @classmethod

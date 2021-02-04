@@ -34,7 +34,7 @@ class ResponseRemindMe(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseRemindMe, self).__init__(msg, self, ResponseRemindMe.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         conn = None
         try:
             conn = pymongo.MongoClient(get_db_url(), connectTimeoutMS=1000)

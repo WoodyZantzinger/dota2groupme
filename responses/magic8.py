@@ -34,7 +34,7 @@ class ResponseMagic8Ball(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseMagic8Ball, self).__init__(msg, self, ResponseMagic8Ball.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             out = random.choice(ResponseMagic8Ball.ANSWERS)
             self.note_response(out)

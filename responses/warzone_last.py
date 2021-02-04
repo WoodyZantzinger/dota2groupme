@@ -57,7 +57,7 @@ class WarzoneLast(AbstractResponse):
             pickle.dump(cod_session, handle, protocol=pickle.HIGHEST_PROTOCOL)
             print("Printing session file")
 
-    def respond(self):
+    def _respond(self):
         print(f"msg.senderID = {self.msg.sender_id}")
         canonical_name = next(key for key, value in AbstractResponse.GroupMeIDs.items() if value == self.msg.sender_id)
         COD_name = AbstractResponse.GroupMetoCODName[canonical_name]

@@ -19,7 +19,7 @@ class Update(AbstractResponse):
     def __init__(self, msg):
         super(Update, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         print("Starting")
 
         # Use the Thread if we are going to be updating like 1,000 records, shouldn't be needed.

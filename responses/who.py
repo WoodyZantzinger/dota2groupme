@@ -13,7 +13,7 @@ class ResponseWho(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseWho, self).__init__(msg, self, ResponseWho.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             people = set()
             out = None

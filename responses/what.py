@@ -17,7 +17,7 @@ class ResponseWhat(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseWhat, self).__init__(msg, self, ResponseWhat.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             out = random.choice(things)
             self.note_response(out)

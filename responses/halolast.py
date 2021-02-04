@@ -16,7 +16,7 @@ class ResponseHaloLast(AbstractResponse):
     def __init__(self, msg):
         super(ResponseHaloLast, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         out = ""
         canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).next()
 

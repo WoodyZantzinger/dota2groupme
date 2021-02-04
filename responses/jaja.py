@@ -11,7 +11,7 @@ class ResponseJaJa(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseJaJa, self).__init__(msg, self, ResponseJaJa.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             n = 1
             while (random.choice([0, 1])):

@@ -17,7 +17,7 @@ class ResponseProphecy(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseProphecy, self).__init__(msg, self, ResponseProphecy.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             out = random.choice(prophecy)
             self.note_response(out)

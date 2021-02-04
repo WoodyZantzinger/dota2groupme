@@ -9,6 +9,6 @@ class ResponseJohnCena(AbstractResponse):
     def __init__(self, msg):
         super(ResponseJohnCena, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         return "DAAH DAAHT DOOT DAAH"
 

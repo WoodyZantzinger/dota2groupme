@@ -9,7 +9,7 @@ class ResponseFishstick(AbstractResponse):
     def __init__(self, msg):
         super(ResponseFishstick, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         return "{}, you a gay fish".format(self.msg.name)
 
     @classmethod

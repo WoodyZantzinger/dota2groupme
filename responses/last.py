@@ -21,7 +21,7 @@ class ResponseLast(AbstractResponse):
     def __init__(self, msg):
         super(ResponseLast, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
 
         if random.random() < ResponseLast.SASS_PERCENTAGE:
             print("#last - sassy override")

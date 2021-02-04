@@ -11,7 +11,7 @@ class Oracle(ResponseCooldown):
     def __init__(self, msg):
         super(Oracle, self).__init__(msg, self, Oracle.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             message = self.msg.text.partition("#oracle")[2]
             out = generate_response(message, 0)

@@ -13,7 +13,7 @@ class ResponseSiONo(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseSiONo, self).__init__(msg, self, ResponseSiONo.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             out = None
             if "omni" in self.msg.text.lower():

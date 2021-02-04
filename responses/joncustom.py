@@ -11,7 +11,7 @@ class ResponseJonCustom(AbstractResponse):
     def __init__(self, msg):
         super(ResponseJonCustom, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         return "8======D"
 
     @classmethod

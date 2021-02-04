@@ -15,7 +15,7 @@ class chitchat(AbstractResponse):
     def __init__(self, msg):
         super(chitchat, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         message = self.msg.text
         return generate_response(message, 0)
 

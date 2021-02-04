@@ -15,7 +15,7 @@ class ResponseMusic(AbstractResponse):
     def __init__(self, msg):
         super(ResponseMusic, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         out = ""
         print("lastfm")
         lastfm_endpoint = "http://ws.audioscrobbler.com/2.0/"

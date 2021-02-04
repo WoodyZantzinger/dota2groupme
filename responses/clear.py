@@ -13,7 +13,7 @@ class ResponseClear(AbstractResponse):
     def __init__(self, msg):
         super(ResponseClear, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         str_number_of_lines = self.msg.text.partition(' ')[2].lower()
         number_of_lines = 10
         try:

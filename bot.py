@@ -121,7 +121,7 @@ def do_last_day_message_statistics():
     print(len(STATISTICS_CACHE))
     for statistic in STATISTICS_CACHE:
         instance = statistic(messages)
-        resp = instance.respond
+        resp = instance.respond()
         if resp:
             print(resp)
             out_message = out_message + resp + "\n"

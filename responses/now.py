@@ -19,7 +19,7 @@ class ResponseNow(AbstractResponse):
     def __init__(self, msg):
         super(ResponseNow, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         secrets = DataAccess.get_secrets()
         api = steamapi.core.APIConnection(secrets["DOTA_KEY"])
 

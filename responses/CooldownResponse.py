@@ -70,5 +70,5 @@ class ResponseCooldown(AbstractResponse):
         ResponseCooldown.usage[self.clazzname] = obj
         # setattr(sys.modules[self.mod], USAGE_MEMBER_NAME, obj)
 
-    def respond(self):
+    def _respond(self):
         pass

@@ -16,7 +16,7 @@ class DiscordNow(AbstractResponse):
     def __init__(self, msg):
         super(DiscordNow, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         global out
         global msg
 

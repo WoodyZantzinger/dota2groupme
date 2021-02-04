@@ -25,7 +25,7 @@ class ResponseClue(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseClue, self).__init__(msg, self, ResponseClue.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             outwho = random.choice(people)
             outwhat = random.choice(things)

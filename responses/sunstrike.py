@@ -32,5 +32,5 @@ class ResponseSunstrike(AbstractResponse):
     def __init__(self, msg):
         super(ResponseSunstrike, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         return random.choice(ResponseSunstrike.burn_responses)

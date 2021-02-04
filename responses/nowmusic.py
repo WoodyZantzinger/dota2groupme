@@ -30,7 +30,7 @@ class Spotify_Last(SSO_Response):
         self.response = None
         super(Spotify_Last, self).__init__(msg, self)
 
-    def respond(self):
+    def _respond(self):
         # should already have data???
         if self.outcome.data:
             data = self.outcome.data
@@ -42,5 +42,5 @@ class Spotify_Last(SSO_Response):
             else:
                 out = "Last listened to " + song + " by " + artist
             self.response = out
-        super(Spotify_Last, self).respond()
+        super(Spotify_Last, self)._respond()
         return self.response

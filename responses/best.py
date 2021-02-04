@@ -23,7 +23,7 @@ class Best(AbstractResponse):
     def __init__(self, msg):
         super(Best, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         out = ""
         hero_name = self.msg.text.split(' ', 1)
         if len(hero_name) < 2:

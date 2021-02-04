@@ -13,7 +13,7 @@ class ResponseNumbers(AbstractResponse):
     def __init__(self, msg):
         super(ResponseNumbers, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         return "whatcha got there, numbers?"
 
     @classmethod

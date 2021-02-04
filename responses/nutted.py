@@ -53,7 +53,7 @@ class ResponseNutted(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseNutted, self).__init__(msg, self, ResponseNutted.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             out = random.choice(ResponseNutted.nutted_responses)
             self.note_response(out)

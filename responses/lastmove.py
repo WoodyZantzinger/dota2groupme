@@ -31,7 +31,7 @@ class Strava_Last(SSO_Response):
         self.response = None
         super(Strava_Last, self).__init__(msg, self)
 
-    def respond(self):
+    def _respond(self):
         # should already have data???
         if self.outcome.data:
             data = self.outcome.data
@@ -43,5 +43,5 @@ class Strava_Last(SSO_Response):
             move_type = data[0]["type"]
             date = dateutil.parser.parse(data[0]["start_date_local"]).date()
             self.response = str(date) + ": You went " + "{0:.2f}".format(miles) + " miles at a " + "{0:.2f}".format(time) + "minute/mile pace in " + location + " (" + move_type + ")"
-        super(Strava_Last, self).respond()
+        super(Strava_Last, self)._respond()
         return self.response

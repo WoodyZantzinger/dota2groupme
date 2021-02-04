@@ -13,7 +13,7 @@ class ResponseNext(AbstractResponse):
     def __init__(self, msg):
         super(ResponseNext, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         return "You will play: " + ResponseNext.random_hero()
 
     @classmethod

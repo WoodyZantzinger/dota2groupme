@@ -12,7 +12,7 @@ class ResponseLol(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseLol, self).__init__(msg, self, ResponseLol.COOLDOWN)
 
-    def respond(self):
+    def _respond(self):
         if self.is_sender_off_cooldown():
             out = ResponseLol.NOTED_RESPONSE
             self.note_response(out)

@@ -11,7 +11,7 @@ class ResponsePUBGLast(AbstractResponse):
     def __init__(self, msg):
         super(ResponsePUBGLast, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         out = ""
 
         template = "{name} did {damage} damage for {numKills} kills (placing {killRank} in kills) to finish {result} in a {gameType}\n"

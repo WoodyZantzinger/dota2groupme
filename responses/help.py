@@ -11,7 +11,7 @@ class ResponseHelp(AbstractResponse):
     def __init__(self, msg):
         super(ResponseHelp, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         classes = AbstractResponse.__subclasses__()
         out = ""
         for cls in classes:

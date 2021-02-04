@@ -214,6 +214,9 @@ class AbstractResponse(object):
     #         getattr(sys.modules[mod], 'last_used')[sender] = time.time()
 
     def respond(self):
+        return self._respond()
+
+    def _respond(self):
         return None
 
     def get_response_storage(self, key):
