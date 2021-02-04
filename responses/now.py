@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+from data import DataAccess
 from .AbstractResponse import AbstractResponse
 import requests
 import steamapi
@@ -8,7 +9,8 @@ import json
 
 class ResponseNow(AbstractResponse):
 
-    api = steamapi.core.APIConnection(AbstractResponse.local_var["DOTA_KEY"])
+
+    #api = steamapi.core.APIConnection(AbstractResponse.local_var["DOTA_KEY"])
 
     person_status_template = "{name} : {status} on {system}\n"
 
@@ -18,6 +20,9 @@ class ResponseNow(AbstractResponse):
         super(ResponseNow, self).__init__(msg)
 
     def respond(self):
+        secrets = DataAccess.get_secrets()
+        api = steamapi.core.APIConnection(secrets["DOTA_KEY"])
+
         out = ""
 
         #Get Steam First

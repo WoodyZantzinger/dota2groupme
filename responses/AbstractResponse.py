@@ -51,32 +51,33 @@ class AbstractResponse(object):
         GroupMeIDs = json.load(f)
 
     mongo_connection = None
-
-    try:
-        with open('local_variables.json') as f:
-            local_var = json.load(f)
-        print(local_var["MONGOLAB_URL"])
-        conn_start_time = time.time()
-        mongo_connection = pymongo.MongoClient(local_var["MONGOLAB_URL"], connectTimeoutMS=1000)
-        conn_time = time.time() - conn_start_time
-        print("took {} seconds to connect to mongo".format(conn_time))
-    except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
-        local_var = dict()
-        for key in os.environ.keys():
-            local_var[key] = os.environ[key]
-        conn_start_time = time.time()
-        mongo_connection = None
+    """
         try:
-            print("trying...")
-            mongo_connection = pymongo.MongoClient(os.getenv('MONGOLAB_URL'), connectTimeoutMS=1000)
-        except Exception as e:
-            print("connection to remote db using os.getenv failed!")
-            print(e)
-        if mongo_connection is not None:
+            with open('local_variables.json') as f:
+                local_var = json.load(f)
+            print(local_var["MONGOLAB_URL"])
+            conn_start_time = time.time()
+            mongo_connection = pymongo.MongoClient(local_var["MONGOLAB_URL"], connectTimeoutMS=1000)
             conn_time = time.time() - conn_start_time
             print("took {} seconds to connect to mongo".format(conn_time))
-    except:
-        print("failed to connect to mongodb!")
+        except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
+            local_var = dict()
+            for key in os.environ.keys():
+                local_var[key] = os.environ[key]
+            conn_start_time = time.time()
+            mongo_connection = None
+            try:
+                print("trying...")
+                mongo_connection = pymongo.MongoClient(os.getenv('MONGOLAB_URL'), connectTimeoutMS=1000)
+            except Exception as e:
+                print("connection to remote db using os.getenv failed!")
+                print(e)
+            if mongo_connection is not None:
+                conn_time = time.time() - conn_start_time
+                print("took {} seconds to connect to mongo".format(conn_time))
+        except:
+            print("failed to connect to mongodb!")
+    """
 
     if mongo_connection:
         mongo_db = mongo_connection.dota2bot
@@ -87,7 +88,7 @@ class AbstractResponse(object):
     def has_dotaMatch(cls, ID):
         matches = AbstractResponse.mongo_db.dota2matches
         temp = matches.find_one({'match_id': ID})
-        return (temp is not None)
+        return temp is not None
 
     @classmethod
     def add_dotaMatch(cls, match):

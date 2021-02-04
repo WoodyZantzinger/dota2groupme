@@ -7,7 +7,7 @@ import steamapi
 import os
 import asyncio
 import discord
-
+from data import DataAccess
 
 class DiscordNow(AbstractResponse):
 
@@ -60,7 +60,8 @@ class DiscordNow(AbstractResponse):
             out = out.strip()
             await client.logout()
 
-        key = AbstractResponse.local_var["DISCORD"]
+        secrets = DataAccess.get_secrets()
+        key = secrets["DISCORD"]
         loop = asyncio.get_event_loop()
         loop.run_until_complete(client.start(key))
 

@@ -96,7 +96,9 @@ def do_last_day_message_statistics():
 
     url = 'https://api.groupme.com/v3/groups/13203822/messages'
     found_a_day_ago = False
-    key = AbstractResponse.AbstractResponse.local_var["GROUPME_AUTH"]
+
+    secrets = DataAccess.get_secrets()
+    key = secrets["GROUPME_AUTH"]
     values = {"token": key}
     req = requests.get(url, params=values)
     response = json.loads(req.text)

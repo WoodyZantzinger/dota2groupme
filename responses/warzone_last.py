@@ -1,3 +1,4 @@
+from data import DataAccess
 from .AbstractResponse import *
 import requests
 import os
@@ -38,7 +39,10 @@ class WarzoneLast(AbstractResponse):
             if split[0] == "XSRF-TOKEN": CSRF = split[1]
 
         url = 'https://profile.callofduty.com/do_login?new_SiteId=cod'
-        values = {'username': "dimos84696@reqaxv.com", 'password': AbstractResponse.local_var["COD_PASS"], 'remember_me': "true", "_csrf": CSRF}
+
+        secrets = DataAccess.get_secrets()
+
+        values = {'username': "dimos84696@reqaxv.com", 'password': secrets["COD_PASS"], 'remember_me': "true", "_csrf": CSRF}
 
         #Make a second request to login
         req2 = cod_session.post(url, data=values)
