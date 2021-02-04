@@ -6,6 +6,8 @@ import time
 import sys
 import difflib
 
+from data import DataAccess
+
 
 class AbstractResponse(object):
     # default response key
@@ -211,6 +213,13 @@ class AbstractResponse(object):
     def respond(self):
         return None
 
+    def get_response_storage(self, key):
+        da = DataAccess.DataAccess()
+        return da.get_response_storage(self.clazzname, key)
+
+    def set_response_storage(self, key, value):
+        da = DataAccess.DataAccess()
+        da.set_response_storage(self.clazzname, key, value)
     @classmethod
     def is_relevant_msg(cls, msg):
         return cls.RESPONSE_KEY in msg.text.lower()

@@ -37,6 +37,12 @@ class ResponseCooldown(AbstractResponse):
         return can_send
 
     def note_response(self, response):
+        count = self.get_response_storage('usage_count')
+        if count:
+            self.set_response_storage('usage_count', count + 1)
+        else:
+            self.set_response_storage('usage_count', 1)
+
         try:
             print(u"noting a response for name of {} and id = {}".format(self.msg.name, self.msg.sender_id))
         except UnicodeEncodeError:

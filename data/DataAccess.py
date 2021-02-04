@@ -65,6 +65,26 @@ class DataAccess():
             token = user.values[token_lookup_key]
         return token
 
+    def get_response_storage(self, clazz, field_name):
+        collection = self.sUN[clazz]
+        item = collection.find_one({"field_name": field_name})
+        if item is None:
+            return None
+        return item["field_value"]
+
+    def set_response_storage(self, clazz, field_name, field_value):
+        collection = self.sUN[clazz]
+        query = {"field_name": field_name}
+        item = collection.find_one(query)
+        if item is None:
+            item = {}
+            item["field_name"] = field_name
+        item["field_value"] = field_value
+
+        collection.replace_one(query, item, upsert=True)
+
+        pass
+
 def get_secrets():
     secrets = None
     try:

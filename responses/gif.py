@@ -45,7 +45,7 @@ class ResponseGif(ResponseCooldown):
     url_9to5 = 'http://api.giphy.com/v1/gifs/random?api_key={key}&tag={term}&rating=g'
 
     def __init__(self, msg):
-        super(ResponseGif, self).__init__(msg, self.__module__, ResponseGif.COOLDOWN)
+        super(ResponseGif, self).__init__(msg, self, ResponseGif.COOLDOWN)
 
     def respond(self):
         if self.is_sender_off_cooldown():
@@ -118,7 +118,6 @@ class ResponseGif(ResponseCooldown):
                         out = HostImage(first_image_result.content_url)
                 else:
                     out = "Found nothing"
-
                 self.note_response(out)
             return out
         else:
