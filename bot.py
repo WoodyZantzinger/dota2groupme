@@ -70,17 +70,25 @@ def send_message(msg, groupID="13203822", send=True):
         line_fail = sys.exc_info()[2].tb_lineno
         logger.debug("\tError: {} on line {}".format(repr(e), line_fail))
     if not DEBUG and send:
-        url = 'https://api.groupme.com/v3/bots/post'
-        user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-        header = {'User-Agent': user_agent, 'Content-Type': 'application/json'}
-        values = GroupMeMessage.parse_message(msg, groupID)
+        #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+        #header = {'User-Agent': user_agent, 'Content-Type': 'application/json'}
         #url_values = urllib.parse.urlencode(values).encode("utf-8")
+        #url_values = json.dumps(values).encode('utf-8')
+        #req = urllib.request.Request(url, url_values, headers = header)
+        #response = urllib.request.urlopen(req)
 
-        url_values = json.dumps(values).encode('utf-8')
+        key = AbstractResponse.AbstractResponse.local_var["GROUPME_AUTH"]
+        url = 'https://api.groupme.com/v3/groups/{id}/messages?token={token}'.format(id=groupID, token=key)
 
-        req = urllib.request.Request(url, url_values, headers = header)
-        response = urllib.request.urlopen(req)
-        return response
+        values = GroupMeMessage.parse_message(msg, groupID)
+
+        final_values ={}
+        final_values["message"] = values
+
+        r = requests.post(url, json=final_values)
+        print(r.status_code, r.reason)
+
+        return r.status_code
     else:
         return 'Win'
 
@@ -184,8 +192,8 @@ def make_responses(categories, msg):
 def message():
     new_message = request.get_json(force=True)
     msg = rawmessage.RawMessage(new_message)
-    #print("received message: ")
-    #print(new_message)
+    print("received message: ")
+    print(new_message)
 
     groupID = new_message["group_id"]
     logger.info("Msg [{id}]: {msg}".format(msg = msg.text, id = msg.sender_id))
