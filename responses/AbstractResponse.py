@@ -197,9 +197,12 @@ class AbstractResponse(object):
         del AbstractResponse.GroupMetoDOTA[old]
         AbstractResponse.cache_GroupMetoDOTA()
 
-    def __init__(self, msg, obj):
+    def __init__(self, msg, obj=None):
         super(AbstractResponse, self).__init__()
-        self.clazzname = obj.__class__.__name__
+        if not obj:
+            self.clazzname = None
+        else:
+            self.clazzname = obj.__class__.__name__
         self.msg = msg
 
     # def get_last_used_time(self, sender, mod=None):
@@ -214,10 +217,14 @@ class AbstractResponse(object):
         return None
 
     def get_response_storage(self, key):
+        if not self.clazzname:
+            return None
         da = DataAccess.DataAccess()
         return da.get_response_storage(self.clazzname, key)
 
     def set_response_storage(self, key, value):
+        if not self.clazzname:
+            return None
         da = DataAccess.DataAccess()
         da.set_response_storage(self.clazzname, key, value)
     @classmethod
