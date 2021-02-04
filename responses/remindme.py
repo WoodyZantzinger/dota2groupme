@@ -32,7 +32,7 @@ class ResponseRemindMe(ResponseCooldown):
     COOLDOWN = 10 * 60
 
     def __init__(self, msg):
-        super(ResponseRemindMe, self).__init__(msg, self.__module__, ResponseRemindMe.COOLDOWN)
+        super(ResponseRemindMe, self).__init__(msg, self, ResponseRemindMe.COOLDOWN)
 
     def respond(self):
         conn = None

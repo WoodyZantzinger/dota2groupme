@@ -9,7 +9,7 @@ class Oracle(ResponseCooldown):
     COOLDOWN = 30 * 60
 
     def __init__(self, msg):
-        super(Oracle, self).__init__(msg, self.__module__, Oracle.COOLDOWN)
+        super(Oracle, self).__init__(msg, self, Oracle.COOLDOWN)
 
     def respond(self):
         if self.is_sender_off_cooldown():

@@ -11,7 +11,7 @@ class ResponseWho(ResponseCooldown):
     COOLDOWN = 1 * 60 * 60 / 4
 
     def __init__(self, msg):
-        super(ResponseWho, self).__init__(msg, self.__module__, ResponseWho.COOLDOWN)
+        super(ResponseWho, self).__init__(msg, self, ResponseWho.COOLDOWN)
 
     def respond(self):
         if self.is_sender_off_cooldown():

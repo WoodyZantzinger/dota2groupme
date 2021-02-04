@@ -20,7 +20,7 @@ class kobe(ResponseCooldown):
     COOLDOWN = 1 * 60 * 60 / 2
 
     def __init__(self, msg):
-        super(kobe, self).__init__(msg, self.__module__, kobe.COOLDOWN)
+        super(kobe, self).__init__(msg, self, kobe.COOLDOWN)
 
     def respond(self):
         if self.is_sender_off_cooldown():

@@ -9,7 +9,7 @@ class ResponseJaJa(ResponseCooldown):
     COOLDOWN = 1 * 60 * 60 / 4
 
     def __init__(self, msg):
-        super(ResponseJaJa, self).__init__(msg, self.__module__, ResponseJaJa.COOLDOWN)
+        super(ResponseJaJa, self).__init__(msg, self, ResponseJaJa.COOLDOWN)
 
     def respond(self):
         if self.is_sender_off_cooldown():

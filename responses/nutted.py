@@ -51,7 +51,7 @@ class ResponseNutted(ResponseCooldown):
 			"http://i.imgur.com/gSqZUWf.gifv"]
 
     def __init__(self, msg):
-        super(ResponseNutted, self).__init__(msg, self.__module__, ResponseNutted.COOLDOWN)
+        super(ResponseNutted, self).__init__(msg, self, ResponseNutted.COOLDOWN)
 
     def respond(self):
         if self.is_sender_off_cooldown():

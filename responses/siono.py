@@ -11,7 +11,7 @@ class ResponseSiONo(ResponseCooldown):
     COOLDOWN = 1 * 60 * 60 / 2
 
     def __init__(self, msg):
-        super(ResponseSiONo, self).__init__(msg, self.__module__, ResponseSiONo.COOLDOWN)
+        super(ResponseSiONo, self).__init__(msg, self, ResponseSiONo.COOLDOWN)
 
     def respond(self):
         if self.is_sender_off_cooldown():
