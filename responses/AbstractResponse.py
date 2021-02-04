@@ -25,6 +25,7 @@ class AbstractResponse(object):
 
     print(f"working directory = {os.getcwd()}")
 
+    # TODO do away with these-- have the classes that use them work through DataAccess
     with open('./responses/GroupMetoSteam.json') as f:
         GroupMetoSteam = json.load(f)
 
@@ -86,6 +87,8 @@ class AbstractResponse(object):
     else:
         mongo_db = None
 
+    # TODO work dota statistics classes into a subclass and move these into there
+    #   this will be a big pain
     @classmethod
     def has_dotaMatch(cls, ID):
         matches = AbstractResponse.mongo_db.dota2matches
@@ -131,10 +134,6 @@ class AbstractResponse(object):
         return True
 
     @classmethod
-    def get_last_match(cls, name):
-        return False
-
-    @classmethod
     def name_to_dotaID(cls, name):
         return int(AbstractResponse.GroupMetoDOTA[name])
 
@@ -177,26 +176,6 @@ class AbstractResponse(object):
     def name_to_steamID(cls, name):
         return int(AbstractResponse.GroupMetoSteam[name])
 
-    @classmethod
-    def cache_GroupMetoSteam(cls):
-        with open('./responses/GroupMetoSteam.json', 'w') as f:
-            json.dump(AbstractResponse.GroupMetoSteam, f)
-
-    @classmethod
-    def cache_GroupMetoDOTA(cls):
-        with open('./responses/GroupMetoDOTA.json', 'w') as f:
-            json.dump(AbstractResponse.GroupMetoDOTA, f)
-
-    @classmethod
-    def update_user(cls, old, new):
-        AbstractResponse.GroupMetoSteam[new] = AbstractResponse.GroupMetoSteam[old]
-        del AbstractResponse.GroupMetoSteam[old]
-        AbstractResponse.cache_GroupMetoSteam()
-
-        AbstractResponse.GroupMetoDOTA[new] = AbstractResponse.GroupMetoDOTA[old]
-        del AbstractResponse.GroupMetoDOTA[old]
-        AbstractResponse.cache_GroupMetoDOTA()
-
     def __init__(self, msg, obj=None):
         super(AbstractResponse, self).__init__()
         if not obj:
@@ -204,14 +183,6 @@ class AbstractResponse(object):
         else:
             self.clazzname = obj.__class__.__name__
         self.msg = msg
-
-    # def get_last_used_time(self, sender, mod=None):
-    #     if mod is not None:
-    #         return getattr(sys.modules[mod], 'last_used')[sender]
-    #
-    # def set_last_used_time(self, sender, mod=None):
-    #     if mod is not None:
-    #         getattr(sys.modules[mod], 'last_used')[sender] = time.time()
 
     def respond(self):
         return self._respond()

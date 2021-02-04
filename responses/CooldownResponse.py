@@ -6,10 +6,6 @@ from utils import cachedmessage
 
 USAGE_MEMBER_NAME = "usage_history"
 
-# TODO make a respond and _respond() method--
-#   respond will handle all the cooldown stuff, and _respond is the actual inner response
-#   this way, all the cooldown stuff is handled by the main class, and not by the subclasses!
-
 class ResponseCooldown(AbstractResponse):
     usage = {}
 
