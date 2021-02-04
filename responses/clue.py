@@ -26,12 +26,8 @@ class ResponseClue(ResponseCooldown):
         super(ResponseClue, self).__init__(msg, self, ResponseClue.COOLDOWN)
 
     def _respond(self):
-        if self.is_sender_off_cooldown():
-            outwho = random.choice(people)
-            outwhat = random.choice(things)
-            outwhere = random.choice(places)
-            out = "%s with the %s in the %s." % (outwho, outwhat, outwhere)
-            self.note_response(out)
-            return out
-        else:
-            print("not responding to #clue because sender {} is on cooldown".format(self.msg.name))
+        outwho = random.choice(people)
+        outwhat = random.choice(things)
+        outwhere = random.choice(places)
+        out = "%s with the %s in the %s." % (outwho, outwhat, outwhere)
+        return out

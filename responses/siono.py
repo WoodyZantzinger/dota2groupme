@@ -14,13 +14,10 @@ class ResponseSiONo(ResponseCooldown):
         super(ResponseSiONo, self).__init__(msg, self, ResponseSiONo.COOLDOWN)
 
     def _respond(self):
-        if self.is_sender_off_cooldown():
-            out = None
-            if "omni" in self.msg.text.lower():
-                out = "no"
-            else:
-                out = random.choice(["si :tacotaco:", "no :tacotaco:"])
-            self.note_response(out)
-            return out
-        print("not responding to siono because sender {} is on cooldown".format(self.msg.name))
+        out = None
+        if "omni" in self.msg.text.lower():
+            out = "no"
+        else:
+            out = random.choice(["si :tacotaco:", "no :tacotaco:"])
+        return out
 

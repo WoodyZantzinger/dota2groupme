@@ -18,9 +18,5 @@ class ResponseWhy(ResponseCooldown):
         super(ResponseWhy, self).__init__(msg, self, ResponseWhy.COOLDOWN)
 
     def _respond(self):
-        if self.is_sender_off_cooldown():
-            out = random.choice(reasons)
-            self.note_response(out)
-            return out
-        else:
-            print("not responding to #why because sender {} is on cooldown".format(self.msg.name))
+        out = random.choice(reasons)
+        return out

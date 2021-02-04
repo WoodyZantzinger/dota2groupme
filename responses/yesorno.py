@@ -14,16 +14,13 @@ class ResponseYesOrNo(ResponseCooldown):
         super(ResponseYesOrNo, self).__init__(msg, self, ResponseYesOrNo.COOLDOWN)
 
     def _respond(self):
-        if self.is_sender_off_cooldown():
-            out = None
-            if "omni" in self.msg.text.lower():
-                out = "no"
+        out = None
+        if "omni" in self.msg.text.lower():
+            out = "no"
+        else:
+            if random.random() < 0.01:
+                out = "maybe :dino:"
             else:
-                if random.random() < 0.01:
-                    out = "maybe :dino:"
-                else:
-                    out = random.choice(["yes :dino:", "no :dino:"])
-            self.note_response(out)
-            return out
-        print("not responding to yesorNo because sender {} is on cooldown".format(self.msg.name))
+                out = random.choice(["yes :dino:", "no :dino:"])
+        return out
 

@@ -18,9 +18,5 @@ class ResponseProphecy(ResponseCooldown):
         super(ResponseProphecy, self).__init__(msg, self, ResponseProphecy.COOLDOWN)
 
     def _respond(self):
-        if self.is_sender_off_cooldown():
-            out = random.choice(prophecy)
-            self.note_response(out)
-            return out
-        else:
-            print("not responding to #prophecy because sender {} is on cooldown".format(self.msg.name))
+        out = random.choice(prophecy)
+        return out

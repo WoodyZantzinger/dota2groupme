@@ -6,13 +6,13 @@ import random
 
 class ResponseNutted(ResponseCooldown):
 
-    RESPONSE_KEY = "#nutted"
+	RESPONSE_KEY = "#nutted"
 
-    HELP_RESPONSE = "Sends a nutted"
+	HELP_RESPONSE = "Sends a nutted"
 
-    COOLDOWN = 1 * 60 * 60 / 4
+	COOLDOWN = 1 * 60 * 60 / 4
 
-    nutted_responses = ["http://i.imgur.com/PytWiWF.gif",
+	nutted_responses = ["http://i.imgur.com/PytWiWF.gif",
 			"https://i.imgur.com/GysC7A7.jpg",
 			"http://i.imgur.com/op9PWrr.gif",
 			"http://38.media.tumblr.com/b9b77be967bf161e4a6b1b18b2c62ff5/tumblr_natck3oNET1s373hwo1_400.gif",
@@ -50,12 +50,9 @@ class ResponseNutted(ResponseCooldown):
 			"https://38.media.tumblr.com/7b735928419c67c53bbf229d5ee19e05/tumblr_mouegrKZeo1svh7j5o1_500.gif",
 			"http://i.imgur.com/gSqZUWf.gifv"]
 
-    def __init__(self, msg):
-        super(ResponseNutted, self).__init__(msg, self, ResponseNutted.COOLDOWN)
+	def __init__(self, msg):
+		super(ResponseNutted, self).__init__(msg, self, ResponseNutted.COOLDOWN)
 
-    def _respond(self):
-        if self.is_sender_off_cooldown():
-            out = random.choice(ResponseNutted.nutted_responses)
-            self.note_response(out)
-            return out
-        print("not responding to nutted because sender {} is on cooldown".format(self.msg.name))
+	def _respond(self):
+		out = random.choice(ResponseNutted.nutted_responses)
+		return out

@@ -14,20 +14,16 @@ class ResponseWho(ResponseCooldown):
         super(ResponseWho, self).__init__(msg, self, ResponseWho.COOLDOWN)
 
     def _respond(self):
-        if self.is_sender_off_cooldown():
-            people = set()
-            out = None
-            for person in iter(AbstractResponse.GroupMetoSteam):
-                people.add(person)
-            for person in iter(AbstractResponse.GroupMetoXbox):
-                people.add(person)
-            if "two thumbs" in self.msg.text:
-                out = "^^ this guy"
-            elif "gonna call" in self.msg.text:
-                out = "Ghostbusters!"
-            else:
-                out = random.choice(list(people))
-            self.note_response(out)
-            return out
+        people = set()
+        out = None
+        for person in iter(AbstractResponse.GroupMetoSteam):
+            people.add(person)
+        for person in iter(AbstractResponse.GroupMetoXbox):
+            people.add(person)
+        if "two thumbs" in self.msg.text:
+            out = "^^ this guy"
+        elif "gonna call" in self.msg.text:
+            out = "Ghostbusters!"
         else:
-            print("not responding to #who because sender {} is on cooldown".format(self.msg.name))
+            out = random.choice(list(people))
+        return out

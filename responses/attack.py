@@ -18,9 +18,5 @@ class ResponseAttack(ResponseCooldown):
         super(ResponseAttack, self).__init__(msg, self, ResponseAttack.COOLDOWN)
 
     def _respond(self):
-        if self.is_sender_off_cooldown():
-            out = random.choice(moves)
-            self.note_response(out)
-            return out
-        else:
-            print("not responding to #attack because sender {} is on cooldown".format(self.msg.name))
+        out = random.choice(moves)
+        return out

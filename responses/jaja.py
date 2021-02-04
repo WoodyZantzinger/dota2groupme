@@ -12,15 +12,12 @@ class ResponseJaJa(ResponseCooldown):
         super(ResponseJaJa, self).__init__(msg, self, ResponseJaJa.COOLDOWN)
 
     def _respond(self):
-        if self.is_sender_off_cooldown():
-            n = 1
-            while (random.choice([0, 1])):
-                n += 1
-            out = "fuck andy " * n
-            self.note_response(out)
-            print("trying to send : " + out)
-            return out
-        print("not responding to jaja because sender {} is on cooldown".format(self.msg.name))
+        n = 1
+        while (random.choice([0, 1])):
+            n += 1
+        out = "fuck andy " * n
+        print("trying to send : " + out)
+        return out
 
 
     @classmethod

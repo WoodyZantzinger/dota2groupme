@@ -13,11 +13,8 @@ class ResponseLol(ResponseCooldown):
         super(ResponseLol, self).__init__(msg, self, ResponseLol.COOLDOWN)
 
     def _respond(self):
-        if self.is_sender_off_cooldown():
-            out = ResponseLol.NOTED_RESPONSE
-            self.note_response(out)
-            return out
-        print("not responding to jaja because sender {} is on cooldown".format(self.msg.name))
+        out = ResponseLol.NOTED_RESPONSE
+        return out
 
     @classmethod
     def is_relevant_msg(cls, msg):

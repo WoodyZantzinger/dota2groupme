@@ -32,7 +32,7 @@ class ResponseCooldown(AbstractResponse):
         else:
             last_msg = messages[-1]
             elapsed_time = time.time() - last_msg.time
-            print("elapsed time is {}, and cooldown is {}".format(elapsed_time, self.cooldown))
+            print(f"elapsed time is {elapsed_time:.0f}s, and cooldown is {self.cooldown:.0f}s")
             if elapsed_time > self.cooldown:
                 can_send = True
         if can_send:
@@ -69,6 +69,14 @@ class ResponseCooldown(AbstractResponse):
     def set_usage(self, obj):
         ResponseCooldown.usage[self.clazzname] = obj
         # setattr(sys.modules[self.mod], USAGE_MEMBER_NAME, obj)
+
+    def respond(self):
+        if self.is_sender_off_cooldown():
+            out = self._respond()
+            self.note_response(out)
+            return out
+        else:
+            print("not responding to #{} because sender {} is on cooldown".format(self.clazzname,   self.msg.name))
 
     def _respond(self):
         pass
