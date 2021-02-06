@@ -3,9 +3,11 @@ from .AbstractResponse import *
 from .CooldownResponse import *
 import random
 
+users = DataAccess.DataAccess().get_users()
+people = [user.values['Name'] for user in users]
+
 
 class ResponseWho(ResponseCooldown):
-
     RESPONSE_KEY = "#who"
 
     COOLDOWN = 1 * 60 * 60 / 4
@@ -14,12 +16,6 @@ class ResponseWho(ResponseCooldown):
         super(ResponseWho, self).__init__(msg, self, ResponseWho.COOLDOWN)
 
     def _respond(self):
-        people = set()
-        out = None
-        for person in iter(AbstractResponse.GroupMetoSteam):
-            people.add(person)
-        for person in iter(AbstractResponse.GroupMetoXbox):
-            people.add(person)
         if "two thumbs" in self.msg.text:
             out = "^^ this guy"
         elif "gonna call" in self.msg.text:

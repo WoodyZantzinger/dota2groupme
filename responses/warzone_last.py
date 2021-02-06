@@ -59,10 +59,12 @@ class WarzoneLast(AbstractResponse):
 
     def _respond(self):
         print(f"msg.senderID = {self.msg.sender_id}")
-        canonical_name = next(key for key, value in AbstractResponse.GroupMeIDs.items() if value == self.msg.sender_id)
-        COD_name = AbstractResponse.GroupMetoCODName[canonical_name]
+        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.sender_id)
+        canonical_name = user['Name']
+        COD_name = user['COD_ID']
 
-        if COD_name == None: return "I don't know your Call of Duty ID"
+        if COD_name is None:
+            return "I don't know your Call of Duty ID"
 
         #open the saved file. If that fails, write a new one
         try:
@@ -81,6 +83,9 @@ class WarzoneLast(AbstractResponse):
 
                 self.reauth()
                 match_history = self.get_match(self.auth_session, COD_name)
+
+            if match_history.json()['status'] == 'error':
+                return f"Error in #zonelast: {match_history.json()['data']['message']}"
 
             matches_data = match_history.json()["data"]["matches"][0]
 

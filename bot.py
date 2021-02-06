@@ -151,8 +151,10 @@ def load_responses():
         logger.info("loaded statistics class: {}".format(cls))
 
 
+sUN_user_id = DataAccess.DataAccess().get_user("Name", "sUN").values['GROUPME_ID']
+
 def get_response_categories(msg):
-    if (msg.sender_id == AbstractResponse.AbstractResponse.GroupMeIDs["sUN"]):
+    if (msg.sender_id == sUN_user_id):
         return None
     out = []
 #    for cls in AbstractResponse.AbstractResponse.__subclasses__():
@@ -319,8 +321,9 @@ def spotify():
 
 @app.route("/past_response/<name>")
 def past_response(name):
-    names = AbstractResponse.AbstractResponse.GroupMetoSteam.keys()
-    matches = difflib.get_close_matches(name, names, cutoff=0.2)
+    users = DataAccess.DataAccess().get_users()
+    people = [user.values['Name'] for user in users]
+    matches = difflib.get_close_matches(name, people, cutoff=0.2)
     if not len(matches):
         return "Could not match name for given name of {}".format(name)
     match = matches[0]
@@ -351,12 +354,13 @@ def remindme_callback():
             if (now > item["time"]):
                 triggered_messages.append(item)
 
-        names = AbstractResponse.AbstractResponse.GroupMetoSteam.keys()
+        users = DataAccess.DataAccess().get_users()
+        people = {user.values['Name']:user.values['GROUPME_ID'] for user in users}
         out = []
         for item in triggered_messages:
-            for name in names:
+            for name in people:
                 try:
-                    if AbstractResponse.AbstractResponse.GroupMeIDs[name] == item['senderid']:
+                    if people[name] == item['senderid']:
                         msg = item["message"].encode('ascii', errors='ignore')
                         out.append("Hey, {}: {}".format(name, msg))
                         break
@@ -473,7 +477,6 @@ if __name__ == "__main__":
 
     load_responses()
     nltk.data.path.append(os.getcwd())
-    logger.info(AbstractResponse.AbstractResponse("", "").GroupMeIDs)
 
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=DEBUG)

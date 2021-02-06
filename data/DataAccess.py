@@ -43,6 +43,18 @@ class DataAccess():
             out[admin['username']] = admin['hashedpw']
         return out
 
+    def get_x_to_y_map(self, x_key, y_key):
+        all_users = self.get_users()
+        out = {}
+        for user in all_users:
+            if user[x_key]:
+                if isinstance(user[x_key], list):
+                    for (i, val) in enumerate(user[x_key]):
+                        out[val] = user[y_key]
+                else:
+                    out[user[x_key]] = user[y_key]
+        return out
+
     def update_user(self, user):
         query = {"GROUPME_ID": user.values["GROUPME_ID"]}
         result = self.users.replace_one(query, user.make_db_object(), upsert=True)

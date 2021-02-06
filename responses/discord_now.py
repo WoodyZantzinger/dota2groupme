@@ -31,13 +31,14 @@ class DiscordNow(AbstractResponse):
             global msg
             # print('We have logged in as {0.user}'.format(client))
 
+            DiscordIdToName = DataAccess.DataAccess().get_x_to_y_map('DISCORD_ID', 'Name')
             activity_groups = dict()
             for member in client.guilds[0].members:
                 # downselect activities by only getting `playing` type activities -- others exist
                 playing_activities = [act for act in member.activities if (act.type is discord.ActivityType.playing)]
                 # care if 1) we have activities, and 2) the user is someone in the mapping
-                if playing_activities and (str(member.id) in AbstractResponse.DiscordIDToName):
-                    readable_name = AbstractResponse.DiscordIDToName[str(member.id)]
+                if playing_activities and (str(member.id) in DiscordIdToName):
+                    readable_name = DiscordIdToName[str(member.id)]
                     activity = playing_activities[0] # for some reason, CoD has two entries, so just take the 0th
                     if activity.name in activity_groups:
                         activity_groups[activity.name].append(readable_name)

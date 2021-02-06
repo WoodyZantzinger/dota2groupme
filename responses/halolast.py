@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+from data import DataAccess
 from .AbstractResponse import AbstractResponse
 import requests
 import os
@@ -18,21 +19,21 @@ class ResponseHaloLast(AbstractResponse):
 
     def _respond(self):
         out = ""
-        canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).next()
+        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.sender_id)
+        canonical_name = user['Name']
+        xbox_live_name = user['XBOX_NAME']
 
-        xbox_live_name = AbstractResponse.GroupMetoXboxName[canonical_name]
+        if not canonical_name or not xbox_live_name:
+            return "You're not registered for #halolast"
+        #canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).next()
+
+
+        #xbox_live_name = AbstractResponse.GroupMetoXboxName[canonical_name]
 
         halo_url = "https://www.haloapi.com/stats/h5/players/{name}/matches"
         key = "0"
         print(canonical_name)
-        try:
-            with open('local_variables.json') as f:
-                local_var = json.load(f)
-                key = local_var["HALO_KEY"]
-        except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
-            key = os.getenv('HALO_KEY')
-        except:
-            print("Something went very wrong in #halolast for the Halo key")
+        key = DataAccess.get_secrets()['HALO_KEY']
 
         response = requests.get(halo_url.format(name=xbox_live_name), headers={'Ocp-Apim-Subscription-Key': key})
 

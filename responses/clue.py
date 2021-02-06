@@ -12,8 +12,10 @@ with open(os.path.join("utils", "places.txt")) as f:
     places = [line.rstrip('\n') for line in f]
 
 people = []
-for person, steamid in AbstractResponse.GroupMetoSteam.items():
-    people.append(person)
+
+users = DataAccess.DataAccess().get_users()
+people = [user.values['Name'] for user in users]
+
 
 
 class ResponseClue(ResponseCooldown):

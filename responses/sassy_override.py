@@ -23,7 +23,7 @@ class ResponseSassyOverride(AbstractResponse):
     def is_relevant_msg(cls, msg):
         relevant_to_me = "?" in msg.text or "#" in msg.text
         could_be_url = "http" in msg.text or "www" in msg.text or ".com" in msg.text
-        not_self = msg.sender_id != AbstractResponse.GroupMeIDs["sUN"]
+        not_self = False
         booleans = relevant_to_me and not could_be_url and not_self
         return random.random() < ResponseSassyOverride.INSULT_THRESHOLD and booleans
 

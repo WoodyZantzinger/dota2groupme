@@ -27,23 +27,13 @@ class ResponseLast(AbstractResponse):
             print("#last - sassy override")
             return "Bitch, you can't last for shit"
 
-        #canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).__next__()
-        try:
-            canonical_name = list(AbstractResponse.GroupMeIDs.keys())[list(AbstractResponse.GroupMeIDs.values()).index(self.msg.sender_id)]
-        except ValueError:
-            return "I don't know who you are"
-
-        if not AbstractResponse.has_steamID(canonical_name):
-            return "I don't know your SteamID! Set it with '#set ID'"
-
-        if not AbstractResponse.has_dotaID(canonical_name):
-            return "I don't know your DOTA ID! Set it with '#setDota ID'"
 
         print("Setting Key & Account ID")
         secrets = DataAccess.get_secrets()
         api.set_api_key(secrets["DOTA_KEY"])
 
-        account_id = AbstractResponse.name_to_steamID(canonical_name)
+        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.sender_id)
+        account_id = user['STEAM_ID']
 
         print("Got Account ID")
         # Get a list of recent matches for the player
@@ -60,7 +50,7 @@ class ResponseLast(AbstractResponse):
         player_num = 0
 
         for x in match["result"]["players"]:
-            if int(x["account_id"]) == AbstractResponse.name_to_dotaID(canonical_name):
+            if x["account_id"] == user['DOTA_ID']:
                 out = ""
                 print("Got self.sender Data")
 

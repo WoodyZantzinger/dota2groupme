@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*
+from data import DataAccess
 from .AbstractResponse import AbstractResponse
 
 
+JON = DataAccess.DataAccess().get_user("GROUPME_ID", '898503')
 class ResponseSausage(AbstractResponse):
 
     OVERRIDE_PRIORITY = 4
@@ -14,5 +16,5 @@ class ResponseSausage(AbstractResponse):
 
     @classmethod
     def is_relevant_msg(cls, msg):
-        return AbstractResponse.GroupMeIDs["Jonny G"] == msg.sender_id and 'sausage' in msg.text
+        return JON['GROUPME_ID'] == msg.sender_id and 'sausage' in msg.text
 

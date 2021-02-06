@@ -23,69 +23,6 @@ class AbstractResponse(object):
     # default help response
     HELP_RESPONSE = "Not implemented for " + RESPONSE_KEY
 
-    print(f"working directory = {os.getcwd()}")
-
-    # TODO do away with these-- have the classes that use them work through DataAccess
-    with open('./responses/GroupMetoSteam.json') as f:
-        GroupMetoSteam = json.load(f)
-
-    with open('./responses/GroupMetoDOTA.json') as f:
-        GroupMetoDOTA = json.load(f)
-
-    with open('./responses/GroupMetoXbox.json') as f:
-        GroupMetoXbox = json.load(f)
-
-    with open('./responses/GroupMetoLastfm.json') as f:
-        GroupMetoLastfm = json.load(f)
-
-    with open('./responses/GroupMetoPUBG.json') as f:
-        GroupMetoPUBGName = json.load(f)
-
-    with open('./responses/GroupMetoXboxName.json') as f:
-        GroupMetoXboxName = json.load(f)
-
-    with open('./responses/GroupMetoCODName.json') as f:
-        GroupMetoCODName = json.load(f)
-
-    with open('./responses/DiscordIDToName.json') as f:
-        DiscordIDToName = json.load(f)
-
-    with open('./utils/GroupMeIDs.json') as f:
-        GroupMeIDs = json.load(f)
-
-    mongo_connection = None
-    """
-        try:
-            with open('local_variables.json') as f:
-                local_var = json.load(f)
-            print(local_var["MONGOLAB_URL"])
-            conn_start_time = time.time()
-            mongo_connection = pymongo.MongoClient(local_var["MONGOLAB_URL"], connectTimeoutMS=1000)
-            conn_time = time.time() - conn_start_time
-            print("took {} seconds to connect to mongo".format(conn_time))
-        except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
-            local_var = dict()
-            for key in os.environ.keys():
-                local_var[key] = os.environ[key]
-            conn_start_time = time.time()
-            mongo_connection = None
-            try:
-                print("trying...")
-                mongo_connection = pymongo.MongoClient(os.getenv('MONGOLAB_URL'), connectTimeoutMS=1000)
-            except Exception as e:
-                print("connection to remote db using os.getenv failed!")
-                print(e)
-            if mongo_connection is not None:
-                conn_time = time.time() - conn_start_time
-                print("took {} seconds to connect to mongo".format(conn_time))
-        except:
-            print("failed to connect to mongodb!")
-    """
-
-    if mongo_connection:
-        mongo_db = mongo_connection.dota2bot
-    else:
-        mongo_db = None
 
     # TODO work dota statistics classes into a subclass and move these into there
     #   this will be a big pain
