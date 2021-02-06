@@ -104,6 +104,16 @@ class SSO_Outcome_Type(Enum):
     TOKEN_EXPIRED = 3
     OUT_OF_SCOPE = 4
     REJECTED = 5
+    NO_CONTENT = 6
+
+    def response_code_to_outcome(response_code):
+        map = {
+            200: SSO_Outcome_Type.SUCCESS,
+            204: SSO_Outcome_Type.NO_CONTENT,
+            401: SSO_Outcome_Type.OUT_OF_SCOPE,
+            403: SSO_Outcome_Type.REJECTED
+        }
+        return map[response_code]
 
 
 class SSO_Outcome(object):
@@ -125,6 +135,7 @@ def make_oauth_session(clazz, client_id):
     )
 
     return oauth
+
 
 def start_original_token_generation(clazz, id, client_id, client_secret):
     # build access request:
@@ -165,7 +176,13 @@ def do_data_request(clazz, id, token):
     client_id, client_secret = DataAccess.get_secret_keys(clazz)
     session = OAuth2Session(client_id, token=token)
     data = session.get(type(clazz).DATA_ACCESS_URL)
-    return json.loads(data.content)
+    print(f"Oauth Response code  = {data.status_code}")
+    outobject = None
+    if data.content:
+        outobject = json.loads(data.content)
+    else:
+        outobject = None
+    return outobject, data.status_code
 
 def get_first_token(clazz, id, code):
     client_id, client_secret = DataAccess.get_secret_keys(clazz)
@@ -179,14 +196,29 @@ def get_first_token(clazz, id, code):
     }
     response = requests.post(type(clazz).TOKEN_REFRESH_URL, data=params)
     token = json.loads(response.content.decode('utf-8'))
-    DataAccess.store_token(clazz, id, token)
+    # check if token has ['scope'] key
+    if not token['scope']:
+        token['scope'] = " ".join(type(clazz).REQUEST_SCOPES)
+    if has_all_requested_scopes(token, clazz):
+        DataAccess.store_token(clazz, id, token)
+
+
+def has_all_requested_scopes(token, clazz):
+    if not token:
+        return False
+    # token['scope'] should be something like "granted-scope-1 granted-scope 2" etc
+    # so we can just...
+    for scope in type(clazz).REQUEST_SCOPES:
+        if scope not in token['scope']:
+            return False
+    return True
 
 def get_SSO_data(clazz, msg):
     da = DataAccess.DataAccess()
     user_groupme_id = msg.sender_id
     client_id, client_secret = DataAccess.get_secret_keys(clazz)
     token = da.get_current_token(clazz, user_groupme_id)
-    if not token:
+    if not token or not has_all_requested_scopes(token, clazz):
         auth_url = start_original_token_generation(clazz, user_groupme_id, client_id, client_secret)
         return SSO_Outcome(SSO_Outcome_Type.NO_TOKEN, None, auth_url)
     else:
@@ -194,5 +226,6 @@ def get_SSO_data(clazz, msg):
         if not token:
             return SSO_Outcome(SSO_Outcome_Type.REJECTED, None, None)
         da.store_token(clazz, user_groupme_id, token)
-        data = do_data_request(clazz, user_groupme_id, token)
-        return SSO_Outcome(SSO_Outcome_Type.SUCCESS, data, None)
+        data, status_code = do_data_request(clazz, user_groupme_id, token)
+        outcome = SSO_Outcome_Type.response_code_to_outcome(status_code)
+        return SSO_Outcome(outcome, data, None)
