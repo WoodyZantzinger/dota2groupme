@@ -11,3 +11,5 @@ nltk>=3.0.5
 azure-cognitiveservices-search-imagesearch>=1.0
 discord.py>=1.4.1
 dnspython>=2.1.0
+progressbar~=2.5
+msrest~=0.6.19
