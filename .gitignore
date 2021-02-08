@@ -21,6 +21,7 @@ var/
 
 # Heroku Local ENVIRON Variables
 local_variables.json
+COD_session.pickle
 
 # Installer logs
 pip-log.txt

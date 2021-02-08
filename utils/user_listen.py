@@ -3,6 +3,7 @@ import time
 import json
 from data import DataAccess
 import sys
+import traceback
 
 DEBUG = False
 
@@ -25,20 +26,23 @@ def getNew(c_ID, numCalls):
         message = json.loads(line.decode("utf-8"))
         #print(message)
         for single_message in message[1:]:
-            message_type = single_message["data"]["type"]
-            message_type_token = "Unknown"
-            if message_type == "direct_message.create": message_type_token = "DM"
-            if message_type == "line.create": message_type_token = "Message"
-            if message_type == "like.create": message_type_token = "Like"
-            if message_type == "ping": message_type_token = "Ping"
+            try:
+                message_type = single_message["data"]["type"]
+                message_type_token = "Unknown"
+                if message_type == "direct_message.create": message_type_token = "DM"
+                if message_type == "line.create": message_type_token = "Message"
+                if message_type == "like.create": message_type_token = "Like"
+                if message_type == "ping": message_type_token = "Ping"
 
-            if message_type_token != "Ping" and message_type_token != "Unknown":
-                message_data = single_message["data"]["subject"]
-                print(message_data["text"])
-                message_type_token = "Message"
-                if not DEBUG:
-                    r = requests.post("https://young-fortress-3393.herokuapp.com/message/?type={msg_type}".format(msg_type=message_type_token), json=message_data)
-                print(r.status_code, r.reason)
+                if message_type_token != "Ping" and message_type_token != "Unknown":
+                    message_data = single_message["data"]["subject"]
+                    print(message_data["text"])
+                    message_type_token = "Message"
+                    if not DEBUG:
+                        r = requests.post("https://young-fortress-3393.herokuapp.com/message/?type={msg_type}".format(msg_type=message_type_token), json=message_data)
+                    print(r.status_code, r.reason)
+            except Exception as e:
+                traceback.print_exc()
         return
 
 def handshake():
