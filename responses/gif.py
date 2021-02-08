@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*
+import random
+import re
+
 from .AbstractResponse import *
 from .CooldownResponse import *
 import requests
@@ -10,13 +13,7 @@ from msrest.authentication import CognitiveServicesCredentials
 import urllib.request
 
 def HostImage(url):
-    GM_key = None
-    try:
-        with open('local_variables.json') as f:
-            local_var = json.load(f)
-            GM_key = local_var["GROUPME_AUTH"]
-    except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
-        GM_key = os.getenv('GROUPME_AUTH')
+    GM_key = DataAccess.get_secrets()['GROUPME_AUTH']
 
     r = requests.get(url)
     url = 'https://image.groupme.com/pictures'
@@ -48,21 +45,8 @@ class ResponseGif(ResponseCooldown):
         super(ResponseGif, self).__init__(msg, self, ResponseGif.COOLDOWN)
 
     def _respond(self):
-        azure_key = None
-        try:
-            with open('local_variables.json') as f:
-                local_var = json.load(f)
-                azure_key = local_var["AZURE_KEY"]
-        except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
-            azure_key = os.getenv('AZURE_KEY')
-
-        key = None
-        try:
-            with open('local_variables.json') as f:
-                local_var = json.load(f)
-                key = local_var["GIPHY_KEY"]
-        except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
-            key = os.getenv('GIPHY_KEY')
+        azure_key = DataAccess.get_secrets()['AZURE_KEY']
+        giphy_key = DataAccess.get_secrets()['GIPHY_KEY']
 
         out = ""
         search_term = self.msg.text.partition(' ')[2].lower()
@@ -73,8 +57,9 @@ class ResponseGif(ResponseCooldown):
             search_term = search_term.replace(".com", "")
             search_term = search_term.replace(".net", "")
             search_term = search_term.replace(".porn", "")
-#            if "ariana" in search_term and "grande" in search_term:
-#		return "her?"
+
+        search_term = self.remove_banned_words(search_term)
+
         hour = datetime.datetime.utcnow().hour
         # 0 == MONDAY for weekday()
         is_weekday = 0 <= datetime.datetime.utcnow().weekday() <= 4
@@ -90,7 +75,7 @@ class ResponseGif(ResponseCooldown):
 
         if search_term == "":
             #use Giphy
-            request_url = url_to_format.format(term=search_term, key=key)
+            request_url = url_to_format.format(term=search_term, key=giphy_key)
             response = requests.get(request_url)
             try:
                 print(request_url)
@@ -106,6 +91,7 @@ class ResponseGif(ResponseCooldown):
 
             if image_results.value:
                 out = ""
+                image_results.value = self.remove_banned_websites(image_results.value)
                 while(out == ""):
                     max = 1
                     if req_term == "#gif":
@@ -118,3 +104,26 @@ class ResponseGif(ResponseCooldown):
                 out = "Found nothing"
         return out
 
+    def remove_banned_words(self, search_term):
+        print(f"Original search term = {search_term}")
+        banned_words = self.get_response_storage('banned_words')
+        print(banned_words)
+        if banned_words:
+            things = None
+            with open(os.path.join("utils", "things.txt")) as f:
+                things = [line.rstrip('\n') for line in f]
+            for bad_word in banned_words:
+                search_term = re.sub(bad_word, random.choice(things), search_term)
+        print(f"Modified search term = {search_term}")
+        return search_term
+
+    def remove_banned_websites(self, image_results):
+        banned_sites = self.get_response_storage('banned_sites')
+        results = []
+        if banned_sites:
+            for result in image_results:
+                if not any([site in result.content_url for site in banned_sites]):
+                    results.append(result)
+        else:
+            results = image_results
+        return results

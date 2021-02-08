@@ -47,6 +47,8 @@ class DataAccess():
         all_users = self.get_users()
         out = {}
         for user in all_users:
+            if not user[y_key]:
+                continue
             if user[x_key]:
                 if isinstance(user[x_key], list):
                     for (i, val) in enumerate(user[x_key]):

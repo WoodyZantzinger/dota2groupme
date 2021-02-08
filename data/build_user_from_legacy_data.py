@@ -34,7 +34,7 @@ def build_legacy_user_objects():
         user_model = add_to_model_from_json(user_model, username, 'GROUPME_ID', "../utils/GroupMeIDs.json")
         user_model = add_to_model_from_json(user_model, username, 'STEAM_ID', "../responses/GroupMetoSteam.json")
         user_model = add_to_model_from_json(user_model, username, 'PUBG_ID', "../responses/GroupMetoPUBG.json")
-        user_model = add_to_model_from_json(user_model, username, 'PUBG_ID', "../responses/GroupMetoCODName.json")
+        user_model = add_to_model_from_json(user_model, username, 'COD_ID', "../responses/GroupMetoCODName.json")
 
         models.append(user_model)
 
