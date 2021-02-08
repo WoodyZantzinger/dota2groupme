@@ -26,12 +26,13 @@ def getNew(c_ID, numCalls):
         #print(message)
         for single_message in message[1:]:
             message_type = single_message["data"]["type"]
+            message_type_token = "Unknown"
             if message_type == "direct_message.create": message_type_token = "DM"
             if message_type == "line.create": message_type_token = "Message"
             if message_type == "like.create": message_type_token = "Like"
             if message_type == "ping": message_type_token = "Ping"
 
-            if message_type != "ping":
+            if message_type_token != "Ping" and message_type_token != "Unknown":
                 message_data = single_message["data"]["subject"]
                 print(message_data["text"])
                 message_type_token = "Message"
