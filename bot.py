@@ -226,7 +226,7 @@ def message():
 
     logger.info("Msg [{id}]: {msg}".format(msg = msg.text, id = msg.sender_id))
     active_response_categories = get_response_categories(msg)
-    if(message_type == "DM" or message_type == "Message") and (randrange(0,100) > -1):
+    if(message_type == "DM" or message_type == "Message") and (randrange(0,100) > 92):
         like_message(new_message["group_id"], new_message["id"])
 
     if active_response_categories:
