@@ -23,16 +23,18 @@ def getNew(c_ID, numCalls):
         message = json.loads(line.decode("utf-8"))
         #print(message)
         for single_message in message[1:]:
-            print(single_message["data"])
-            message_data = single_message["data"]["subject"]
             message_type = single_message["data"]["type"]
-            print(message_data["text"])
-            message_type_token = "Message"
             if message_type == "direct_message.create": message_type_token = "DM"
             if message_type == "line.create": message_type_token = "Message"
             if message_type == "like.create": message_type_token = "Like"
-            #r = requests.post("http://localhost:5000/message/?type={msg_type}".format(msg_type=message_type_token), json=message_data)
-            print(r.status_code, r.reason)
+            if message_type == "ping": message_type_token = "Ping"
+
+            if message_type != "Ping":
+                message_data = single_message["data"]["subject"]
+                print(message_data["text"])
+                message_type_token = "Message"
+                #r = requests.post("http://localhost:5000/message/?type={msg_type}".format(msg_type=message_type_token), json=message_data)
+                print(r.status_code, r.reason)
         return
 
 def handshake():
