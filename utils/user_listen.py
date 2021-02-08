@@ -2,7 +2,9 @@ import requests
 import time
 import json
 from data import DataAccess
+import sys
 
+DEBUG = False
 
 def getNew(c_ID, numCalls):
     # Copied data from tutorial here: https://dev.groupme.com/tutorials/push
@@ -33,7 +35,8 @@ def getNew(c_ID, numCalls):
                 message_data = single_message["data"]["subject"]
                 print(message_data["text"])
                 message_type_token = "Message"
-                r = requests.post("http://localhost:80/message/?type={msg_type}".format(msg_type=message_type_token), json=message_data)
+                if not DEBUG:
+                    r = requests.post("https://young-fortress-3393.herokuapp.com/message/?type={msg_type}".format(msg_type=message_type_token), json=message_data)
                 print(r.status_code, r.reason)
         return
 
@@ -50,6 +53,10 @@ def handshake():
     return r.json()[0]["clientId"]
 
 if __name__ == "__main__":
+
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "debug": DEBUG = True
+
     accessToken = DataAccess.get_secrets()["GROUPME_AUTH"]
 
     #Get our User ID by asking GroupMe who we are
