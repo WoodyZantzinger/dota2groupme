@@ -33,7 +33,7 @@ def getNew(c_ID, numCalls):
                 message_data = single_message["data"]["subject"]
                 print(message_data["text"])
                 message_type_token = "Message"
-                r = requests.post("http://localhost:5000/message/?type={msg_type}".format(msg_type=message_type_token), json=message_data)
+                r = requests.post("http://localhost:80/message/?type={msg_type}".format(msg_type=message_type_token), json=message_data)
                 print(r.status_code, r.reason)
         return
 
