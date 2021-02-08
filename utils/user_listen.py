@@ -23,6 +23,7 @@ def getNew(c_ID, numCalls):
         message = json.loads(line.decode("utf-8"))
         #print(message)
         for single_message in message[1:]:
+            print(single_message["data"])
             message_data = single_message["data"]["subject"]
             message_type = single_message["data"]["type"]
             print(message_data["text"])
