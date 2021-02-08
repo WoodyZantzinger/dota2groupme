@@ -14,6 +14,6 @@ class ResponseNextTeam(AbstractResponse):
     def __init__(self, msg):
         super(ResponseNextTeam, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         heroes = [ResponseNext.random_hero() for _ in range(5)]
         return ResponseNextTeam.team_template.format(*heroes)

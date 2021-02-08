@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+from data import DataAccess
 from .AbstractResponse import AbstractResponse
 import requests
 import steamapi
@@ -7,8 +8,7 @@ import json
 
 
 class ResponseNow(AbstractResponse):
-
-    api = steamapi.core.APIConnection(AbstractResponse.local_var["DOTA_KEY"])
+    # api = steamapi.core.APIConnection(AbstractResponse.local_var["DOTA_KEY"])
 
     person_status_template = "{name} : {status} on {system}\n"
 
@@ -17,11 +17,17 @@ class ResponseNow(AbstractResponse):
     def __init__(self, msg):
         super(ResponseNow, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
+        secrets = DataAccess.get_secrets()
+        api = steamapi.core.APIConnection(secrets["DOTA_KEY"])
+
         out = ""
 
-        #Get Steam First
-        for person, steamid in AbstractResponse.GroupMetoSteam.items():
+        name_to_steamid = DataAccess.DataAccess().get_x_to_y_map("Name", "STEAM_ID")
+        # Get Steam First
+        for person, steamid in name_to_steamid:
+            if not steamid:
+                continue
             steamuser = steamapi.user.SteamUser(steamid)
 
             playing = steamuser.currently_playing
@@ -31,18 +37,14 @@ class ResponseNow(AbstractResponse):
                 game = playing._cache['name'][0]
                 out += ResponseNow.person_status_template.format(name=person, status=game, system="Steam")
 
+        key = secrets["XBOX_KEY"]
 
-        key = None
-        try:
-            with open('local_variables.json') as f:
-                local_var = json.load(f)
-                key = local_var["XBOX_KEY"]
-        except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
-            key = os.getenv('XBOX_KEY')
-        except:
-            print("Something went very wrong in #now for the Xbox key")
-        #Get Xbox Second
-        for person, xboxid in AbstractResponse.GroupMetoXbox.items():
+        # Get Xbox Second
+        name_to_xboxid = DataAccess.DataAccess().get_x_to_y_map("Name", "XBOX_ID")
+
+        for person, xboxid in name_to_xboxid:
+            if not xboxid:
+                continue
             xbox_url = "https://xboxapi.com/v2/{id}/presence"
             print(person)
 
@@ -58,5 +60,3 @@ class ResponseNow(AbstractResponse):
         if not out:
             return "Nobody's online :("
         return out
-
-

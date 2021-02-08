@@ -4,15 +4,22 @@ import pymongo
 from data import build_user_from_legacy_data
 from data.sUN_user import sUN_user
 import time
+from pymongo.errors import ConnectionFailure
 
 class DataAccess():
+    __client = None
+
     def __init__(self):
         secrets = get_secrets()
-        self.client = pymongo.MongoClient(secrets['SUNDATA_URL'])
-        self.sUN = self.client['sUN_users']
-        self.users = self.sUN['users']
-        self.admin = self.sUN['admin']
-
+        if DataAccess.__client is None:
+            try:
+                DataAccess.__client = pymongo.MongoClient(secrets['SUNDATA_URL'])
+            except ConnectionFailure as cf:
+                DataAccess.__client = None
+        if DataAccess.__client:
+            self.sUN = DataAccess.__client['sUN_users']
+            self.users = self.sUN['users']
+            self.admin = self.sUN['admin']
 
     def get_users(self):
         users_list = list(self.users.find({}))
@@ -36,20 +43,59 @@ class DataAccess():
             out[admin['username']] = admin['hashedpw']
         return out
 
+    def get_x_to_y_map(self, x_key, y_key):
+        all_users = self.get_users()
+        out = {}
+        for user in all_users:
+            if user[x_key]:
+                if isinstance(user[x_key], list):
+                    for (i, val) in enumerate(user[x_key]):
+                        out[val] = user[y_key]
+                else:
+                    out[user[x_key]] = user[y_key]
+        return out
+
     def update_user(self, user):
         query = {"GROUPME_ID": user.values["GROUPME_ID"]}
         result = self.users.replace_one(query, user.make_db_object(), upsert=True)
         return result
 
-def store_token(clazz, id, token):
-    if 'expires_at' not in token:
-        expires_at = time.time() + token['expires_in']
-        token['expires_at'] = expires_at
-    da = DataAccess()
-    user = da.get_user("GROUPME_ID", id)
-    user.values[clazz.token_key_name()] = token
-    da.update_user(user)
+    def store_token(self, clazz, id, token):
+        if 'expires_at' not in token:
+            expires_at = time.time() + token['expires_in']
+            token['expires_at'] = expires_at
 
+        user = self.get_user("GROUPME_ID", id)
+        user.values[clazz.token_key_name()] = token
+        self.update_user(user)
+
+    def get_current_token(self, clazz, id):
+        user = self.get_user("GROUPME_ID", id)
+        token = None
+        token_lookup_key = clazz.token_key_name()
+        if token_lookup_key in user.values:
+            token = user.values[token_lookup_key]
+        return token
+
+    def get_response_storage(self, clazz, field_name):
+        collection = self.sUN[clazz]
+        item = collection.find_one({"field_name": field_name})
+        if item is None:
+            return None
+        return item["field_value"]
+
+    def set_response_storage(self, clazz, field_name, field_value):
+        collection = self.sUN[clazz]
+        query = {"field_name": field_name}
+        item = collection.find_one(query)
+        if item is None:
+            item = {}
+            item["field_name"] = field_name
+        item["field_value"] = field_value
+
+        collection.replace_one(query, item, upsert=True)
+
+        pass
 
 def get_secrets():
     secrets = None
@@ -69,14 +115,7 @@ def get_secret_keys(clazz):
     out = [secrets[id_name], secrets[key_name]]
     return out
 
-def get_current_token(clazz, id):
-    da = DataAccess()
-    user = da.get_user("GROUPME_ID", id)
-    token = None
-    token_lookup_key = clazz.token_key_name()
-    if token_lookup_key in user.values:
-        token = user.values[token_lookup_key]
-    return token
+
 
 if __name__ == "__main__":
     access = DataAccess()

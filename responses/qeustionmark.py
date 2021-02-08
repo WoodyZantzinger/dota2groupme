@@ -10,7 +10,7 @@ class ResponseQeustionMark(AbstractResponse):
     def __init__(self, msg):
         super(ResponseQeustionMark, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         return "dont qeustion mark lol"
 
     @classmethod

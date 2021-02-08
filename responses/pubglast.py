@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+from data import DataAccess
 from .AbstractResponse import AbstractResponse
 import os
 import json
@@ -11,24 +12,16 @@ class ResponsePUBGLast(AbstractResponse):
     def __init__(self, msg):
         super(ResponsePUBGLast, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         out = ""
 
         template = "{name} did {damage} damage for {numKills} kills (placing {killRank} in kills) to finish {result} in a {gameType}\n"
 
-        canonical_name = (key for key,value in AbstractResponse.GroupMeIDs.items() if value==self.msg.sender_id).next()
+        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.sender_id)
+        canonical_name = user['Name']
+        PUBGname = user['PUBG_ID']
 
-        PUBGname = AbstractResponse.GroupMetoPUBGName[canonical_name]
-
-        key = None
-        try:
-            with open('local_variables.json') as f:
-                local_var = json.load(f)
-                key = local_var["PUBG_KEY"]
-        except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
-            key = os.getenv('PUBG_KEY')
-        except:
-            print("Something went very wrong in #pubglast for the PUBG key")
+        key = DataAccess.get_secrets()['PUBG_KEY']
 
         playerUrl = "https://api.pubg.com/shards/pc-na/players?filter[playerNames]={name}"
         matchUrl = "https://api.pubg.com/shards/pc-na/matches/{matchID}"

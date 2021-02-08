@@ -12,7 +12,7 @@ class Worst(AbstractResponse):
     def __init__(self, msg):
         super(Worst, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
 
         out = ""
         hero_name = self.msg.text.split(' ', 1)

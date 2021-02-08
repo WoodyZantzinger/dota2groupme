@@ -42,7 +42,7 @@ class ResponseNow(AbstractResponse):
     def __init__(self, msg):
         super(ResponseNow, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         URL = ("https://www.strava.com/oauth/authorize?"
             "client_id= 7477"
             "&response_type=code"

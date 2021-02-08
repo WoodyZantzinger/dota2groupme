@@ -13,7 +13,7 @@ class ResponseNextItem(AbstractResponse):
     def __init__(self, msg):
         super(ResponseNextItem, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         return "You will buy: " + ResponseNextItem.random_item()
 
     @classmethod

@@ -12,7 +12,7 @@ class ResponseGetAJob(AbstractResponse):
     def __init__(self, msg):
         super(ResponseGetAJob, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         return "Get a job"
 
     @classmethod

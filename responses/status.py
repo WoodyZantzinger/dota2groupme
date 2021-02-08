@@ -11,5 +11,5 @@ class ResponseStatus(AbstractResponse):
     def __init__(self, msg):
         super(ResponseStatus, self).__init__(msg)
 
-    def respond(self):
+    def _respond(self):
         return "Currently listening ;)"

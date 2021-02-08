@@ -3,31 +3,23 @@ from .AbstractResponse import *
 from .CooldownResponse import *
 import random
 
+users = DataAccess.DataAccess().get_users()
+people = [user.values['Name'] for user in users]
+
 
 class ResponseWho(ResponseCooldown):
-
     RESPONSE_KEY = "#who"
 
     COOLDOWN = 1 * 60 * 60 / 4
 
     def __init__(self, msg):
-        super(ResponseWho, self).__init__(msg, self.__module__, ResponseWho.COOLDOWN)
+        super(ResponseWho, self).__init__(msg, self, ResponseWho.COOLDOWN)
 
-    def respond(self):
-        if self.is_sender_off_cooldown():
-            people = set()
-            out = None
-            for person in iter(AbstractResponse.GroupMetoSteam):
-                people.add(person)
-            for person in iter(AbstractResponse.GroupMetoXbox):
-                people.add(person)
-            if "two thumbs" in self.msg.text:
-                out = "^^ this guy"
-            elif "gonna call" in self.msg.text:
-                out = "Ghostbusters!"
-            else:
-                out = random.choice(list(people))
-            self.note_response(out)
-            return out
+    def _respond(self):
+        if "two thumbs" in self.msg.text:
+            out = "^^ this guy"
+        elif "gonna call" in self.msg.text:
+            out = "Ghostbusters!"
         else:
-            print("not responding to #who because sender {} is on cooldown".format(self.msg.name))
+            out = random.choice(list(people))
+        return out

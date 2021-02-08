@@ -31,23 +31,22 @@ class SSO_Response(AbstractResponse):
 
 
     def __init__(self, msg, obj):
-        super(SSO_Response, self).__init__(msg)
+        super(SSO_Response, self).__init__(msg, obj)
         self.msg = msg
         self.data = None
         self.obj = obj
-        self.clazzname = obj.__class__.__name__
         self.outcome = None
         self.authenticate(obj, msg)
 
     def authenticate(self, obj, msg):
         self.outcome = SSO_Manager.get_SSO_data(obj, msg)
 
-    def respond(self):
+    def _respond(self):
         if self.outcome.outcome_type == SSO_Manager.SSO_Outcome_Type.NO_TOKEN:
             self.response = f"Please authenticate before using {self.clazzname}:\n{self.outcome.auth_url}"
         if self.outcome.outcome_type == SSO_Manager.SSO_Outcome_Type.REJECTED:
             self.response = f"Unknown failure in using {self.clazzname}"
-        return None
+        return self.response
 
     def make_auth_state(self):
         return self.clazzname + "|" + self.msg.sender_id

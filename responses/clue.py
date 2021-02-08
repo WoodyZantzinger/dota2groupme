@@ -12,8 +12,10 @@ with open(os.path.join("utils", "places.txt")) as f:
     places = [line.rstrip('\n') for line in f]
 
 people = []
-for person, steamid in AbstractResponse.GroupMetoSteam.items():
-    people.append(person)
+
+users = DataAccess.DataAccess().get_users()
+people = [user.values['Name'] for user in users]
+
 
 
 class ResponseClue(ResponseCooldown):
@@ -23,15 +25,11 @@ class ResponseClue(ResponseCooldown):
     COOLDOWN = 1 * 60 * 60 / 4
 
     def __init__(self, msg):
-        super(ResponseClue, self).__init__(msg, self.__module__, ResponseClue.COOLDOWN)
+        super(ResponseClue, self).__init__(msg, self, ResponseClue.COOLDOWN)
 
-    def respond(self):
-        if self.is_sender_off_cooldown():
-            outwho = random.choice(people)
-            outwhat = random.choice(things)
-            outwhere = random.choice(places)
-            out = "%s with the %s in the %s." % (outwho, outwhat, outwhere)
-            self.note_response(out)
-            return out
-        else:
-            print("not responding to #clue because sender {} is on cooldown".format(self.msg.name))
+    def _respond(self):
+        outwho = random.choice(people)
+        outwhat = random.choice(things)
+        outwhere = random.choice(places)
+        out = "%s with the %s in the %s." % (outwho, outwhat, outwhere)
+        return out

@@ -30,18 +30,14 @@ class ResponseSpecificGif(ResponseCooldown):
                  }
 
     def __init__(self, msg):
-        super(ResponseSpecificGif, self).__init__(msg, self.__module__, ResponseSpecificGif.COOLDOWN)
+        super(ResponseSpecificGif, self).__init__(msg, self, ResponseSpecificGif.COOLDOWN)
 
-    def respond(self):
-        if self.is_sender_off_cooldown():
-            out = None
-            for word in self.msg.text.split(" "):
-                if word.startswith("#") and word[1:] in ResponseSpecificGif.GIF_MAP:
-                    out = ResponseSpecificGif.GIF_MAP[word[1:]]
-            self.note_response(out)
-            return out
-        else:
-            print("not responding to gif because sender {} is on cooldown".format(self.msg.name))
+    def _respond(self):
+        out = None
+        for word in self.msg.text.split(" "):
+            if word.startswith("#") and word[1:] in ResponseSpecificGif.GIF_MAP:
+                out = ResponseSpecificGif.GIF_MAP[word[1:]]
+        return out
 
     @classmethod
     def is_relevant_msg(cls, msg):

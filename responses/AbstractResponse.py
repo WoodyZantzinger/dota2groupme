@@ -6,8 +6,10 @@ import time
 import sys
 import difflib
 
-class AbstractResponse(object):
+from data import DataAccess
 
+
+class AbstractResponse(object):
     # default response key
     # should respond to no messages
     RESPONSE_KEY = "\0"
@@ -21,73 +23,14 @@ class AbstractResponse(object):
     # default help response
     HELP_RESPONSE = "Not implemented for " + RESPONSE_KEY
 
-    print(f"working directory = {os.getcwd()}")
 
-    with open('./responses/GroupMetoSteam.json') as f:
-        GroupMetoSteam = json.load(f)
-
-    with open('./responses/GroupMetoDOTA.json') as f:
-        GroupMetoDOTA = json.load(f)
-
-    with open('./responses/GroupMetoXbox.json') as f:
-        GroupMetoXbox = json.load(f)
-
-    with open('./responses/GroupMetoLastfm.json') as f:
-        GroupMetoLastfm = json.load(f)
-
-    with open('./responses/GroupMetoPUBG.json') as f:
-        GroupMetoPUBGName= json.load(f)
-
-    with open('./responses/GroupMetoXboxName.json') as f:
-        GroupMetoXboxName = json.load(f)
-
-    with open('./responses/GroupMetoCODName.json') as f:
-        GroupMetoCODName = json.load(f)
-
-    with open('./responses/DiscordIDToName.json') as f:
-        DiscordIDToName = json.load(f)
-
-    with open('./utils/GroupMeIDs.json') as f:
-        GroupMeIDs = json.load(f)
-
-    mongo_connection = None
-
-    try:
-        with open('local_variables.json') as f:
-            local_var = json.load(f)
-        print(local_var["MONGOLAB_URL"])
-        conn_start_time = time.time()
-        mongo_connection = pymongo.MongoClient(local_var["MONGOLAB_URL"], connectTimeoutMS=1000)
-        conn_time = time.time() - conn_start_time
-        print("took {} seconds to connect to mongo".format(conn_time))
-    except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
-        local_var = dict()
-        for key in os.environ.keys():
-            local_var[key] = os.environ[key]
-        conn_start_time = time.time()
-        mongo_connection = None
-        try:
-            print("trying...")
-            mongo_connection = pymongo.MongoClient(os.getenv('MONGOLAB_URL'), connectTimeoutMS=1000)
-        except Exception as e:
-            print("connection to remote db using os.getenv failed!")
-            print(e)
-        if mongo_connection is not None:
-            conn_time = time.time() - conn_start_time
-            print("took {} seconds to connect to mongo".format(conn_time))
-    except:
-        print("failed to connect to mongodb!")
-
-    if mongo_connection:
-        mongo_db = mongo_connection.dota2bot
-    else:
-        mongo_db = None
-
+    # TODO work dota statistics classes into a subclass and move these into there
+    #   this will be a big pain
     @classmethod
     def has_dotaMatch(cls, ID):
         matches = AbstractResponse.mongo_db.dota2matches
         temp = matches.find_one({'match_id': ID})
-        return (temp is not None)
+        return temp is not None
 
     @classmethod
     def add_dotaMatch(cls, match):
@@ -128,14 +71,9 @@ class AbstractResponse(object):
         return True
 
     @classmethod
-    def get_last_match(cls, name):
-        return False
-
-    @classmethod
     def name_to_dotaID(cls, name):
         return int(AbstractResponse.GroupMetoDOTA[name])
 
-    #TODO: We need to optimize, this is a poor was to do reverse lookups
     @classmethod
     def dotaID_to_name(cls, id):
         for name, key in AbstractResponse.GroupMetoDOTA.items():
@@ -151,13 +89,13 @@ class AbstractResponse(object):
 
         for key in data.HEROES_CACHE.items():
             ratio = difflib.SequenceMatcher(None, msg_name.lower(), key[1]['localized_name'].lower()).ratio()
-            if ratio > .7 :
+            if ratio > .7:
                 matches.append([key, ratio])
 
         if len(matches) < 1:
             return -1
         else:
-            return sorted(matches, key = lambda x: x[1], reverse = True)[0][0][0]
+            return sorted(matches, key=lambda x: x[1], reverse=True)[0][0][0]
 
     @classmethod
     def has_dotaID(cls, name):
@@ -175,41 +113,31 @@ class AbstractResponse(object):
     def name_to_steamID(cls, name):
         return int(AbstractResponse.GroupMetoSteam[name])
 
-    @classmethod
-    def cache_GroupMetoSteam(cls):
-        with open('./responses/GroupMetoSteam.json', 'w') as f:
-            json.dump(AbstractResponse.GroupMetoSteam, f)
-
-    @classmethod
-    def cache_GroupMetoDOTA(cls):
-        with open('./responses/GroupMetoDOTA.json', 'w') as f:
-            json.dump(AbstractResponse.GroupMetoDOTA, f)
-
-    @classmethod
-    def update_user(cls, old, new):
-        AbstractResponse.GroupMetoSteam[new] = AbstractResponse.GroupMetoSteam[old]
-        del AbstractResponse.GroupMetoSteam[old]
-        AbstractResponse.cache_GroupMetoSteam()
-
-        AbstractResponse.GroupMetoDOTA[new] = AbstractResponse.GroupMetoDOTA[old]
-        del AbstractResponse.GroupMetoDOTA[old]
-        AbstractResponse.cache_GroupMetoDOTA()
-
-    def __init__(self, msg, mod=None):
+    def __init__(self, msg, obj=None):
         super(AbstractResponse, self).__init__()
+        if not obj:
+            self.clazzname = None
+        else:
+            self.clazzname = obj.__class__.__name__
         self.msg = msg
 
-    def get_last_used_time(self, sender, mod=None):
-        if mod is not None:
-            return getattr(sys.modules[mod], 'last_used')[sender]
-
-    def set_last_used_time(self, sender, mod=None):
-        if mod is not None:
-            getattr(sys.modules[mod], 'last_used')[sender] = time.time()
-
     def respond(self):
+        return self._respond()
+
+    def _respond(self):
         return None
 
+    def get_response_storage(self, key):
+        if not self.clazzname:
+            return None
+        da = DataAccess.DataAccess()
+        return da.get_response_storage(self.clazzname, key)
+
+    def set_response_storage(self, key, value):
+        if not self.clazzname:
+            return None
+        da = DataAccess.DataAccess()
+        da.set_response_storage(self.clazzname, key, value)
     @classmethod
     def is_relevant_msg(cls, msg):
         return cls.RESPONSE_KEY in msg.text.lower()

@@ -6,13 +6,13 @@ from utils import cachedmessage
 
 USAGE_MEMBER_NAME = "usage_history"
 
-
 class ResponseCooldown(AbstractResponse):
+    usage = {}
 
-    def __init__(self, msg, mod, cooldown):
-        super(ResponseCooldown, self).__init__(msg, mod)
+    def __init__(self, msg, obj, cooldown):
+        super(ResponseCooldown, self).__init__(msg, obj)
         self.cooldown = cooldown
-        self.mod = mod
+        # self.mod = mod
         if not self.has_usage():
             self.set_usage(dict())
             self.get_usage()[self.msg.sender_id] = []
@@ -28,7 +28,7 @@ class ResponseCooldown(AbstractResponse):
         else:
             last_msg = messages[-1]
             elapsed_time = time.time() - last_msg.time
-            print("elapsed time is {}, and cooldown is {}".format(elapsed_time, self.cooldown))
+            print(f"elapsed time is {elapsed_time:.0f}s, and cooldown is {self.cooldown:.0f}s")
             if elapsed_time > self.cooldown:
                 can_send = True
         if can_send:
@@ -36,6 +36,12 @@ class ResponseCooldown(AbstractResponse):
         return can_send
 
     def note_response(self, response):
+        count = self.get_response_storage('usage_count')
+        if count:
+            self.set_response_storage('usage_count', count + 1)
+        else:
+            self.set_response_storage('usage_count', 1)
+
         try:
             print(u"noting a response for name of {} and id = {}".format(self.msg.name, self.msg.sender_id))
         except UnicodeEncodeError:
@@ -49,13 +55,24 @@ class ResponseCooldown(AbstractResponse):
             print(_)
 
     def get_usage(self):
-        return getattr(sys.modules[self.mod], USAGE_MEMBER_NAME)
+        return ResponseCooldown.usage[self.clazzname]
+        #return getattr(sys.modules[self.mod], USAGE_MEMBER_NAME)
 
     def has_usage(self):
-        return hasattr(sys.modules[self.mod], USAGE_MEMBER_NAME)
+        return self.clazzname in ResponseCooldown.usage
+        # return hasattr(sys.modules[self.mod], USAGE_MEMBER_NAME)
 
     def set_usage(self, obj):
-        setattr(sys.modules[self.mod], USAGE_MEMBER_NAME, obj)
+        ResponseCooldown.usage[self.clazzname] = obj
+        # setattr(sys.modules[self.mod], USAGE_MEMBER_NAME, obj)
 
     def respond(self):
+        if self.is_sender_off_cooldown():
+            out = self._respond()
+            self.note_response(out)
+            return out
+        else:
+            print("not responding to #{} because sender {} is on cooldown".format(self.clazzname,   self.msg.name))
+
+    def _respond(self):
         pass

@@ -10,14 +10,11 @@ class ResponseLol(ResponseCooldown):
     RESPONSE_THRESHOLD = 3
 
     def __init__(self, msg):
-        super(ResponseLol, self).__init__(msg, self.__module__, ResponseLol.COOLDOWN)
+        super(ResponseLol, self).__init__(msg, self, ResponseLol.COOLDOWN)
 
-    def respond(self):
-        if self.is_sender_off_cooldown():
-            out = ResponseLol.NOTED_RESPONSE
-            self.note_response(out)
-            return out
-        print("not responding to jaja because sender {} is on cooldown".format(self.msg.name))
+    def _respond(self):
+        out = ResponseLol.NOTED_RESPONSE
+        return out
 
     @classmethod
     def is_relevant_msg(cls, msg):
