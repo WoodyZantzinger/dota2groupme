@@ -29,7 +29,7 @@ def getNew(c_ID, numCalls):
             if message_type == "like.create": message_type_token = "Like"
             if message_type == "ping": message_type_token = "Ping"
 
-            if message_type != "Ping":
+            if message_type_token != "Ping":
                 message_data = single_message["data"]["subject"]
                 print(message_data["text"])
                 message_type_token = "Message"
