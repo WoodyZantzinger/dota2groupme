@@ -78,22 +78,21 @@ class DataAccess():
         return token
 
     def get_response_storage(self, clazz, field_name):
-        collection = self.sUN[clazz]
-        item = collection.find_one({"field_name": field_name})
-        if item is None:
+        response_data_collection = self.sUN['response_data']
+        response_storage = response_data_collection.find_one({"response_name": clazz})
+        if response_storage is None or field_name not in response_storage:
             return None
-        return item["field_value"]
+        return response_storage[field_name]
 
     def set_response_storage(self, clazz, field_name, field_value):
-        collection = self.sUN[clazz]
-        query = {"field_name": field_name}
-        item = collection.find_one(query)
-        if item is None:
-            item = {}
-            item["field_name"] = field_name
-        item["field_value"] = field_value
+        response_data_collection = self.sUN['response_data']
+        query = {"response_name": clazz}
+        response_storage = response_data_collection.find_one(query)
+        if response_storage is None:
+            response_storage = {"response_name": clazz, field_name: field_value}
+        response_storage[field_name] = field_value
 
-        collection.replace_one(query, item, upsert=True)
+        response_data_collection.replace_one(query, response_storage, upsert=True)
 
         pass
 
