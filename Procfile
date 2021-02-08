@@ -1,1 +1,1 @@
-web: python bot.py -p
+web: python bot.py -p & python utils/user_listen.py & wait -n

@@ -22,6 +22,7 @@ from responses import oAuth_util, CooldownResponse
 import pdb
 from data import DataAccess
 import hashlib
+from random import randrange
 
 from responses import *
 from responses import AbstractResponse
@@ -70,14 +71,8 @@ def send_message(msg, groupID="13203822", send=True):
         line_fail = sys.exc_info()[2].tb_lineno
         logger.debug("\tError: {} on line {}".format(repr(e), line_fail))
     if not DEBUG and send:
-        #user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-        #header = {'User-Agent': user_agent, 'Content-Type': 'application/json'}
-        #url_values = urllib.parse.urlencode(values).encode("utf-8")
-        #url_values = json.dumps(values).encode('utf-8')
-        #req = urllib.request.Request(url, url_values, headers = header)
-        #response = urllib.request.urlopen(req)
 
-        key = AbstractResponse.AbstractResponse.local_var["GROUPME_AUTH"]
+        key = DataAccess.get_secrets()["GROUPME_AUTH"]
         url = 'https://api.groupme.com/v3/groups/{id}/messages?token={token}'.format(id=groupID, token=key)
 
         values = GroupMeMessage.parse_message(msg, groupID)
@@ -87,10 +82,39 @@ def send_message(msg, groupID="13203822", send=True):
 
         r = requests.post(url, json=final_values)
         print(r.status_code, r.reason)
-
+        #     "source_guid": "GUID",
+        #     "recipient_id": "20",
         return r.status_code
     else:
         return 'Win'
+
+def send_direct_message(msg, userID=0, send=True):
+
+    if not DEBUG and send:
+
+        key = DataAccess.get_secrets()["GROUPME_AUTH"]
+        url = 'https://api.groupme.com/v3/direct_messages?token={token}'.format(token=key)
+
+        values = GroupMeMessage.parse_message(msg, "0")
+
+        final_values ={}
+        values["source_guid"] = "GUID"
+        values["recipient_id"] = userID
+        final_values["direct_message"] = values
+
+        r = requests.post(url, json=final_values)
+        print(r.status_code, r.reason)
+        return r.status_code
+    else:
+        return 'Win'
+
+def like_message(convoID, messageID):
+    key = DataAccess.get_secrets()["GROUPME_AUTH"]
+    url = 'https://api.groupme.com/v3/messages/{conversation_id}/{message_id}/like?token={token}'.format(token=key, conversation_id=convoID, message_id=messageID)
+    r = requests.post(url)
+    print(r.status_code, r.reason)
+    return r.status_code
+
 
 @app.route('/statistics')
 def do_last_day_message_statistics():
@@ -196,12 +220,15 @@ def make_responses(categories, msg):
 def message():
     new_message = request.get_json(force=True)
     msg = rawmessage.RawMessage(new_message)
+    message_type = request.args.get('type')
     print("received message: ")
     print(new_message)
 
-    groupID = new_message["group_id"]
     logger.info("Msg [{id}]: {msg}".format(msg = msg.text, id = msg.sender_id))
     active_response_categories = get_response_categories(msg)
+    if(message_type == "DM" or message_type == "Message") and (randrange(0,100) > -1):
+        like_message(new_message["group_id"], new_message["id"])
+
     if active_response_categories:
         output_messages = make_responses(active_response_categories, msg)
         # sleep for a second before sending message
@@ -209,7 +236,10 @@ def message():
         time.sleep(1)
         for output in output_messages:
             if output:
-                send_message(output, groupID)
+                if message_type == "DM":
+                    send_direct_message(output, new_message["sender_id"])
+                else:
+                    send_message(output, new_message["group_id"])
         if output == None:
             return 'WARNING - Response triggered but not sent'
         else:

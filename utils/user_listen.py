@@ -1,14 +1,15 @@
 import requests
 import time
 import json
+from data import DataAccess
 
-# Get new messages from the server
+
 def getNew(c_ID, numCalls):
     # Copied data from tutorial here: https://dev.groupme.com/tutorials/push
     data = [ {
                "channel" : "/meta/connect",
                "clientId" : c_ID,
-               "connectionType" : "in-process",
+               "connectionType" : "long-polling",
                "id" : "%d" % numCalls
              } ]
     try:
@@ -20,47 +21,58 @@ def getNew(c_ID, numCalls):
         return
     for line in r.iter_lines():
         message = json.loads(line.decode("utf-8"))
-        print(message)
-        message_data = message[1]["data"]["subject"]
-        r = requests.post("http://localhost:5000/message/", json=message_data)
-        print(r.status_code, r.reason)
+        #print(message)
+        for single_message in message[1:]:
+            message_data = single_message["data"]["subject"]
+            message_type = single_message["data"]["type"]
+            print(message_data["text"])
+            message_type_token = "Message"
+            if message_type == "direct_message.create": message_type_token = "DM"
+            if message_type == "line.create": message_type_token = "Message"
+            if message_type == "like.create": message_type_token = "Like"
+            #r = requests.post("http://localhost:5000/message/?type={msg_type}".format(msg_type=message_type_token), json=message_data)
+            print(r.status_code, r.reason)
         return
 
-accessToken = "thgXWwUGUtKsk7bpCdISBvubz4zXzgwnsrz5qeU1"
-userID = "91085088"
+def handshake():
+    # Do a long-polling handshake
+    # Copied data from tutorial here: https://dev.groupme.com/tutorials/push
+    data = [{
+        "channel": "/meta/handshake",
+        "version": "1.0",
+        "supportedConnectionTypes": ["long-polling"],
+        "id": "1"
+    }]
+    r = requests.post("https://push.groupme.com/faye", json=data)
+    return r.json()[0]["clientId"]
 
-data = {"access_token": accessToken}
-r = requests.get("https://api.groupme.com/v3/users/me", params=data)
-print(r.json()["response"]["user_id"])
+if __name__ == "__main__":
+    accessToken = DataAccess.get_secrets()["GROUPME_AUTH"]
 
-# Copied data from tutorial here: https://dev.groupme.com/tutorials/push
-data = [{
-    "channel": "/meta/handshake",
-    "version": "1.0",
-    "supportedConnectionTypes": ["long-polling"],
-    "id": "1"
-}]
-r = requests.post("https://push.groupme.com/faye", json=data)
+    #Get our User ID by asking GroupMe who we are
+    data = {"access_token": accessToken}
+    r = requests.get("https://api.groupme.com/v3/users/me", params=data)
+    #print(r.json()["response"]["user_id"])
+    userID = r.json()["response"]["user_id"]
 
-clientId = r.json()[0]["clientId"]
-print(clientId)
+    clientId = handshake()
+    print(clientId)
 
-# Copied data from tutorial here: https://dev.groupme.com/tutorials/push
-data = [{
-    "channel": "/meta/subscribe",
-    "clientId": clientId,
-    "subscription": "/user/%s" % userID,
-    "id": "2",
-    "ext": {
-        "access_token": accessToken,
-        "timestamp": int(time.time())
-    }
-}]
-r = requests.post("https://push.groupme.com/faye", json=data)
-if not r.json()[0]["successful"]: raise Exception("Subscription failed")
-
-numCalls = 3
-while True:
-    getNew(clientId, numCalls)
-    numCalls += 1
-
+    # Subscribe to the user
+    data = [{
+        "channel": "/meta/subscribe",
+        "clientId": clientId,
+        "subscription": "/user/%s" % userID,
+        "id": "2",
+        "ext": {
+            "access_token": accessToken,
+            "timestamp": int(time.time())
+        }
+    }]
+    r = requests.post("https://push.groupme.com/faye", json=data)
+    if not r.json()[0]["successful"]: raise Exception("Subscription failed")
+    print(r.json()[0])
+    numCalls = 3
+    while True:
+        getNew(clientId, numCalls)
+        numCalls += 1
