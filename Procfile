@@ -1,2 +1,1 @@
-web: python bot.py -p
-listner: python utils/user_listen.py
+web: python bot.py -p & python utils/user_listen.py & wait -n
