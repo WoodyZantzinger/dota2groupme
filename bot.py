@@ -421,7 +421,7 @@ def git_event():
     updates_buffer = "I've been updated!\n"
     for commit in new_event["commits"]:
         updates_buffer += "'" + commit["message"] + "' - " + commit["author"]["name"] + "\n"
-    send_message(updates_buffer, "0")
+    send_message(updates_buffer)
     return updates_buffer
 
 
