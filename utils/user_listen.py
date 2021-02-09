@@ -6,6 +6,24 @@ import sys
 import traceback
 
 DEBUG = False
+HandshakeRequired = True
+
+def subscribe():
+    # Subscribe to the user
+    data = [{
+        "channel": "/meta/subscribe",
+        "clientId": clientId,
+        "subscription": "/user/%s" % userID,
+        "id": "2",
+        "ext": {
+            "access_token": accessToken,
+            "timestamp": int(time.time())
+        }
+    }]
+    r = requests.post("https://push.groupme.com/faye", json=data)
+    if not r.json()[0]["successful"]: raise Exception("Subscription failed")
+    print(r.json()[0])
+    return
 
 def getNew(c_ID, numCalls):
     # Copied data from tutorial here: https://dev.groupme.com/tutorials/push
@@ -19,12 +37,13 @@ def getNew(c_ID, numCalls):
         #this is a blocking request. It will hold until there is something to return
         r = requests.post("https://push.groupme.com/faye", json=data, stream=True)
     except requests.exceptions.RequestException as e:
-        print("There was a problem getting the next messages.")
-        print(e)
+        print("Connection closed, resubscribing")
         return
     for line in r.iter_lines():
         message = json.loads(line.decode("utf-8"))
-        #print(message)
+        if(message[0]["advice"]["reconnect"] == 'handshake'):
+            HandshakeRequired = True
+            print("We were asked to re-handshake")
         for single_message in message[1:]:
             try:
                 message_type = single_message["data"]["type"]
@@ -43,7 +62,7 @@ def getNew(c_ID, numCalls):
                     print(r.status_code, r.reason)
             except Exception as e:
                 traceback.print_exc()
-        return
+    return
 
 def handshake():
     # Do a long-polling handshake
@@ -69,25 +88,12 @@ if __name__ == "__main__":
     r = requests.get("https://api.groupme.com/v3/users/me", params=data)
     #print(r.json()["response"]["user_id"])
     userID = r.json()["response"]["user_id"]
-
-    clientId = handshake()
-    print(clientId)
-
-    # Subscribe to the user
-    data = [{
-        "channel": "/meta/subscribe",
-        "clientId": clientId,
-        "subscription": "/user/%s" % userID,
-        "id": "2",
-        "ext": {
-            "access_token": accessToken,
-            "timestamp": int(time.time())
-        }
-    }]
-    r = requests.post("https://push.groupme.com/faye", json=data)
-    if not r.json()[0]["successful"]: raise Exception("Subscription failed")
-    print(r.json()[0])
+    clientId = 0
     numCalls = 3
     while True:
+        if HandshakeRequired:
+            clientId = handshake()
+            subscribe()
+            HandshakeRequired = False
         getNew(clientId, numCalls)
         numCalls += 1
