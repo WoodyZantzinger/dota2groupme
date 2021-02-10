@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Database Management</title>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+</head>
+<body>
+{% if not collection_name %}
+<h1> Select a collection: </h1>
+{% else %}
+<a href="{{ url_for('manage_db') }}">
+    <h1> Collection: {{ collection_name }} </h1>
+</a>
+{% endif %}
+<ul>
+    {% if not collection_name and not doc_idx %}
+        {% for item in link_list %}
+            <li>
+                <a href="{{ url_for('manage_db', collection_name=item) }}"> {{ item }} </a>
+            </li>
+        {% endfor %}
+    {% elif collection_name %}
+        {% for item in link_list %}
+            <li>
+                <a href="{{ url_for('manage_db', collection_name=collection_name, doc_idx=(loop.index-1)) }}"> {{ item }} </a>
+            </li>
+        {% endfor %}
+    {% endif %}
+</ul>
+
+{% if doc_idx is not none %}
+<textarea rows="40" cols="80">
+{{ json }}
+</textarea>
+<br>
+<input type="button" value="Submit Changes" class="submit">
+<script>
+$(".submit").click(function(){
+    data = {
+        newjson: $("textarea")[0].value,
+        collection_name: "{{collection_name}}",
+        doc_idx: "{{doc_idx}}",
+    };
+    url = "{{ url_for('database_update') }}";
+    console.log(data);
+    console.log(url);
+    $.ajax({
+        type: "POST",
+        url: "{{ url_for('database_update') }}",
+        data: data,
+    });
+});
+</script>
+{% endif %}
+
+</body>
+</html>
