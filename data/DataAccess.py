@@ -6,6 +6,16 @@ from data.sUN_user import sUN_user
 import time
 from pymongo.errors import ConnectionFailure
 
+import json
+from bson import ObjectId, json_util
+
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
 class DataAccess():
     __client = None
 
@@ -98,6 +108,41 @@ class DataAccess():
 
         pass
 
+    def get_collection_names(self):
+        return self.sUN.list_collection_names()
+
+    def get_document_names(self, collection_name):
+        coll = self.sUN[collection_name]
+        docs = coll.find({})
+        return [str(doc) for doc in docs]
+
+    def get_document_item(self, collection_name, doc_idx):
+        coll = self.sUN[collection_name]
+        docs = coll.find({})
+        doc = docs[int(doc_idx)]
+        parsed = json.loads(json_util.dumps(doc))
+        rval = json.dumps(parsed, indent=4, sort_keys=True)
+        return rval
+
+    def set_document_item(self, collection_name, doc_idx, json_str):
+        doc_idx = int(doc_idx)
+        print(f"collection_name = {collection_name}\ndoc_idx = {doc_idx}\njson_str = {json_str}")
+        try:
+            json_obj = json_util.loads(json_str)
+            coll = self.sUN[collection_name]
+            docs = coll.find({})
+            doc = docs[doc_idx]
+            oid = doc['_id']
+            if json_obj['_id'] != oid:
+                return False
+            for key in json_obj:
+                if key == "_id":
+                    continue
+                doc[key] = json_obj[key]
+            coll.replace_one({"_id":oid}, doc, upsert=True)
+        except Exception as e:
+            print(e)
+            return False
 def get_secrets():
     secrets = None
     try:

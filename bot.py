@@ -487,12 +487,63 @@ def index():
             return redirect(url_for('protect'))
     return render_template('index.html')
 
+def format_text_for_textarea(text):
+    lines = text.split('\n')
+    out_lines = []
+    for line in lines:
+        out_lines.append(line)
+        #out_lines.append(f"<p>{line}</p>")
+    return "\n".join(out_lines)
 
-@app.route('/protect')
+@app.route('/dbupdate', methods=['POST'])
+def database_update():
+    newjson = request.form['newjson']
+    collection_name = request.form['collection_name']
+    doc_idx = request.form['doc_idx']
+
+    da = DataAccess.DataAccess()
+    success = da.set_document_item(collection_name, doc_idx, newjson)
+    print(f"update success = {success}")
+    return str(success)
+
+@app.route('/database_management')
+@flask_login.login_required
+def manage_db():
+    collection_name = request.args.get('collection_name')
+    doc_idx = request.args.get('doc_idx')
+    print(f"collection_name = {collection_name}")
+    print(f"doc_idx = {doc_idx}")
+    da = DataAccess.DataAccess()
+    names = da.get_collection_names()
+    if collection_name and doc_idx:
+        pass
+    if not collection_name and not doc_idx:
+        return render_template('database_management.html',
+                               collection_name=None,
+                               doc_idx=None,
+                               link_list=da.get_collection_names()
+                               )
+    if collection_name and not doc_idx:
+        return render_template('database_management.html',
+                               collection_name=collection_name,
+                               doc_idx=None,
+                               link_list=da.get_document_names(collection_name)
+                               )
+    if collection_name and doc_idx:
+        item_json_str = da.get_document_item(collection_name, doc_idx)
+        item_json_str = format_text_for_textarea(item_json_str)
+        return render_template('database_management.html',
+                               collection_name=collection_name,
+                               json=item_json_str,
+                               doc_idx=doc_idx
+                               )
+
+
+@app.route('/admin_home')
 @flask_login.login_required
 def protect():
     user = session['user']
-    return render_template('protected.html', user=user)
+    return render_template('admin_home.html', user=user)
 
 
 @app.route('/logout')
