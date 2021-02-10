@@ -4,15 +4,18 @@ import json
 from data import DataAccess
 import sys
 import traceback
+import websocket
+from websocket import create_connection
+import ssl
 
 DEBUG = False
 HandshakeRequired = True
 
-def subscribe():
+def subscribe(clientID):
     # Subscribe to the user
     data = [{
         "channel": "/meta/subscribe",
-        "clientId": clientId,
+        "clientId": clientID,
         "subscription": "/user/%s" % userID,
         "id": "2",
         "ext": {
@@ -22,46 +25,45 @@ def subscribe():
     }]
     r = requests.post("https://push.groupme.com/faye", json=data)
     if not r.json()[0]["successful"]: raise Exception("Subscription failed")
-    print(r.json()[0])
+    #print(r.json()[0])
     return
 
-def getNew(c_ID, numCalls):
-    # Copied data from tutorial here: https://dev.groupme.com/tutorials/push
-    data = [ {
-               "channel" : "/meta/connect",
-               "clientId" : c_ID,
-               "connectionType" : "long-polling",
-               "id" : "%d" % numCalls
-             } ]
-    try:
-        #this is a blocking request. It will hold until there is something to return
-        r = requests.post("https://push.groupme.com/faye", json=data, stream=True)
-    except requests.exceptions.RequestException as e:
-        print("Connection closed, resubscribing")
-        return
-    for line in r.iter_lines():
-        message = json.loads(line.decode("utf-8"))
-        if(message[0]["advice"]["reconnect"] == 'handshake'):
-            HandshakeRequired = True
-            print("We were asked to re-handshake")
-        for single_message in message[1:]:
-            try:
-                message_type = single_message["data"]["type"]
-                message_type_token = "Unknown"
-                if message_type == "direct_message.create": message_type_token = "DM"
-                if message_type == "line.create": message_type_token = "Message"
-                if message_type == "like.create": message_type_token = "Like"
-                if message_type == "ping": message_type_token = "Ping"
+def on_message(ws, line):
+    print(line)
+    message = json.loads(line)
 
-                if message_type_token != "Ping" and message_type_token != "Unknown":
-                    message_data = single_message["data"]["subject"]
-                    print(message_data["text"])
-                    message_type_token = "Message"
-                    if not DEBUG:
-                        r = requests.post("https://young-fortress-3393.herokuapp.com/message/?type={msg_type}".format(msg_type=message_type_token), json=message_data)
-                    print(r.status_code, r.reason)
-            except Exception as e:
-                traceback.print_exc()
+    #I'm usnure if GroupMe will ever send back multiple messages but looping through the list just in case
+    for single_message in message:
+
+        #try in-case we get some message format I've never seen
+        try:
+            message_type = single_message["data"]["type"]
+            message_type_token = "Unknown"
+
+            #These are the only 4 types I've ever encountered
+            #TODO: Find out what ping means to GroupMe and what we do for that message
+            if message_type == "direct_message.create": message_type_token = "DM"
+            if message_type == "line.create": message_type_token = "Message"
+            if message_type == "like.create": message_type_token = "Like"
+            if message_type == "ping": message_type_token = "Ping"
+
+            #Right now we ignore Like messages
+            if message_type_token == "Message" or message_type_token == "DM":
+                message_data = single_message["data"]["subject"]
+                print("Message Recieved: " + message_data["text"])
+                message_type_token = "Message"
+
+                #if we launch with DEBUG arg, don't send messages onward
+                if not DEBUG:
+                    r = requests.post("https://young-fortress-3393.herokuapp.com/message/?type={msg_type}".format(
+                        msg_type=message_type_token), json=message_data)
+                    #print(r.status_code, r.reason)
+            else:
+                print("Abnormal Response")
+                print(single_message)
+        except Exception as e:
+            print(message)
+            traceback.print_exc()
     return
 
 def handshake():
@@ -70,11 +72,31 @@ def handshake():
     data = [{
         "channel": "/meta/handshake",
         "version": "1.0",
-        "supportedConnectionTypes": ["long-polling"],
+        "supportedConnectionTypes": ["websocket"],
         "id": "1"
     }]
     r = requests.post("https://push.groupme.com/faye", json=data)
     return r.json()[0]["clientId"]
+
+def on_open(ws):
+    #print("We Open")
+    c_ID = handshake()
+    subscribe(c_ID)
+
+    data = [ {
+               "channel" : "/meta/connect",
+               "clientId" : c_ID,
+               "connectionType" : "websocket",
+               "id" : "%d" % numCalls
+             } ]
+    print(data)
+    ws.send(json.dumps(data))
+
+def on_error(ws, error):
+    print(error)
+
+def on_close(ws):
+    print("-- Socket Closed --")
 
 if __name__ == "__main__":
 
@@ -86,14 +108,17 @@ if __name__ == "__main__":
     #Get our User ID by asking GroupMe who we are
     data = {"access_token": accessToken}
     r = requests.get("https://api.groupme.com/v3/users/me", params=data)
-    #print(r.json()["response"]["user_id"])
     userID = r.json()["response"]["user_id"]
-    clientId = 0
+
     numCalls = 3
-    while True:
-        if HandshakeRequired:
-            clientId = handshake()
-            subscribe()
-            HandshakeRequired = False
-        getNew(clientId, numCalls)
-        numCalls += 1
+
+    if(DEBUG): websocket.enableTrace(True)
+
+    ws = websocket.WebSocketApp("wss://push.groupme.com/faye",
+                                on_message = on_message,
+                                on_error=on_error,
+                                on_close=on_close
+                                )
+
+    ws.on_open = on_open
+    ws.run_forever()
