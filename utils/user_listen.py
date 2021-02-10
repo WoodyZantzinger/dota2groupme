@@ -9,16 +9,20 @@ from websocket import create_connection
 import ssl
 
 numCalls = 3
+Channel = ""
+ClientID = ""
 DEBUG = False
 HandshakeRequired = True
 
 def subscribe(clientID):
     # Subscribe to the user
     global numCalls
+    global Channel
+
     data = [{
         "channel": "/meta/subscribe",
         "clientId": clientID,
-        "subscription": "/user/%s" % userID,
+        "subscription": Channel,
         "id": numCalls,
         "ext": {
             "access_token": accessToken,
@@ -46,38 +50,38 @@ def on_message(ws, line):
                 return
         #try in-case we get some message format I've never seen
         try:
-            message_type = single_message["data"]["type"]
-            message_type_token = "Unknown"
+            if "data" in single_message:
+                message_type = single_message["data"]["type"]
+                message_type_token = "Unknown"
 
-            #These are the only 4 types I've ever encountered
-            #TODO: Find out what ping means to GroupMe and what we do for that message
-            if message_type == "direct_message.create": message_type_token = "DM"
-            if message_type == "line.create": message_type_token = "Message"
-            if message_type == "like.create": message_type_token = "Like"
-            if message_type == "ping": message_type_token = "Ping"
+                #These are the only 4 types I've ever encountered
+                #TODO: Find out what ping means to GroupMe and what we do for that message
+                if message_type == "direct_message.create": message_type_token = "DM"
+                if message_type == "line.create": message_type_token = "Message"
+                if message_type == "like.create": message_type_token = "Like"
+                if message_type == "ping": message_type_token = "Ping"
 
-            #Right now we ignore Like messages
-            if message_type_token == "Message" or message_type_token == "DM":
-                message_data = single_message["data"]["subject"]
-                print("Message Recieved: " + message_data["text"])
-                message_type_token = "Message"
+                #Right now we ignore Like messages
+                if message_type_token == "Message" or message_type_token == "DM":
+                    message_data = single_message["data"]["subject"]
+                    print("Message Recieved: " + message_data["text"])
+                    message_type_token = "Message"
 
-                #if we launch with DEBUG arg, don't send messages onward
-                if not DEBUG:
-                    r = requests.post("https://young-fortress-3393.herokuapp.com/message/?type={msg_type}".format(
-                        msg_type=message_type_token), json=message_data)
-                    #print(r.status_code, r.reason)
+                    #if we launch with DEBUG arg, don't send messages onward
+                    if not DEBUG:
+                        r = requests.post("https://young-fortress-3393.herokuapp.com/message/?type={msg_type}".format(
+                            msg_type=message_type_token), json=message_data)
+                        #print(r.status_code, r.reason)
             else:
-                print("Abnormal Response")
-                print(single_message)
+                print("Abnormal Response: " + str(single_message))
+                #print(single_message)
         except Exception as e:
             print(message)
             traceback.print_exc()
     return
 
 def handshake():
-    # Do a long-polling handshake
-    # Copied data from tutorial here: https://dev.groupme.com/tutorials/push
+    # Do a websocket handshake
     global numCalls
     data = [{
         "channel": "/meta/handshake",
@@ -92,12 +96,13 @@ def handshake():
 def on_open(ws):
     print("We're Opening")
     global numCalls
-    c_ID = handshake()
-    subscribe(c_ID)
+    global ClientID
+    ClientID = handshake()
+    subscribe(ClientID)
 
     data = [ {
                "channel" : "/meta/connect",
-               "clientId" : c_ID,
+               "clientId" : ClientID,
                "connectionType" : "websocket",
                "id" : "%d" % numCalls
              } ]
@@ -115,7 +120,25 @@ def on_pong(ws, pong):
     print('pong!', pong)
 
 def on_ping(ws, ping):
-    print('ping!!', ping)
+    #print('ping', ping)
+    global numCalls
+    global Channel
+    global ClientID
+    data = [{
+          "channel": Channel,
+          "data": {
+            "type": "ping"
+            },
+          "clientId": ClientID,
+          "id" : "%d" % numCalls,
+          "ext": {
+            "access_token": DataAccess.get_secrets()["GROUPME_AUTH"]
+          }
+    }]
+    numCalls += 1
+    ws.send(json.dumps(data))
+
+
 
 if __name__ == "__main__":
 
@@ -127,7 +150,8 @@ if __name__ == "__main__":
     #Get our User ID by asking GroupMe who we are
     data = {"access_token": accessToken}
     r = requests.get("https://api.groupme.com/v3/users/me", params=data)
-    userID = r.json()["response"]["user_id"]
+
+    Channel = "/user/%s" % r.json()["response"]["user_id"]
 
     #if(DEBUG): websocket.enableTrace(True)
 
@@ -135,11 +159,12 @@ if __name__ == "__main__":
                                 on_message=on_message,
                                 on_error=on_error,
                                 on_close=on_close,
-                                on_open=on_open
+                                on_open=on_open,
+                                on_ping=on_ping
                                 )
     while True:
         try:
-            ws.run_forever()
+            ws.run_forever(ping_interval=30)
         except Exception as e:
             print("Socket Error")
             print(e)
