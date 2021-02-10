@@ -8,16 +8,18 @@ import websocket
 from websocket import create_connection
 import ssl
 
+numCalls = 3
 DEBUG = False
 HandshakeRequired = True
 
 def subscribe(clientID):
     # Subscribe to the user
+    global numCalls
     data = [{
         "channel": "/meta/subscribe",
         "clientId": clientID,
         "subscription": "/user/%s" % userID,
-        "id": "2",
+        "id": numCalls,
         "ext": {
             "access_token": accessToken,
             "timestamp": int(time.time())
@@ -26,6 +28,7 @@ def subscribe(clientID):
     r = requests.post("https://push.groupme.com/faye", json=data)
     if not r.json()[0]["successful"]: raise Exception("Subscription failed")
     #print(r.json()[0])
+    numCalls += 1
     return
 
 def on_message(ws, line):
@@ -34,7 +37,13 @@ def on_message(ws, line):
 
     #I'm usnure if GroupMe will ever send back multiple messages but looping through the list just in case
     for single_message in message:
-
+        if "advice" in single_message:
+            #the Server is trying to tell us something
+            if single_message["advice"]["reconnect"] == "retry":
+                #lets diconnect and resetup the websocket
+                #print("We're in the endgame now")
+                ws.close()
+                return
         #try in-case we get some message format I've never seen
         try:
             message_type = single_message["data"]["type"]
@@ -69,17 +78,20 @@ def on_message(ws, line):
 def handshake():
     # Do a long-polling handshake
     # Copied data from tutorial here: https://dev.groupme.com/tutorials/push
+    global numCalls
     data = [{
         "channel": "/meta/handshake",
         "version": "1.0",
         "supportedConnectionTypes": ["websocket"],
-        "id": "1"
+        "id": numCalls
     }]
     r = requests.post("https://push.groupme.com/faye", json=data)
+    numCalls += 1
     return r.json()[0]["clientId"]
 
 def on_open(ws):
-    #print("We Open")
+    print("We're Opening")
+    global numCalls
     c_ID = handshake()
     subscribe(c_ID)
 
@@ -90,6 +102,7 @@ def on_open(ws):
                "id" : "%d" % numCalls
              } ]
     print(data)
+    numCalls += 1
     ws.send(json.dumps(data))
 
 def on_error(ws, error):
@@ -97,6 +110,12 @@ def on_error(ws, error):
 
 def on_close(ws):
     print("-- Socket Closed --")
+
+def on_pong(ws, pong):
+    print('pong!', pong)
+
+def on_ping(ws, ping):
+    print('ping!!', ping)
 
 if __name__ == "__main__":
 
@@ -110,15 +129,19 @@ if __name__ == "__main__":
     r = requests.get("https://api.groupme.com/v3/users/me", params=data)
     userID = r.json()["response"]["user_id"]
 
-    numCalls = 3
-
-    if(DEBUG): websocket.enableTrace(True)
+    #if(DEBUG): websocket.enableTrace(True)
 
     ws = websocket.WebSocketApp("wss://push.groupme.com/faye",
-                                on_message = on_message,
+                                on_message=on_message,
                                 on_error=on_error,
-                                on_close=on_close
+                                on_close=on_close,
+                                on_open=on_open
                                 )
-
-    ws.on_open = on_open
-    ws.run_forever()
+    while True:
+        try:
+            ws.run_forever()
+        except Exception as e:
+            print("Socket Error")
+            print(e)
+        print("Reconnecting")
+    print("End of Program")
