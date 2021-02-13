@@ -200,7 +200,7 @@ def get_first_token(clazz, id, code):
     if not token['scope']:
         token['scope'] = " ".join(type(clazz).REQUEST_SCOPES)
     if has_all_requested_scopes(token, clazz):
-        DataAccess.store_token(clazz, id, token)
+        DataAccess.DataAccess().store_token(clazz, id, token)
 
 
 def has_all_requested_scopes(token, clazz):
