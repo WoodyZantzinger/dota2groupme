@@ -289,6 +289,7 @@ def cooldown():
     return response
 
 @app.route("/oauth_callback")
+@app.route("/oauth_callback/")
 def oauth_callback():
     code = request.args.get('code')
     state = request.args.get('state')
