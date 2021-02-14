@@ -36,7 +36,7 @@ def subscribe(clientID):
     return
 
 def on_message(ws, line):
-    print(line)
+    #print(line)
     message = json.loads(line)
 
     #I'm usnure if GroupMe will ever send back multiple messages but looping through the list just in case
@@ -73,8 +73,9 @@ def on_message(ws, line):
                             msg_type=message_type_token), json=message_data)
                         #print(r.status_code, r.reason)
             else:
-                print("Abnormal Response: " + str(single_message))
+                #print("Abnormal Response: " + str(single_message))
                 #print(single_message)
+                pass
         except Exception as e:
             print(message)
             traceback.print_exc()
