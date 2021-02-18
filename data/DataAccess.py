@@ -40,7 +40,7 @@ class DataAccess():
         return users_found
 
     def get_user(self, key, value):
-        search_key = { key: value }
+        search_key = {key: value}
         found = self.users.find_one(search_key)
         if not found:
             return found
@@ -84,6 +84,7 @@ class DataAccess():
 
     def get_current_token(self, clazz, id):
         user = self.get_user("GROUPME_ID", id)
+        print(f"User found = {user}")
         token = None
         token_lookup_key = clazz.token_key_name()
         if token_lookup_key in user.values:
@@ -140,10 +141,12 @@ class DataAccess():
                 if key == "_id":
                     continue
                 doc[key] = json_obj[key]
-            coll.replace_one({"_id":oid}, doc, upsert=True)
+            coll.replace_one({"_id": oid}, doc, upsert=True)
         except Exception as e:
             print(e)
             return False
+
+
 def get_secrets():
     secrets = None
     try:
@@ -155,6 +158,7 @@ def get_secrets():
             secrets[key] = os.environ[key]
     return secrets
 
+
 def get_secret_keys(clazz):
     id_name = clazz.id_key_name()
     key_name = clazz.key_key_name()
@@ -163,17 +167,16 @@ def get_secret_keys(clazz):
     return out
 
 
-
 if __name__ == "__main__":
     access = DataAccess()
-    #print("[Getting user Kevin]")
+    # print("[Getting user Kevin]")
     user = access.get_user("Name", "Kevin")
-    #print(user)
+    # print(user)
 
     print(access.get_admins())
 
-    #print("[All Users]")
+    # print("[All Users]")
     users = access.get_users()
     for user in users:
         pass
-        #print(user)
+        # print(user)

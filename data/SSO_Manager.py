@@ -184,6 +184,7 @@ def do_data_request(clazz, id, token):
         outobject = None
     return outobject, data.status_code
 
+
 def get_first_token(clazz, id, code):
     client_id, client_secret = DataAccess.get_secret_keys(clazz)
     params = {
@@ -192,8 +193,9 @@ def get_first_token(clazz, id, code):
         "code": code,
         "grant_type": "authorization_code",
         "redirect_uri": type(clazz).REDIRECT_URI,
-
     }
+    print("first token request params are:")
+    pprint.pprint(params)
     response = requests.post(type(clazz).TOKEN_REFRESH_URL, data=params)
     token = json.loads(response.content.decode('utf-8'))
     # check if token has ['scope'] key

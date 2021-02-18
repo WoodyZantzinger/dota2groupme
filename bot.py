@@ -1,3 +1,4 @@
+import pprint
 import urllib
 import time
 import sys
@@ -31,7 +32,6 @@ from statistics import AbstractStatistics
 from utils import rawmessage
 from utils import GroupMeMessage
 
-
 DEBUG = True
 
 app = Flask(__name__)
@@ -40,29 +40,31 @@ app.secret_key = 'key'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-users = {'user1':{'pw':'pass1'},
-         'user2':{'pw':'pass2'},
-         'user3':{'pw':'pass3'}}
+users = {'user1': {'pw': 'pass1'},
+         'user2': {'pw': 'pass2'},
+         'user3': {'pw': 'pass3'}}
 
 logger = logging.getLogger(__name__)
 
 RESPONSES_CACHE = []
 STATISTICS_CACHE = []
 
+
 def set_debug(debug_level):
     global DEBUG
     DEBUG = debug_level
     logger = logging.getLogger(__name__)
 
-    if(debug_level):
+    if (debug_level):
         os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
         logging.basicConfig(format='%(levelname)s in %(funcName)s (%(module)s): \t %(message)s', level=logging.DEBUG)
     else:
         logging.basicConfig(format='%(levelname)s in %(funcName)s (%(module)s): \t %(message)s', level=logging.INFO)
         handler = logging.handlers.RotatingFileHandler(
-              "LOG_FILE", maxBytes=20, backupCount=5)
+            "LOG_FILE", maxBytes=20, backupCount=5)
         handler.setLevel(logging.DEBUG)
         logger.addHandler(handler)
+
 
 def send_message(msg, groupID="13203822", send=True):
     try:
@@ -77,7 +79,7 @@ def send_message(msg, groupID="13203822", send=True):
 
         values = GroupMeMessage.parse_message(msg, groupID)
 
-        final_values ={}
+        final_values = {}
         final_values["message"] = values
 
         r = requests.post(url, json=final_values)
@@ -88,8 +90,8 @@ def send_message(msg, groupID="13203822", send=True):
     else:
         return 'Win'
 
-def send_direct_message(msg, userID=0, send=True):
 
+def send_direct_message(msg, userID=0, send=True):
     if not DEBUG and send:
 
         key = DataAccess.get_secrets()["GROUPME_AUTH"]
@@ -97,7 +99,7 @@ def send_direct_message(msg, userID=0, send=True):
 
         values = GroupMeMessage.parse_message(msg, "0")
 
-        final_values ={}
+        final_values = {}
         values["source_guid"] = "GUID"
         values["recipient_id"] = userID
         final_values["direct_message"] = values
@@ -108,9 +110,12 @@ def send_direct_message(msg, userID=0, send=True):
     else:
         return 'Win'
 
+
 def like_message(convoID, messageID):
     key = DataAccess.get_secrets()["GROUPME_AUTH"]
-    url = 'https://api.groupme.com/v3/messages/{conversation_id}/{message_id}/like?token={token}'.format(token=key, conversation_id=convoID, message_id=messageID)
+    url = 'https://api.groupme.com/v3/messages/{conversation_id}/{message_id}/like?token={token}'.format(token=key,
+                                                                                                         conversation_id=convoID,
+                                                                                                         message_id=messageID)
     r = requests.post(url)
     print(r.status_code, r.reason)
     return r.status_code
@@ -121,7 +126,7 @@ def do_last_day_message_statistics():
     # get all messages from the last day
 
     now = datetime.datetime.utcnow()
-    td = datetime.timedelta(hours=5) #DST can go fuck itself
+    td = datetime.timedelta(hours=5)  # DST can go fuck itself
     EST_NOW = now - td
     td = datetime.timedelta(hours=24)
     EST_1_DAY_AGO = EST_NOW - td
@@ -185,16 +190,17 @@ def load_responses():
 
 sUN_user_id = DataAccess.DataAccess().get_user("Name", "sUN").values['GROUPME_ID']
 
+
 def get_response_categories(msg):
     if (msg.sender_id == sUN_user_id):
         return None
     out = []
-#    for cls in AbstractResponse.AbstractResponse.__subclasses__():
-        #classes.append(cls)
-    #for cls in classes:
-        #for cls2 in cls.__subclasses__():
-            #if cls2 not in classes:
-                #classes.append(cls2)
+    #    for cls in AbstractResponse.AbstractResponse.__subclasses__():
+    # classes.append(cls)
+    # for cls in classes:
+    # for cls2 in cls.__subclasses__():
+    # if cls2 not in classes:
+    # classes.append(cls2)
     for cls in RESPONSES_CACHE:
         if cls.is_relevant_msg(msg):
             out.append(cls)
@@ -224,9 +230,9 @@ def message():
     print("received message: ")
     print(new_message)
 
-    logger.info("Msg [{id}]: {msg}".format(msg = msg.text, id = msg.sender_id))
+    logger.info("Msg [{id}]: {msg}".format(msg=msg.text, id=msg.sender_id))
     active_response_categories = get_response_categories(msg)
-    if(message_type == "DM" or message_type == "Message") and (randrange(0,100) > 92):
+    if (message_type == "DM" or message_type == "Message") and (randrange(0, 100) > 92):
         like_message(new_message["group_id"], new_message["id"])
 
     if active_response_categories:
@@ -288,12 +294,15 @@ def cooldown():
                         response += "Cooldown Remaining for <b>" + name + "</b>: " + time_left + "<br>"
     return response
 
+
 @app.route("/oauth_callback")
 @app.route("/oauth_callback/")
 def oauth_callback():
     code = request.args.get('code')
     state = request.args.get('state')
-    print(f"rq.args = {request.args}")
+    if not code:
+        print(request.args)
+        return "You're already authorized, congrats!"
     parts = state.split("|")
     source_clazz_name = parts[0]
     sender_id = parts[1]
@@ -304,7 +313,8 @@ def oauth_callback():
     dummy_msg = rawmessage.RawMessage({"sender_id": sender_id, 'text': ''})
     clazz_obj = matched_clazz(dummy_msg)
     matched_clazz.exchange_code_for_first_key(code, clazz_obj, sender_id)
-    return "hello"
+    return f"Success, you can now use {matched_clazz.RESPONSE_KEY}"
+
 
 @app.route("/strava_token")
 def strava():
@@ -312,9 +322,9 @@ def strava():
     code = request.args.get('code')
     url = 'https://www.strava.com/oauth/token'
     values = {
-          'client_id': '60934',
-          'client_secret': oAuth_util.get_strava_key(),
-          'code': code
+        'client_id': '60934',
+        'client_secret': oAuth_util.get_strava_key(),
+        'code': code
     }
     strava_data = urllib.urlencode(values)
     strava_req = urllib.Request(url, strava_data)
@@ -331,18 +341,18 @@ def strava():
     logger.info(result)
     return "Success! GroupMe, sUN and Strava are synched"
 
+
 @app.route("/spotify_callback")
 def spotify():
     GroupmeID = request.args.get('state')
     code = request.args.get('code')
 
-    r = requests.post('https://accounts.spotify.com/api/token', data = {
-        'grant_type':'authorization_code',
-        'client_id':'f8597c3f9afb4c1f9f0d3e8d5b53d4ae',
-        'redirect_uri':'https://young-fortress-3393.herokuapp.com/spotify_callback',
+    r = requests.post('https://accounts.spotify.com/api/token', data={
+        'grant_type': 'authorization_code',
+        'client_id': 'f8597c3f9afb4c1f9f0d3e8d5b53d4ae',
+        'redirect_uri': 'https://young-fortress-3393.herokuapp.com/spotify_callback',
         'client_secret': oAuth_util.get_spotify_key(),
         'code': code})
-
 
     SpotifyData = r.json()
     SpotifyData['GroupmeID'] = GroupmeID
@@ -394,7 +404,7 @@ def remindme_callback():
                 triggered_messages.append(item)
 
         users = DataAccess.DataAccess().get_users()
-        people = {user.values['Name']:user.values['GROUPME_ID'] for user in users}
+        people = {user.values['Name']: user.values['GROUPME_ID'] for user in users}
         out = []
         for item in triggered_messages:
             for name in people:
@@ -432,7 +442,7 @@ def hello():
 
 
 class User(UserMixin):
-  pass
+    pass
 
 
 @login_manager.user_loader
@@ -488,13 +498,15 @@ def index():
             return redirect(url_for('protect'))
     return render_template('index.html')
 
+
 def format_text_for_textarea(text):
     lines = text.split('\n')
     out_lines = []
     for line in lines:
         out_lines.append(line)
-        #out_lines.append(f"<p>{line}</p>")
+        # out_lines.append(f"<p>{line}</p>")
     return "\n".join(out_lines)
+
 
 @app.route('/dbupdate', methods=['POST'])
 def database_update():
@@ -506,6 +518,7 @@ def database_update():
     success = da.set_document_item(collection_name, doc_idx, newjson)
     print(f"update success = {success}")
     return str(success)
+
 
 @app.route('/database_management')
 @flask_login.login_required
@@ -554,7 +567,6 @@ def logout():
 
 
 if __name__ == "__main__":
-
     parser = OptionParser()
     parser.add_option("-d", "--debug", action="store_true", dest="debug",
                       help="Set the bot to debug mode")
@@ -570,5 +582,3 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=DEBUG)
-
-
