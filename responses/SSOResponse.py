@@ -22,8 +22,8 @@ from data import SSO_Manager
 
 class SSO_Response(AbstractResponse):
 
-    #REDIRECT_URI = r'https://young-fortress-3393.herokuapp.com/oauth_callback/'
-    REDIRECT_URI = r'https://17333c82fcdd.ngrok.io/oauth_callback/'
+    REDIRECT_URI = r'https://young-fortress-3393.herokuapp.com/oauth_callback/'
+    #REDIRECT_URI = r'https://17333c82fcdd.ngrok.io/oauth_callback/'
     #   static variables:
     #   auth_url
     #   token_refresh_url
