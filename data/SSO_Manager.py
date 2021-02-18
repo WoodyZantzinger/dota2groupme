@@ -194,12 +194,12 @@ def get_first_token(clazz, id, code):
         "grant_type": "authorization_code",
         "redirect_uri": type(clazz).REDIRECT_URI,
     }
-    print("first token request params are:")
-    pprint.pprint(params)
+    #print("first token request params are:")
+    #pprint.pprint(params)
     response = requests.post(type(clazz).TOKEN_REFRESH_URL, data=params)
     token = json.loads(response.content.decode('utf-8'))
     # check if token has ['scope'] key
-    print(f"GFT::\nToken is {token}")
+    #print(f"GFT::\nToken is {token}")
     if not token['scope']:
         token['scope'] = " ".join(type(clazz).REQUEST_SCOPES)
     if has_all_requested_scopes(token, clazz):

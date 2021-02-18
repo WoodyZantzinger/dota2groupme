@@ -84,7 +84,7 @@ class DataAccess():
 
     def get_current_token(self, clazz, id):
         user = self.get_user("GROUPME_ID", id)
-        print(f"User found = {user}")
+        #print(f"User found = {user}")
         token = None
         token_lookup_key = clazz.token_key_name()
         if token_lookup_key in user.values:
