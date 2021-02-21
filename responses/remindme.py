@@ -29,30 +29,17 @@ class ResponseRemindMe(ResponseCooldown):
 
     OVERRIDE_PRIORITY = 1
 
-    COOLDOWN = 10 * 60
+    COOLDOWN = -1
 
     def __init__(self, msg):
         super(ResponseRemindMe, self).__init__(msg, self, ResponseRemindMe.COOLDOWN)
 
     def _respond(self):
-        conn = None
-        try:
-            conn = pymongo.MongoClient(get_db_url(), connectTimeoutMS=1000)
-        except:
-            print("failed to connect to reminders-db")
-            return None
 
-        reminders = conn.mjsunbot.reminders
-        print("remindme: connected to db")
-
-        #for item in reminders.find():
-        #    print(item)
-
-        print("sender is off CD")
         now = time_parser.parse("now")
         if (self.msg.text.split(" ")[0].lower() != "#remindme"):
             return
-        print("first word was remindme")
+
         firstquot = self.msg.text.find(quot)
         if (firstquot != -1):
             secondquot = self.msg.text[firstquot + 1:].find(quot)
@@ -62,8 +49,19 @@ class ResponseRemindMe(ResponseCooldown):
                 if (time > now):
                     body = self.msg.text[firstquot + 1 + secondquot + 1:]
                     dt = datetime.datetime(*time[0][:6])
-                    storemsg = {"message": body, "time": dt, "senderid": self.msg.sender_id}
-                    reminders.insert(storemsg)
+
+                    storemsg = {
+                                "message": body,
+                                "time": dt,
+                                "username": self.msg.name,
+                                "groupid": self.msg.group_id,
+                                "senderid": self.msg.sender_id,
+                                }
+                    storage = self.get_response_storage('reminders')
+                    if storage is None:
+                        storage = []
+                    storage.append(storemsg)
+                    self.set_response_storage('reminders', storage)
                     print("inserting message: " + str(storemsg))
                     return "I will remind {} about {}. Beep boop.".format(self.msg.name, body)
                 else:

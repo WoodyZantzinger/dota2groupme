@@ -19,7 +19,7 @@ import pymongo
 import traceback
 import nltk
 import requests
-from responses import oAuth_util, CooldownResponse
+from responses import oAuth_util, CooldownResponse, remindme
 import pdb
 from data import DataAccess
 import hashlib
@@ -394,14 +394,14 @@ def past_response(name):
 def remindme_callback():
     try:
         logger.info("callbacking on remindme")
-        conn = pymongo.MongoClient(remindme.get_db_url(), connectTimeoutMS=1000)
-        reminders = conn.mjsunbot.reminders
+        rm = remindme.ResponseRemindMe(None)
+        reminders = rm.get_response_storage("reminders")
 
         now = datetime.datetime.now()
         triggered_messages = []
-        for item in conn.mjsunbot.reminders.find():
-            if (now > item["time"]):
-                triggered_messages.append(item)
+        for reminder in reminders:
+            if now > reminder["time"]:
+                triggered_messages.append(reminder)
 
         users = DataAccess.DataAccess().get_users()
         people = {user.values['Name']: user.values['GROUPME_ID'] for user in users}
@@ -413,10 +413,13 @@ def remindme_callback():
                         msg = item["message"].encode('ascii', errors='ignore')
                         out.append("Hey, {}: {}".format(name, msg))
                         break
-                except:
+                except Exception as e:
+                    traceback.print_exc()
                     logger.warning("error reverse-looking up name: " + name)
             logger.info("triggering message:")
             reminders.remove(item)
+        rm.set_response_storage("reminders", reminders)
+        pass
         for msg in out:
             send_message(msg)
         return out.__str__()

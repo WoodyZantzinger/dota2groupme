@@ -13,6 +13,8 @@ class ResponseCooldown(AbstractResponse):
         super(ResponseCooldown, self).__init__(msg, obj)
         self.cooldown = cooldown
         # self.mod = mod
+        if not msg:
+            return
         if not self.has_usage():
             self.set_usage(dict())
             self.get_usage()[self.msg.sender_id] = []
