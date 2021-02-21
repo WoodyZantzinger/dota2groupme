@@ -29,13 +29,13 @@ def get_or_create_eventloop():
 
 async def get_last_results(client_login, client_pass, platform, username):
     parts = username.split("#")
-    username_simple = parts[0]
+    username_simple = parts[0].lower()
     client = await callofduty.Login(client_login, client_pass)
     match_last = (await client.GetPlayerMatches(platform, username, Title.ModernWarfare, Mode.Warzone, limit=1))[0]
     match_result = await client.GetFullMatch(platform, Title.ModernWarfare, Mode.Warzone, match_last.id)
     players = match_result['allPlayers']
     for player in players:
-        this_player_username = player['player']['username']
+        this_player_username = player['player']['username'].lower()
         if this_player_username == username_simple:
             break
         else:
