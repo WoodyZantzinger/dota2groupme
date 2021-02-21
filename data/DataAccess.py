@@ -1,5 +1,7 @@
 import json
 import os
+import urllib
+
 import pymongo
 from data import build_user_from_legacy_data
 from data.sUN_user import sUN_user
@@ -124,6 +126,7 @@ class DataAccess():
         doc = docs[int(doc_idx)]
         parsed = json.loads(json_util.dumps(doc))
         rval = json.dumps(parsed, indent=4, sort_keys=True)
+        rval = urllib.parse.unquote(rval)
         return rval
 
     def set_document_item(self, collection_name, doc_idx, json_str):

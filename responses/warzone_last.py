@@ -1,112 +1,99 @@
+import urllib.parse
+
 from data import DataAccess
 from .AbstractResponse import *
 import requests
 import os
 import pickle
+import asyncio
+
+import callofduty
+from callofduty import Mode, Platform, Title
+import html
+
+platform_map = {
+    "battle": Platform.BattleNet,
+    "uno": Platform.Activision,
+}
+
+
+def get_or_create_eventloop():
+    try:
+        return asyncio.get_event_loop()
+    except RuntimeError as ex:
+        if "There is no current event loop in thread" in str(ex):
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            return asyncio.get_event_loop()
+
+
+async def get_last_results(client_login, client_pass, platform, username):
+    parts = username.split("#")
+    username_simple = parts[0]
+    client = await callofduty.Login(client_login, client_pass)
+    match_last = (await client.GetPlayerMatches(platform, username, Title.ModernWarfare, Mode.Warzone, limit=1))[0]
+    match_result = await client.GetFullMatch(platform, Title.ModernWarfare, Mode.Warzone, match_last.id)
+    players = match_result['allPlayers']
+    for player in players:
+        this_player_username = player['player']['username']
+        if this_player_username == username_simple:
+            break
+        else:
+            player = None
+
+    if not player:
+        return None
+
+    match_performance_template = "{name} of clan {clan} finished {place}th with {kills} kills and {damage} damage. He "
+
+    gulag = "didn't go to the gulag"
+    place = "?"
+    if "gulagKills" in player["playerStats"]:
+        if player["playerStats"]["gulagKills"] > 0: gulag = "won his gulag (ez)"
+        if player["playerStats"]["gulagDeaths"] > 0: gulag = "lost his gulag (bitch)"
+        place = int(player["playerStats"]["teamPlacement"])
+    else:
+        gulag = "played some wierd mode"
+
+    if "clantag" not in player["player"]: player["player"]["clantag"] = "looking for love"
+
+    out = match_performance_template.format(
+        name=player["player"]["username"],
+        clan=player["player"]["clantag"],
+        place=place,
+        damage=player["playerStats"]["damageDone"],
+        kills=int(player["playerStats"]["kills"])
+    ) + gulag
+
+    pass
+    return out
+
 
 class WarzoneLast(AbstractResponse):
     RESPONSE_KEY = "#zonelast"
 
-    HELP_RESPONSE = "Shows your personel stats from the last game, add a user argument to find someone elses stats"
-
-    DOTABUFF_LINK_TEMPLATE = "http://www.dotabuff.com/matches/{id}"
+    HELP_RESPONSE = "Shows your personal stats from the last game, add a user argument to find someone elses stats"
 
     def __init__(self, msg):
         super(WarzoneLast, self).__init__(msg)
-        self.auth_session = None
-
-    def get_match(self, session, name):
-
-        platform = name.split(":")[0]
-        username = name.split(":")[1]
-
-
-        URL = "https://my.callofduty.com/api/papi-client/crm/cod/v2/title/mw/platform/{platform}/gamer/{name}/matches/warzone/start/0/end/0/details".format(name = username, platform = platform)
-        matches = session.get(URL)
-        return matches
-
-    def reauth(self):
-
-        # Request a basic page to get the CSRF
-        cod_session = requests.Session()
-
-        url = 'https://profile.callofduty.com/cod/login'
-        req = cod_session.get(url)
-
-        header_data = dict(req.headers)["Set-Cookie"].split(";")
-        for cookie in header_data:
-            split = cookie.split("=")
-            if split[0] == "XSRF-TOKEN": CSRF = split[1]
-
-        url = 'https://profile.callofduty.com/do_login?new_SiteId=cod'
-
-        secrets = DataAccess.get_secrets()
-
-        values = {'username': "dimos84696@reqaxv.com", 'password': secrets["COD_PASS"], 'remember_me': "true", "_csrf": CSRF}
-
-        #Make a second request to login
-        req2 = cod_session.post(url, data=values)
-        ATKN = cod_session.cookies.get_dict()["atkn"]
-
-        os.environ['COD_CSRF'] = CSRF
-        os.environ['COD_ATKN'] = ATKN
-
-        #Save this session (and the cookies)
-        self.auth_session = cod_session
-        with open('COD_session.pickle', 'wb') as handle:
-            pickle.dump(cod_session, handle, protocol=pickle.HIGHEST_PROTOCOL)
-            print("Printing session file")
 
     def _respond(self):
         print(f"msg.senderID = {self.msg.sender_id}")
         user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.sender_id)
+        COD_client_login = DataAccess.get_secrets()["COD_USER"]
+        COD_client_pass = DataAccess.get_secrets()["COD_PASS"]
         canonical_name = user['Name']
         COD_name = user['COD_ID']
 
         if COD_name is None:
             return "I don't know your Call of Duty ID"
+        platform, username = COD_name.split(":")
+        platform = platform_map[platform]
+        username = urllib.parse.unquote(username)
 
-        #open the saved file. If that fails, write a new one
-        try:
-            with open('COD_session.pickle', 'rb') as handle:
-                self.auth_session = pickle.load(handle)
-        except Exception as error:
-            print("File not found")
-            self.reauth()
+        loop = get_or_create_eventloop()
+        result = loop.run_until_complete(
+            get_last_results(COD_client_login, COD_client_pass, platform, username)
+        )
 
-        if self.auth_session is not None:
-            print("Auth is set")
-            match_history = self.get_match(self.auth_session, COD_name)
-
-            if match_history.status_code != 200 or "matches" not in match_history.json()["data"]:
-                #Maybe the Authentication is stale? Reauthenticate and try again
-
-                self.reauth()
-                match_history = self.get_match(self.auth_session, COD_name)
-
-            if match_history.json()['status'] == 'error':
-                return f"Error in #zonelast: {match_history.json()['data']['message']}"
-
-            matches_data = match_history.json()["data"]["matches"][0]
-
-
-            match_performance_template = "{name} of clan {clan} finished {place}th with {kills} kills and {damage} damage. He "
-
-            gulag = "didn't go to the gulag"
-            place = "?"
-            if "gulagKills" in matches_data["playerStats"]:
-                if matches_data["playerStats"]["gulagKills"] > 0: gulag = "won his gulag (ez)"
-                if matches_data["playerStats"]["gulagDeaths"] > 0: gulag = "lost his gulag (bitch)"
-                place = int(matches_data["playerStats"]["teamPlacement"])
-            else:
-                gulag = "played some wierd mode"
-
-            if "clantag" not in matches_data["player"]: matches_data["player"]["clantag"] = "looking for love"
-
-            return match_performance_template.format(
-                name = matches_data["player"]["username"],
-                clan = matches_data["player"]["clantag"],
-                place = place,
-                damage = matches_data["playerStats"]["damageDone"],
-                kills = int(matches_data["playerStats"]["kills"])
-            ) + gulag
+        return result

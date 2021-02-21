@@ -1,17 +1,57 @@
-Flask>=0.10.1
-Flask-Login>=0.5.0
--e git+git://github.com/mjdesrosiers/dota2py#egg=dota2py
--e git+git://github.com/smiley/steamapi#egg=steamapi
--e git+git://github.com/mjdesrosiers/pypubg#egg=pypubg
--e git+git://github.com/WoodyZantzinger/python-bayeux#egg=python-bayeux
-requests>=2.4.3
-websocket-client>=0.57.0
-pymongo>=2.8
-parsedatetime>=1.5
-python-dateutil>=1.5
-nltk>=3.0.5
-azure-cognitiveservices-search-imagesearch>=1.0
-discord.py>=1.4.1
-dnspython>=2.1.0
-progressbar~=2.5
-msrest~=0.6.19
+adal==1.2.6
+aiohttp==3.7.3
+async-timeout==3.0.1
+attrs==20.3.0
+azure-cognitiveservices-search-imagesearch==2.0.0
+azure-common==1.1.26
+callofduty.py==1.2.2
+certifi==2020.12.5
+cffi==1.14.5
+chardet==3.0.4
+click==7.1.2
+cryptography==3.4.6
+discord.py==1.6.0
+dnspython==2.1.0
+-e git://github.com/mjdesrosiers/dota2py@744f44ba6993c99932037df15de2c08dbd265674#egg=dota2py
+Flask==1.1.2
+Flask-Login==0.5.0
+gevent==21.1.2
+greenlet==1.0.0
+h11==0.12.0
+httpcore==0.12.3
+httpx==0.16.1
+idna==2.10
+isodate==0.6.0
+itsdangerous==1.1.0
+Jinja2==2.11.3
+joblib==1.0.1
+MarkupSafe==1.1.1
+msrest==0.6.21
+msrestazure==0.6.4
+multidict==5.1.0
+nltk==3.5
+oauthlib==3.1.0
+parsedatetime==2.6
+progressbar==2.5
+pycparser==2.20
+PyJWT==2.0.1
+pymongo==3.11.3
+-e git://github.com/mjdesrosiers/pypubg@4f4e8d1b2c8e0d2f88ccc712f2ffb6d811782c65#egg=pypubg
+-e git://github.com/WoodyZantzinger/python-bayeux@a72bcd7b9c30368b1a326c3dde19892a675a5877#egg=python_bayeux
+python-dateutil==2.8.1
+regex==2020.11.13
+requests==2.25.1
+requests-oauthlib==1.3.0
+rfc3986==1.4.0
+simplejson==3.17.2
+six==1.15.0
+sniffio==1.2.0
+-e git://github.com/smiley/steamapi@eb1cf49ecabc2de892f6581168a84c07a19cb36f#egg=steamapi
+tqdm==4.57.0
+typing-extensions==3.7.4.3
+urllib3==1.26.3
+websocket-client==0.57.0
+Werkzeug==1.0.1
+yarl==1.6.3
+zope.event==4.5.0
+zope.interface==5.2.0
