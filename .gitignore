@@ -65,5 +65,10 @@ venv/
 #no logs
 LOGFILE*
 
+#file related to credentials/pydrive
+client_secrets.json
+mycreds.txt
+*.jpeg
+
 
 #Comment
