@@ -49,10 +49,15 @@ class ResponseSave(ResponseCooldown):
     def upload_files_to_pydrive(self, local_fnames):
         secrets_data = self.get_response_storage("client_secrets")
         secrets_data = secrets_data[1:-1]
+        my_creds = self.get_response_storage("my_creds")
+        my_creds = my_creds[1:-1]
         with open("client_secrets.json", "w+") as f:
             f.write(secrets_data)
         pass
-        gauth = GoogleAuth()
+        if my_creds:
+            with open("mycreds.txt", 'w+') as f:
+                f.write(my_creds)
+            gauth = GoogleAuth()
         # Try to load saved client credentials
         gauth.LoadCredentialsFile("mycreds.txt")
         if gauth.credentials is None:
@@ -66,6 +71,11 @@ class ResponseSave(ResponseCooldown):
             gauth.Authorize()
         # Save the current credentials to a file
         gauth.SaveCredentialsFile("mycreds.txt")
+        with open("mycreds.txt") as f:
+            creds = f.readline()
+        if creds:
+            creds = "'" + creds + "'"
+            self.set_response_storage("my_creds", creds)
 
         drive = GoogleDrive(gauth)  # List files in Google Drive
         #fileList = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
