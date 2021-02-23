@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*
+import logging
+import traceback
+
+from googleapiclient import discovery
 
 from .CooldownResponse import *
 import random
@@ -8,12 +12,14 @@ from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive# Rename the downloaded JSON file to client_secrets.json
 import urllib.request
 
+
 GROUPMEME_FOLDER = "groupmemes"
 SUN_UPLOADS_FOLDER = "sUN_uploads"
 
 class ResponseSave(ResponseCooldown):
     COOLDOWN = -1
     RESPONSE_KEY = "#save"
+    SUN_UPLOADS_FOLDER_ID = ''
 
     def __init__(self, msg):
         super(ResponseSave, self).__init__(msg, self, ResponseSave.COOLDOWN)
@@ -50,23 +56,41 @@ class ResponseSave(ResponseCooldown):
         YAML_FNAME = "settings.yaml"
         SAVED_CREDS_FNAME = "credentials.json"
 
+        print("== GETTING SECRETS FROM DB ==")
         secrets_data = self.get_response_storage("client_secrets")
-        secrets_data = secrets_data[1:-1]
+        secrets_data = secrets_data[1:-1].replace("\\n", '\n')
 
         credentials = self.get_response_storage("credentialsjson")
-        credentials = credentials[1:-1]
+        credentials = credentials[1:-1].replace("\\n", '\n')
 
         settingsyaml = self.get_response_storage("settingsyaml")
+        print("loaded yaml = ")
+        print(settingsyaml)
         settingsyaml = settingsyaml[1:-1].replace("\\n", '\n')
-        with open("client_secrets.json", "w+") as f:
-            f.write(secrets_data)
-        with open(YAML_FNAME, "w+") as f:
-            f.write(settingsyaml)
+
         if secrets_data:
-            with open(SAVED_CREDS_FNAME, 'w+') as f:
+            with open("client_secrets.json", "w+") as f:
+                f.write(secrets_data)
+                pass
+            pass
+        if credentials:
+            with open(SAVED_CREDS_FNAME, "w+") as f:
                 f.write(credentials)
-            gauth = GoogleAuth()
-        # Try to load saved client credentials
+                pass
+            pass
+        if settingsyaml:
+            with open(YAML_FNAME, "w+") as f:
+                f.write(settingsyaml)
+                pass
+            pass
+
+        print("== WRITING SECRETS TO FILES ==")
+
+        logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
+        logging.getLogger('googleapiclient.discovery').setLevel(logging.CRITICAL)
+
+        gauth = GoogleAuth()
+
         try:
             gauth.LoadCredentialsFile(SAVED_CREDS_FNAME)
             if gauth.credentials is None:
@@ -75,33 +99,47 @@ class ResponseSave(ResponseCooldown):
             elif gauth.access_token_expired:
                 # Refresh them if expired
                 gauth.Refresh()
-        except:
-            # Initialize the saved creds
+        except Exception as e:
+            traceback.print_exc()
             gauth.Authorize()
         # Save the current credentials to a file
+
         gauth.SaveCredentialsFile(SAVED_CREDS_FNAME)
         with open(SAVED_CREDS_FNAME) as f:
-            creds = f.readline()
+            creds = f.read()
         if creds:
             creds = "'" + creds + "'"
             self.set_response_storage("credentialsjson", creds)
+        with open(YAML_FNAME, 'r') as f:
+            yaml = f.read()
+        if yaml:
+            yaml = "'" + yaml + "'"
+            self.set_response_storage("settingsyaml", yaml)
 
         drive = GoogleDrive(gauth)  # List files in Google Drive
-        #fileList = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
-        f = drive.ListFile({"q": "mimeType='application/vnd.google-apps.folder' and trashed=false"}).GetList()
 
-        fID = None
-        for folder in f:
-            if folder['title'] == SUN_UPLOADS_FOLDER:
-                fID = folder['id']
+        # 1) Choose your starting point by inserting file name
+        folder_title = SUN_UPLOADS_FOLDER
+        folder_id = ''
+        if not ResponseSave.SUN_UPLOADS_FOLDER_ID:
+            print("== SEEKING SUN UPLOADS FOLDER ==")
+            # 2) Retrieve the folder id - start searching from root
+            file_list = drive.ListFile({'q': "mimeType='application/vnd.google-apps.folder' and trashed=false"}).GetList()
 
-        if not fID:
-            return
+            print(f"len(file_list) = {len(file_list)}")
+            for file in file_list:
+                if (file['title'] == folder_title):
+                    ResponseSave.SUN_UPLOADS_FOLDER_ID = file['id']
+                    break
+        else:
+            print(f"== USING SAVED FOLDER_ID = {ResponseSave.SUN_UPLOADS_FOLDER_ID}")
+
 
         for fname in local_fnames:
-            file = drive.CreateFile({'parents': [{'id': fID}]})
+            file = drive.CreateFile({'parents': [{'id': ResponseSave.SUN_UPLOADS_FOLDER_ID}]})
             file.SetContentFile(fname)
             file.Upload()
+
 
 
     def _respond(self):
