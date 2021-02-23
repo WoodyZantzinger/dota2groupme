@@ -67,7 +67,8 @@ LOGFILE*
 
 #file related to credentials/pydrive
 client_secrets.json
-mycreds.txt
+settings.yaml
+credentials.json
 *.jpeg
 
 

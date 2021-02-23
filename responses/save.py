@@ -47,35 +47,44 @@ class ResponseSave(ResponseCooldown):
         return image_attachments
 
     def upload_files_to_pydrive(self, local_fnames):
+        YAML_FNAME = "settings.yaml"
+        SAVED_CREDS_FNAME = "credentials.json"
+
         secrets_data = self.get_response_storage("client_secrets")
         secrets_data = secrets_data[1:-1]
-        my_creds = self.get_response_storage("my_creds")
-        my_creds = my_creds[1:-1]
+
+        credentials = self.get_response_storage("credentialsjson")
+        credentials = credentials[1:-1]
+
+        settingsyaml = self.get_response_storage("settingsyaml")
+        settingsyaml = settingsyaml[1:-1].replace("\\n", '\n')
         with open("client_secrets.json", "w+") as f:
             f.write(secrets_data)
-        pass
-        if my_creds:
-            with open("mycreds.txt", 'w+') as f:
-                f.write(my_creds)
+        with open(YAML_FNAME, "w+") as f:
+            f.write(settingsyaml)
+        if secrets_data:
+            with open(SAVED_CREDS_FNAME, 'w+') as f:
+                f.write(credentials)
             gauth = GoogleAuth()
         # Try to load saved client credentials
-        gauth.LoadCredentialsFile("mycreds.txt")
-        if gauth.credentials is None:
-            # Authenticate if they're not there
-            gauth.LocalWebserverAuth()
-        elif gauth.access_token_expired:
-            # Refresh them if expired
-            gauth.Refresh()
-        else:
+        try:
+            gauth.LoadCredentialsFile(SAVED_CREDS_FNAME)
+            if gauth.credentials is None:
+                # Authenticate if they're not there
+                gauth.LocalWebserverAuth()
+            elif gauth.access_token_expired:
+                # Refresh them if expired
+                gauth.Refresh()
+        except:
             # Initialize the saved creds
             gauth.Authorize()
         # Save the current credentials to a file
-        gauth.SaveCredentialsFile("mycreds.txt")
-        with open("mycreds.txt") as f:
+        gauth.SaveCredentialsFile(SAVED_CREDS_FNAME)
+        with open(SAVED_CREDS_FNAME) as f:
             creds = f.readline()
         if creds:
             creds = "'" + creds + "'"
-            self.set_response_storage("my_creds", creds)
+            self.set_response_storage("credentialsjson", creds)
 
         drive = GoogleDrive(gauth)  # List files in Google Drive
         #fileList = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
@@ -99,6 +108,7 @@ class ResponseSave(ResponseCooldown):
         image_attachments = self.get_referenced_image_urls()
         filenames = self.save_images_to_local(image_attachments)
         self.upload_files_to_pydrive(filenames)
+        return f"Uploaded {len(filenames)} to Groupmemes"
 
     def save_images_to_local(self, image_attachments):
         local_fnames = []
