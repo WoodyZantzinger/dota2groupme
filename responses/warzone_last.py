@@ -86,7 +86,7 @@ class WarzoneLast(AbstractResponse):
         COD_name = user['COD_ID']
 
         if COD_name is None:
-            return "I don't know your Call of Duty ID"
+            return "I don't know your Call of Duty ID. Please get Mike or Woody to add it to the database. Look it up here and send your profile page:\nhttps://cod.tracker.gg/warzone"
         platform, username = COD_name.split(":")
         platform = platform_map[platform]
         username = urllib.parse.unquote(username)
@@ -95,5 +95,6 @@ class WarzoneLast(AbstractResponse):
         result = loop.run_until_complete(
             get_last_results(COD_client_login, COD_client_pass, platform, username)
         )
-
+        if not result:
+            return f"Ensure the following are done:\n1: Your COD ID is set correctly (I think it is {COD_name}).\n2. Your profile settings are set to Friends/All/All under Battle.net account on this page: https://profile.callofduty.com/cod/profile. 3. You are friends with Mike (Riffin) on COD."
         return result
