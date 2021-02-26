@@ -1,5 +1,7 @@
 import json
 import os
+import traceback
+
 import pymongo
 import time
 import sys
@@ -22,7 +24,6 @@ class AbstractResponse(object):
     # default help response
     HELP_RESPONSE = "Not implemented for " + RESPONSE_KEY
 
-
     def __init__(self, msg, obj=None):
         super(AbstractResponse, self).__init__()
         if not obj:
@@ -32,10 +33,26 @@ class AbstractResponse(object):
         self.msg = msg
 
     def respond(self):
-        return self._respond()
+        try:
+            return self._respond()
+        except:
+            exception_string = traceback.format_exc()
+            self.add_to_response_storage_list('exceptions', exception_string, 10)
+            return None
 
     def _respond(self):
         return None
+
+    def add_to_response_storage_list(self, key, value, limit=None):
+        if not self.clazzname:
+            return None
+        stored_list = self.get_response_storage(key)
+        if not stored_list:
+            stored_list = []
+        stored_list.append(value)
+        if limit:
+            stored_list = stored_list[(-1 * limit):]
+        self.set_response_storage(key, stored_list)
 
     def get_response_storage(self, key):
         if not self.clazzname:
@@ -48,6 +65,7 @@ class AbstractResponse(object):
             return None
         da = DataAccess.DataAccess()
         da.set_response_storage(self.clazzname, key, value)
+
     @classmethod
     def is_relevant_msg(cls, msg):
         return cls.RESPONSE_KEY in msg.text.lower()
