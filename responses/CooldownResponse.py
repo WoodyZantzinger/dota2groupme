@@ -31,7 +31,15 @@ class ResponseCooldown(AbstractResponse):
             last_msg = messages[-1]
             elapsed_time = time.time() - last_msg.time
             print(f"elapsed time is {elapsed_time:.0f}s, and cooldown is {self.cooldown:.0f}s")
-            if elapsed_time > self.cooldown:
+
+            cooldown_override = self.get_response_storage("cooldown")
+            if cooldown_override:
+                print(f"<{self.clazzname}> Using cooldown override of {cooldown_override}")
+                cooldown = cooldown_override
+            else:
+                cooldown = self.cooldown
+
+            if elapsed_time > cooldown:
                 can_send = True
         if can_send:
             self.get_usage()[self.msg.sender_id].append(cachedmessage.CachedMessage(self.msg.text))
