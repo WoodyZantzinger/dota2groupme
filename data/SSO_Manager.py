@@ -175,14 +175,23 @@ def refresh_token(clazz, id, token):
 def do_data_request(clazz, id, token):
     client_id, client_secret = DataAccess.get_secret_keys(clazz)
     session = OAuth2Session(client_id, token=token)
-    data = session.get(type(clazz).DATA_ACCESS_URL)
-    print(f"Oauth Response code  = {data.status_code}")
-    outobject = None
-    if data.content:
-        outobject = json.loads(data.content)
-    else:
+
+    endpoints = type(clazz).DATA_ACCESS_URL
+    if not isinstance(endpoints, list):
+        endpoints = [endpoints]
+
+    results = []
+    for endpoint in endpoints:
+        data = session.get(endpoint)
+        print(f"Oauth Response code  = {data.status_code}")
         outobject = None
-    return outobject, data.status_code
+        if data.content:
+            outobject = json.loads(data.content)
+        else:
+            outobject = None
+        outcome = SSO_Outcome(SSO_Outcome_Type.response_code_to_outcome(data.status_code), outobject, None)
+        results.append(outcome)
+    return results
 
 
 def get_first_token(clazz, id, code):
@@ -229,6 +238,5 @@ def get_SSO_data(clazz, msg):
         if not token:
             return SSO_Outcome(SSO_Outcome_Type.REJECTED, None, None)
         da.store_token(clazz, user_groupme_id, token)
-        data, status_code = do_data_request(clazz, user_groupme_id, token)
-        outcome = SSO_Outcome_Type.response_code_to_outcome(status_code)
-        return SSO_Outcome(outcome, data, None)
+        return do_data_request(clazz, user_groupme_id, token)
+        #return SSO_Outcome(outcome, data, None)

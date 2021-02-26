@@ -33,8 +33,8 @@ class Strava_Last(SSO_Response):
 
     def _respond(self):
         # should already have data???
-        if self.outcome.data:
-            data = self.outcome.data
+        if self.outcome.data[0]:
+            data = self.outcome[0].data
             miles = data[0]["distance"] / 1609.34
             time = data[0]["elapsed_time"] / 60 / miles
             location = data[0]["location_city"]

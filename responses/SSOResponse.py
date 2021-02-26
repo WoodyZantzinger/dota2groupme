@@ -42,9 +42,9 @@ class SSO_Response(AbstractResponse):
         self.outcome = SSO_Manager.get_SSO_data(obj, msg)
 
     def _respond(self):
-        if self.outcome.outcome_type == SSO_Manager.SSO_Outcome_Type.NO_TOKEN:
+        if self.outcome[0].outcome_type == SSO_Manager.SSO_Outcome_Type.NO_TOKEN:
             self.response = f"Please authenticate before using {self.clazzname}:\n{self.outcome.auth_url}"
-        if self.outcome.outcome_type == SSO_Manager.SSO_Outcome_Type.REJECTED:
+        if self.outcome[0].outcome_type == SSO_Manager.SSO_Outcome_Type.REJECTED:
             self.response = f"Unknown failure in using {self.clazzname}"
         return self.response
 

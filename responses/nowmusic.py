@@ -12,7 +12,8 @@ class Spotify_Last(SSO_Response):
 
     AUTH_URL = r"https://accounts.spotify.com/authorize"
     TOKEN_REFRESH_URL = r"https://accounts.spotify.com/api/token"
-    DATA_ACCESS_URL = r"https://api.spotify.com/v1/me/player/recently-played"
+    DATA_ACCESS_URL = [r"https://api.spotify.com/v1/me/player/currently-playing",
+                       r"https://api.spotify.com/v1/me/player/recently-played"]
     REQUEST_SCOPES = [
         "user-read-currently-playing",
         "user-read-playback-state",
@@ -31,8 +32,14 @@ class Spotify_Last(SSO_Response):
 
     def _respond(self):
         # should already have data???
-        if self.outcome.data:
-            data = self.outcome.data['items'][0]
+        if self.outcome[0].data:
+            data = self.outcome[0].data['item']
+            song = data["name"]
+            artist = data["artists"][0]["name"]
+            out = "Currently listening to " + song + " by " + artist
+            self.response = out
+        elif self.outcome[1].data:
+            data = self.outcome[1].data['items'][0]
             song = data["track"]["name"]
             artist = data["track"]["artists"][0]["name"]
             out = "Last listened to " + song + " by " + artist
