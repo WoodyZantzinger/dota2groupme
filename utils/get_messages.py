@@ -2,11 +2,14 @@ import requests
 import sys
 import json
 from progressbar import ProgressBar
+
+from data import DataAccess
 from ..responses import AbstractResponse
 
 __author__ = 'woodyzantzinger'
 
-request_url = "https://api.groupme.com/v3/groups/13203822/messages?token=xde396cxXkwCQjn2BZQiVojW9XLYd4NxIiYepwwx&limit=100"
+request_url = \
+    f"https://api.groupme.com/v3/groups/13203822/messages?token={DataAccess.get_secrets()['GROUPME_AUTH']}&limit=100"
 
 output_to_print = True
 
