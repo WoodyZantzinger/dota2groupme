@@ -80,8 +80,10 @@ def make_meme(top_string, bottom_string, filename):
         font = ImageFont.truetype(font_path, font_size)
 
     draw = ImageDraw.Draw(img)
-    min_y_position = image_size[1]
+
     outline_range = int(font_size / 15)
+
+    min_y_position = image_size[1] - outline_range
 
     for line in reversed(bottom_strings):
         text_size = font.getsize(line)
