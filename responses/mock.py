@@ -9,7 +9,8 @@ import json
 from responses.CooldownResponse import ResponseCooldown
 from utils import get_groupme_messages
 
-font_path = os.path.join('meme_resources', 'Fonts', 'Impact', 'Impact.ttf')
+font_path = os.path.join('meme_resources', 'Fonts', 'Impact', 'impact.ttf')
+print(f"Impact font path location: {font_path}")
 
 
 def HostImage(path):
