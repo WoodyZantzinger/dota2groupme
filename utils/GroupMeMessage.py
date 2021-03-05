@@ -5,15 +5,14 @@ emoji_data_file = "utils/groupme_emojis.json"
 emojis_temp = None
 
 GroupToBot = {}
-GroupToBot["0"] = "f906f09e88ff3764c3c8b8c043" #Default
+GroupToBot["0"] = "f906f09e88ff3764c3c8b8c043"  # Default
 
-GroupToBot["13203822"] = "f906f09e88ff3764c3c8b8c043" #Main Group
-GroupToBot["19216747"] = "200ba085c2b7a953cb74f849ad" #DnD Group
-GroupToBot["23635322"] = "b9b8594507d45452e13dcb4012" #Cville Group
-GroupToBot["16905359"] = "2cfa6c35347bffeb718a9061d2" #Dick.com group
-GroupToBot["11861464"] = "3498b59720bc9473c86f631600" #Test group
-GroupToBot["32229954"] = "bd982e70861fa051c78e389565" #PUBG
-
+GroupToBot["13203822"] = "f906f09e88ff3764c3c8b8c043"  # Main Group
+GroupToBot["19216747"] = "200ba085c2b7a953cb74f849ad"  # DnD Group
+GroupToBot["23635322"] = "b9b8594507d45452e13dcb4012"  # Cville Group
+GroupToBot["16905359"] = "2cfa6c35347bffeb718a9061d2"  # Dick.com group
+GroupToBot["11861464"] = "3498b59720bc9473c86f631600"  # Test group
+GroupToBot["32229954"] = "bd982e70861fa051c78e389565"  # PUBG
 
 # read the file to memory
 with open(emoji_data_file) as f:
@@ -43,21 +42,19 @@ def return_emoticons(text):
 
 
 def parse_message(text, groupID):
-    values = {
-          'bot_id': GroupToBot[groupID],
-    }
+    values = {}
     emoticons = return_emoticons(text)
     if len(emoticons) > 0:
         char_map = []
         for emoticon in emoticons:
             if emoticon in emojis:
                 char_map.append(emojis[emoticon])
-                text = text.replace(":" + emoticon + ":",u'\ufffd',1)
+                text = text.replace(":" + emoticon + ":", u'\ufffd', 1)
         values["attachments"] = [{
             'type': 'emoji',
             'charmap': char_map,
             'placeholder': u'\ufffd'
-                                 }]
+        }]
 
     values["text"] = text
 
