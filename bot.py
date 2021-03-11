@@ -441,7 +441,8 @@ def git_event():
 
 @app.route("/")
 def hello():
-    return "Hello world!"
+    return render_template('index.html')
+    #return "Hello world!"
 
 
 class User(UserMixin):
@@ -483,7 +484,7 @@ def request_loader(req):
     return user
 
 
-@app.route('/home', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def index():
     da = DataAccess.DataAccess()
     admins = da.get_admins()
@@ -499,7 +500,7 @@ def index():
             flask_login.login_user(user)
             session['user'] = username
             return redirect(url_for('protect'))
-    return render_template('index.html')
+    return render_template('login.html')
 
 
 def format_text_for_textarea(text):

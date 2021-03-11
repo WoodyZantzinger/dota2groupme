@@ -1,5 +1,12 @@
-<html>
-  <title>Test</title>
+{% extends "base_template.html" %}
+{% block title %}Protected Area{% endblock %}
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+{% block content %}
   <h1>Protected</h1>
   <p1> Welcome to the secret club, {{ user }}</p1>
   <br>
@@ -8,4 +15,4 @@
       <a href="{{ url_for('manage_db') }}">Manage database</a>
     </li>
   </ul>
-</html>
+{% endblock %}

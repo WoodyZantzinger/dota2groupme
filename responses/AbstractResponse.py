@@ -34,11 +34,12 @@ class AbstractResponse(object):
 
     def respond(self):
         try:
-            return self._respond()
+            response = self._respond()
+            return response
         except:
             exception_string = traceback.format_exc()
             self.add_to_response_storage_list('exceptions', exception_string, 10)
-            return None
+            return response
 
     def _respond(self):
         return None

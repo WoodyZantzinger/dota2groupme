@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Database Management</title>
-    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
-</head>
-<body>
+{% extends "base_template.html" %}
+{% block title %}Manage Database{% endblock %}
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+{% block content %}
 {% if not collection_name %}
 <h1> Select a collection: </h1>
 {% else %}
@@ -53,6 +54,4 @@ $(".submit").click(function(){
 });
 </script>
 {% endif %}
-
-</body>
-</html>
+{% endblock %}

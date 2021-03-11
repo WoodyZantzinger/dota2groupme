@@ -75,7 +75,7 @@ class WarzoneLast(AbstractResponse):
     HELP_RESPONSE = "Shows your personal stats from the last game, add a user argument to find someone elses stats"
 
     def __init__(self, msg):
-        super(WarzoneLast, self).__init__(msg)
+        super(WarzoneLast, self).__init__(msg, self)
 
     def _respond(self):
         print(f"msg.senderID = {self.msg.sender_id}")
@@ -92,9 +92,14 @@ class WarzoneLast(AbstractResponse):
         username = urllib.parse.unquote(username)
 
         loop = get_or_create_eventloop()
-        result = loop.run_until_complete(
-            get_last_results(COD_client_login, COD_client_pass, platform, username)
-        )
+        result = None
+        try:
+            result = loop.run_until_complete(
+                get_last_results(COD_client_login, COD_client_pass, platform, username)
+            )
+        except:
+            pass
+
         if not result:
-            return f"Ensure the following are done:\n1: Your COD ID is set correctly (I think it is {COD_name}).\n2. Your profile settings are set to Friends/All/All under Battle.net account on this page: https://profile.callofduty.com/cod/profile. 3. You are friends with Mike (Riffin) on COD."
+            return f"Ensure the following are d1one:\n1: Your COD ID is set correctly (I think it is {COD_name}).\n2. Your profile settings are set to Friends/All/All under Battle.net account on this page: https://profile.callofduty.com/cod/profile. 3. You are friends with Mike (Riffin) on COD."
         return result
