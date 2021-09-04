@@ -25,6 +25,9 @@ class ResponseSuperheart(ResponseQuote):
         sender_id = self.msg.sender_id
         sender_name = self.msg.name
 
+        if (recipient_id == sender_id):
+            return "Cannot superheart own message."
+
         coin_storage = self.get_response_storage("coins")
         if not coin_storage:
             coin_storage = dict()
