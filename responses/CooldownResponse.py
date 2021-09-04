@@ -6,6 +6,7 @@ from utils import cachedmessage
 
 USAGE_MEMBER_NAME = "usage_history"
 
+
 class ResponseCooldown(AbstractResponse):
     usage = {}
 
@@ -57,7 +58,7 @@ class ResponseCooldown(AbstractResponse):
         except UnicodeEncodeError:
             print(u"noting a response for some asshole with a fancy name and id = {}".format(self.msg.sender_id))
         self.get_usage()[self.msg.sender_id][-1].response = response
-        #self.print_responses()
+        # self.print_responses()
 
     def print_responses(self):
         print("past messages are:")
@@ -66,7 +67,7 @@ class ResponseCooldown(AbstractResponse):
 
     def get_usage(self):
         return ResponseCooldown.usage[self.clazzname]
-        #return getattr(sys.modules[self.mod], USAGE_MEMBER_NAME)
+        # return getattr(sys.modules[self.mod], USAGE_MEMBER_NAME)
 
     def has_usage(self):
         return self.clazzname in ResponseCooldown.usage
@@ -82,7 +83,7 @@ class ResponseCooldown(AbstractResponse):
             self.note_response(out)
             return out
         else:
-            print("not responding to #{} because sender {} is on cooldown".format(self.clazzname,   self.msg.name))
+            print("not responding to #{} because sender {} is on cooldown".format(self.clazzname, self.msg.name))
 
     def _respond(self):
         pass

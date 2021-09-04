@@ -22,7 +22,7 @@ def get_exact_group_message(group_id, message_id):
     response = json.loads(req.text)
     return response
 
-def get_list_of_messages_before(group_id, message_id, limit):
+def get_list_of_messages_before(group_id, message_id, limit=1):
     url = LIST_OF_MESSAGES_ENDPOINT.format(
         group_id=group_id,
     )
@@ -31,7 +31,7 @@ def get_list_of_messages_before(group_id, message_id, limit):
     values = {
         "before_id": message_id,
         "token": key,
-        "limit": 1,
+        "limit": limit,
     }
 
     req = requests.get(url, params=values)
