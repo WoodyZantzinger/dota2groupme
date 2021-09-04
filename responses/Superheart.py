@@ -1,19 +1,24 @@
 import datetime
+import operator
 import time
 
 from responses.QuoteResponse import ResponseQuote
 
+TOKEN_LOOKUP_KEY = "last_free_token_time"
+TOKEN_COUNT_KEY = "token_count"
+TOKEN_USER_NAME = "name"
 
 class ResponseSuperheart(ResponseQuote):
 
     RESPONSE_KEY = "#superheart"
+
 
     def __init__(self, msg):
         super(ResponseSuperheart, self).__init__(msg)
 
     def _respond(self):
         if not self.referenced_message:
-            return
+            return self.make_leaderboard()
 
         msg_to_give_to = self.referenced_message
         if self.referenced_message.name == "sUN":
@@ -35,8 +40,7 @@ class ResponseSuperheart(ResponseQuote):
         # check if giver can give:
             # first, are users in coin storage?
             # set up user if not already
-        TOKEN_LOOKUP_KEY = "last_free_token_time"
-        TOKEN_COUNT_KEY = "token_count"
+
         for id in [sender_id, recipient_id]:
             if id not in coin_storage:
                 coin_storage[id] = {}
@@ -80,9 +84,23 @@ class ResponseSuperheart(ResponseQuote):
 
         coin_storage[sender_id][TOKEN_COUNT_KEY] = sender_tokens
         coin_storage[recipient_id][TOKEN_COUNT_KEY] = recipient_tokens
-        coin_storage[sender_id]['name'] = sender_name
-        coin_storage[recipient_id]['name'] = recipient_name
+        coin_storage[sender_id][TOKEN_USER_NAME] = sender_name
+        coin_storage[recipient_id][TOKEN_USER_NAME] = recipient_name
 
         self.set_response_storage("coins", coin_storage)
 
         return f"Transferred from {sender_name}[{sender_tokens}] to {recipient_name}[{recipient_tokens}]"
+
+    def make_leaderboard(self):
+        coin_storage = self.get_response_storage("coins")
+        output = "Superhearts:\n"
+        status = {}
+        for user in coin_storage:
+            status[coin_storage[user][TOKEN_USER_NAME]] = coin_storage[user][TOKEN_COUNT_KEY]
+
+        status = sorted(status.items(), key=operator.itemgetter(1), reverse=True)
+
+        for username, count in status:
+            output += f"\t{username}: {count}\n"
+
+        return output.strip()
