@@ -39,8 +39,8 @@ class ResponseQuote(ResponseCooldown):
         self.group_id = group_id
 
     def get_message_before_referenced_message(self):
-        message_before = get_groupme_messages.get_list_of_messages_before(self.group_id, self.msg.message_id)
-        return RawMessage(message_before['response']['message'])
+        message_before = get_groupme_messages.get_list_of_messages_before(self.group_id, self.referenced_message.id)
+        return RawMessage(message_before['response']['messages'][0])
 
     def _respond(self):
         pass
