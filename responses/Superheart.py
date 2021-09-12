@@ -96,8 +96,7 @@ class ResponseSuperheart(ResponseQuote):
 
         self.set_response_storage("coins", coin_storage)
 
-        sending_cost = sending_cost * -1
-        return f"Transferred from {sender_name}[{sender_tokens}/{sending_cost:+d}] to {recipient_name}[{recipient_tokens}/+1]"
+        return f"Transferred from {sender_name}[{sender_tokens}/-{sending_cost}] to {recipient_name}[{recipient_tokens}/+1]"
 
     def make_leaderboard(self):
         coin_storage = self.get_response_storage("coins")
