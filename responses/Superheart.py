@@ -2,6 +2,7 @@ import datetime
 import operator
 import time
 
+from data import DataAccess
 from responses.QuoteResponse import ResponseQuote
 
 TOKEN_LOOKUP_KEY = "last_free_token_time"
@@ -95,8 +96,16 @@ class ResponseSuperheart(ResponseQuote):
         coin_storage = self.get_response_storage("coins")
         output = "Superhearts:\n"
         status = {}
+
+        da = DataAccess.DataAccess()
+
         for user in coin_storage:
-            status[coin_storage[user][TOKEN_USER_NAME]] = coin_storage[user][TOKEN_COUNT_KEY]
+            response_name = coin_storage[user][TOKEN_USER_NAME]
+            real_name = da.get_user("GROUPME_ID", user)
+            if real_name:
+                response_name = real_name["Name"]
+
+            status[response_name] = coin_storage[user][TOKEN_COUNT_KEY]
 
         status = sorted(status.items(), key=operator.itemgetter(1), reverse=True)
 
