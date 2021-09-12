@@ -9,6 +9,8 @@ TOKEN_LOOKUP_KEY = "last_free_token_time"
 TOKEN_COUNT_KEY = "token_count"
 TOKEN_USER_NAME = "name"
 
+DATABASE_ACCESS = DataAccess.DataAccess()
+
 class ResponseSuperheart(ResponseQuote):
 
     RESPONSE_KEY = "#superheart"
@@ -50,7 +52,11 @@ class ResponseSuperheart(ResponseQuote):
             if TOKEN_COUNT_KEY not in coin_storage[id]:
                 coin_storage[id][TOKEN_COUNT_KEY] = 0
 
-            # sort out if can send, and cost if so
+        # fix names to canonical names, or last-known names if canonical name doesn't exist
+        sender_name = self.choose_display_name(sender_id)
+        recipient_name = self.choose_display_name(recipient_id)
+
+        # sort out if can send, and cost if so
         can_send_token = False
         sending_cost = 1
 
@@ -97,13 +103,8 @@ class ResponseSuperheart(ResponseQuote):
         output = "Superhearts:\n"
         status = {}
 
-        da = DataAccess.DataAccess()
-
         for user in coin_storage:
-            response_name = coin_storage[user][TOKEN_USER_NAME]
-            real_name = da.get_user("GROUPME_ID", user)
-            if real_name:
-                response_name = real_name["Name"]
+            response_name = self.choose_display_name(user)
 
             status[response_name] = coin_storage[user][TOKEN_COUNT_KEY]
 
@@ -113,3 +114,12 @@ class ResponseSuperheart(ResponseQuote):
             output += f"\t{username}: {count}\n"
 
         return output.strip()
+
+    def choose_display_name(self, user_id):
+        coin_storage = self.get_response_storage("coins")
+        response_name = coin_storage[user_id][TOKEN_USER_NAME]
+        real_name = DATABASE_ACCESS.get_user("GROUPME_ID", user_id)
+        if real_name:
+            response_name = real_name["Name"]
+
+        return response_name
