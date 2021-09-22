@@ -53,8 +53,8 @@ class ResponseSuperheart(ResponseQuote):
                 coin_storage[id][TOKEN_COUNT_KEY] = 0
 
         # fix names to canonical names, or last-known names if canonical name doesn't exist
-        sender_name = self.choose_display_name(sender_id)
-        recipient_name = self.choose_display_name(recipient_id)
+        sender_name = self.choose_display_name(sender_id, sender_name)
+        recipient_name = self.choose_display_name(recipient_id, recipient_name)
 
         # sort out if can send, and cost if so
         can_send_token = False
@@ -115,9 +115,11 @@ class ResponseSuperheart(ResponseQuote):
 
         return output.strip()
 
-    def choose_display_name(self, user_id):
+    def choose_display_name(self, user_id, user_name):
         coin_storage = self.get_response_storage("coins")
-        response_name = coin_storage[user_id][TOKEN_USER_NAME]
+        response_name = user_name
+        if user_id in coin_storage:
+            response_name = coin_storage[user_id][TOKEN_USER_NAME]
         real_name = DATABASE_ACCESS.get_user("GROUPME_ID", user_id)
         if real_name:
             response_name = real_name["Name"]
