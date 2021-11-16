@@ -104,7 +104,7 @@ class ResponseSuperheart(ResponseQuote):
         status = {}
 
         for user in coin_storage:
-            response_name = self.choose_display_name(user)
+            response_name = self.choose_display_name(user, None)
 
             status[response_name] = coin_storage[user][TOKEN_COUNT_KEY]
 
