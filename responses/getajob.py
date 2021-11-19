@@ -23,7 +23,9 @@ class ResponseGetAJob(AbstractResponse):
         EST_5PM = 4 + 12 + 5
         is_during_workday = EST_9AM < hour < EST_5PM
 
-        boolean = is_during_workday and "games" in msg.text and is_weekday and "?" in msg.text
+        text = msg.text.lower()
+
+        boolean = is_during_workday and "games" in text and is_weekday and "?" in text
 
         return boolean
 
