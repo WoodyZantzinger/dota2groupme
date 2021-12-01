@@ -57,12 +57,34 @@ def parse_message(text, groupID):
         }]
 
     values["text"] = text
+    # split TEXT at spaces
+    # see if any of the splits contain i.groupme.com
+    # IF SO, blank out ONLY THAT space
+    # add url to attachment
+    # re-join rest of message
 
-    if ("https://i.groupme.com/" in text and " " not in text):
-        values["attachments"] = [{
-            'type': 'image',
-            'url': text
-        }]
-        values["text"] = ""
+    message_parts = text.split()
+    hosted_images_idxs = []
+    for i, part in enumerate(message_parts):
+        if "https://i.groupme.com/" in part:
+            hosted_images_idxs.append(i)
+    if len(hosted_images_idxs) != 0:
+        attachments = []
+        for idx in hosted_images_idxs:
+            attach =    {
+                        'type': 'image',
+                        'url': message_parts[i]
+                        }
+            attachments.append(attach)
+            text = text.replace(message_parts[i], "")
+        values["text"] = text.strip()
+        values["attachments"] = attachments
+
+    #if ("https://i.groupme.com/" in text and " " not in text):
+    #    values["attachments"] = [{
+    #        'type': 'image',
+    #        'url': text
+    #    }]
+    #    values["text"] = ""
 
     return values

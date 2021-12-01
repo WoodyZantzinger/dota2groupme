@@ -1,5 +1,7 @@
 __author__ = 'woodyzantzinger'
 # -*- coding: utf-8 -*
+import urllib
+
 from. AbstractResponse import *
 from .CooldownResponse import *
 from .SSOResponse import *
@@ -7,6 +9,22 @@ import requests
 from responses import oAuth_util
 import dateutil.parser
 
+def HostImage(url):
+    GM_key = DataAccess.get_secrets()['GROUPME_AUTH']
+
+    r = requests.get(url)
+    url = 'https://image.groupme.com/pictures'
+
+    header = {'X-Access-Token': GM_key, 'Content-Type': 'image/gif'}
+    try:
+        req = urllib.request.Request(url, r.content, header)
+        response = urllib.request.urlopen(req)
+        JSON_response = json.load(response)
+        return (JSON_response["payload"]["picture_url"])
+    except urllib.error.HTTPError:
+        print("There was some sort of error uploading the photo")
+        print(r.content)
+        return ""
 
 class Spotify_Last(SSO_Response):
 
@@ -32,17 +50,30 @@ class Spotify_Last(SSO_Response):
 
     def _respond(self):
         # should already have data???
+        image_url = None
+        song_url = None
         if self.outcome[0].data:
             data = self.outcome[0].data['item']
             song = data["name"]
             artist = data["artists"][0]["name"]
             out = "Currently listening to " + song + " by " + artist
+            # find album artwork URL and rehost
+            # add rehosted URL to response
+            image_url = data['album']['images'][1]['url']
+            song_url = data['external_urls']['spotify']
             self.response = out
         elif self.outcome[1].data:
             data = self.outcome[1].data['items'][0]
             song = data["track"]["name"]
             artist = data["track"]["artists"][0]["name"]
+            image_url = data["track"]["album"]["images"][1]['url']
+            song_url = data["track"]['external_urls']['spotify']
             out = "Last listened to " + song + " by " + artist
+            # find album artwork URL and rehost
+            # add rehosted URL to response
             self.response = out
+
+        hosted_url = HostImage(image_url)
+        self.response = self.response + '\n' + song_url + '\n' + hosted_url
         super(Spotify_Last, self)._respond()
         return self.response

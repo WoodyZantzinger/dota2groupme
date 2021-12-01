@@ -72,15 +72,16 @@ def send_message(msg, groupID="13203822", send=True):
     except Exception as e:
         line_fail = sys.exc_info()[2].tb_lineno
         logger.debug("\tError: {} on line {}".format(repr(e), line_fail))
+
+    key = DataAccess.get_secrets()["GROUPME_AUTH"]
+    url = 'https://api.groupme.com/v3/groups/{id}/messages?token={token}'.format(id=groupID, token=key)
+
+    values = GroupMeMessage.parse_message(msg, groupID)
+
+    final_values = {}
+    final_values["message"] = values
+
     if not DEBUG and send:
-
-        key = DataAccess.get_secrets()["GROUPME_AUTH"]
-        url = 'https://api.groupme.com/v3/groups/{id}/messages?token={token}'.format(id=groupID, token=key)
-
-        values = GroupMeMessage.parse_message(msg, groupID)
-
-        final_values = {}
-        final_values["message"] = values
 
         r = requests.post(url, json=final_values)
         print(r.status_code, r.reason)
