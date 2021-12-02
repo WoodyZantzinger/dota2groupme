@@ -74,6 +74,6 @@ class Spotify_Last(SSO_Response):
             self.response = out
 
         hosted_url = HostImage(image_url)
-        self.response = self.response + '\n' + song_url + '\n' + hosted_url
+        self.response = self.response + '\n' + song_url + '\n\U0001F3B6\n' + hosted_url
         super(Spotify_Last, self)._respond()
         return self.response
