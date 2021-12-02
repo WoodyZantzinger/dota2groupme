@@ -56,7 +56,7 @@ class Spotify_Last(SSO_Response):
             data = self.outcome[0].data['item']
             song = data["name"]
             artist = data["artists"][0]["name"]
-            out = "Currently listening to " + song + " by " + artist
+            out = "Currently listening to:\n" + song + " by " + artist
             # find album artwork URL and rehost
             # add rehosted URL to response
             image_url = data['album']['images'][1]['url']
@@ -68,12 +68,12 @@ class Spotify_Last(SSO_Response):
             artist = data["track"]["artists"][0]["name"]
             image_url = data["track"]["album"]["images"][1]['url']
             song_url = data["track"]['external_urls']['spotify']
-            out = "Last listened to " + song + " by " + artist
+            out = "Last listened to:\n" + song + " by " + artist
             # find album artwork URL and rehost
             # add rehosted URL to response
             self.response = out
 
         hosted_url = HostImage(image_url)
-        self.response = self.response + '\n' + song_url + '\n\U0001F3B6\n' + hosted_url
+        self.response = self.response + '\n' + song_url + '\n\U0001F3B6\n' # + hosted_url
         super(Spotify_Last, self)._respond()
         return self.response
