@@ -9,29 +9,9 @@ import json
 from responses.CooldownResponse import ResponseCooldown
 from utils import get_groupme_messages
 import tempfile
+from utils.GroupMeMessage import HostImage
 
 font_path = os.path.join('meme_resources', 'Fonts', 'Impact', 'impact.ttf')
-
-def HostImage(path):
-    GM_key = DataAccess.get_secrets()['GROUPME_AUTH']
-
-    image_content = None
-    with open(path, 'rb') as f:
-        image_content = f.read()
-
-    url = 'https://image.groupme.com/pictures'
-
-    header = {'X-Access-Token': GM_key, 'Content-Type': 'image/png'}
-    try:
-        req = urllib.request.Request(url, image_content, header)
-        response = urllib.request.urlopen(req)
-        JSON_response = json.load(response)
-        return (JSON_response["payload"]["picture_url"])
-    except urllib.error.HTTPError:
-        print("There was some sort of error uploading the photo")
-        print(image_content)
-        return ""
-
 
 def mockify_text(text):
     output = ""

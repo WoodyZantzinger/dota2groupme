@@ -11,24 +11,7 @@ from random import randrange
 from azure.cognitiveservices.search.imagesearch import ImageSearchClient
 from msrest.authentication import CognitiveServicesCredentials
 import urllib.request
-
-def HostImage(url):
-    GM_key = DataAccess.get_secrets()['GROUPME_AUTH']
-
-    r = requests.get(url)
-    url = 'https://image.groupme.com/pictures'
-
-    header = {'X-Access-Token': GM_key, 'Content-Type': 'image/gif'}
-    try:
-        req = urllib.request.Request(url, r.content, header)
-        response = urllib.request.urlopen(req)
-        JSON_response = json.load(response)
-        return (JSON_response["payload"]["picture_url"])
-    except urllib.error.HTTPError:
-        print("There was some sort of error uploading the photo")
-        print(r.content)
-        return ""
-
+from utils.GroupMeMessage import HostImage
 
 class ResponseGif(ResponseCooldown):
 
