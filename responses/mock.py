@@ -135,7 +135,7 @@ class ResponseMock(ResponseCooldown):
         referenced_text = self.get_referenced_text()
         if referenced_text and not self.quoting_own_message:
             filename = make_spongebob_image(referenced_text)
-            hosted_image_path = HostImage(filename)
+            hosted_image_path = HostImage(filename, local=True)
             os.remove(filename)
             return hosted_image_path
         if self.quoting_own_message:
