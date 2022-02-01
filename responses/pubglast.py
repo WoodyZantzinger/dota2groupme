@@ -4,7 +4,7 @@ from .AbstractResponse import AbstractResponse
 import os
 import json
 import requests
-
+from pubg_python import PUBG, Shard
 
 class ResponsePUBGLast(AbstractResponse):
     RESPONSE_KEY = "#pubglast"
@@ -22,34 +22,30 @@ class ResponsePUBGLast(AbstractResponse):
         PUBGname = user['PUBG_ID']
 
         key = DataAccess.get_secrets()['PUBG_KEY']
+        api = PUBG(key, Shard.STEAM)
 
-        playerUrl = "https://api.pubg.com/shards/pc-na/players?filter[playerNames]={name}"
-        matchUrl = "https://api.pubg.com/shards/pc-na/matches/{matchID}"
+        player = list(api.players().filter(player_names=[PUBGname]))[0]
+        match = api.matches().get(player.matches[0].id)
 
+        my_roster = None
+        for roster in match.rosters:
+            am_i_in_this = any([(participant.name == player.name) for participant in roster.participants])
+            if am_i_in_this:
+                my_roster = roster
+                break
 
-        header = {"Authorization": "Bearer " + key, "Accept": "application/vnd.api+json"}
-        playerRequest = requests.get(playerUrl.format(name = PUBGname), headers=header)
+        if my_roster:
+            idxs = [i if (p.name == player.name) else -1 for i, p in enumerate(my_roster.participants)]
+            me = my_roster.participants[max(idxs)]
+            print("found roster")
+            out = template.format(name = me.name,
+                                  damage = int(round(me.damage_dealt, 0)),
+                                  numKills = me.kills,
+                                  killRank = me.kill_place,
+                                  result = me.win_place,
+                                  gameType = match.game_mode)
 
-        lastMatch = playerRequest.json()["data"][0]["relationships"]["matches"]["data"][0]["id"]
-        userID = playerRequest.json()["data"][0]["id"]
-
-        matchRequest = requests.get(matchUrl.format(matchID = lastMatch), headers=header)
-
-        for player in matchRequest.json()["included"]:
-            if player["type"] == "participant":
-                if player["attributes"]["stats"]["playerId"] == userID:
-
-                    stats = player["attributes"]["stats"]
-
-                    out = template.format(name = stats["name"],
-                                          damage = int(round(stats["damageDealt"], 0)),
-                                          numKills = stats["kills"],
-                                          killRank = stats["killPlace"],
-                                          result = stats["winPlace"],
-                                          gameType = matchRequest.json()["data"]["attributes"]["mapName"])
-
-                    print(out)
-
-        return out
+            #print(out)
+            return out
 
 
