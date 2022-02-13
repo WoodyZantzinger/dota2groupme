@@ -12,15 +12,15 @@ time_parser = parsedatetime.Calendar(c)
 quot = "\""
 
 
-def get_db_url():
-    try:
-        with open('local_variables.json') as f:
-            local_var = json.load(f)
-        return local_var["REMINDMEURL"]
-    except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
-        return os.getenv('REMINDMEURL')
-    except:
-        return None
+#def get_db_url():
+#    try:
+#        with open('local_variables.json') as f:
+#            local_var = json.load(f)
+#        return local_var["REMINDMEURL"]
+#    except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
+#        return os.getenv('REMINDMEURL')
+#    except:
+#        return None
 
 
 class ResponseRemindMe(ResponseCooldown):

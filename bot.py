@@ -412,7 +412,9 @@ def remindme_callback():
                 try:
                     if people[name] == item['senderid']:
                         msg = item["message"].encode('ascii', errors='ignore')
-                        out.append("Hey, {}: {}".format(name, msg))
+                        send_group = item["groupid"]
+                        text = "Hey, {}: {}".format(name, msg)
+                        out.append((text, send_group))
                         break
                 except Exception as e:
                     traceback.print_exc()
@@ -422,7 +424,9 @@ def remindme_callback():
         rm.set_response_storage("reminders", reminders)
         pass
         for msg in out:
-            send_message(msg)
+            text = msg[0]
+            group = msg[1]
+            send_message(text, groupID=group)
         return out.__str__()
     except Exception as e:
         (e)
