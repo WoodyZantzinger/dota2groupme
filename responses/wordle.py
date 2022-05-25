@@ -23,7 +23,7 @@ class ResponseWordle(ResponseCooldown):
             game_number = parts[1]
             guesses = parts[2]
             n_guesses = guesses.split('/')[0]
-            success = int(n_guesses) in [1, 2, 3, 4, 5, 6]
+            success = int(n_guesses) in range(1, 6 + 1)
             if success:
                 sender_id = self.msg.sender_id
                 results_log = self.get_response_storage(ResponseWordle.LOG_KEY_NAME)
