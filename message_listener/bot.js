@@ -69,7 +69,7 @@ request_call.then((response) => {
 
 
 function doPost(message) {
-
+    /*
     axios.post("https://young-fortress-3393.herokuapp.com/message/?type=Message", JSON.stringify(message), {
         headers: {
             // 'application/json' is the modern content-type for JSON, but some
@@ -83,5 +83,5 @@ function doPost(message) {
     }, (error) => {
       // console.log(error);
     });
-
+    */
 }
