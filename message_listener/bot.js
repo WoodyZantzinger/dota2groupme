@@ -70,7 +70,14 @@ request_call.then((response) => {
 
 function doPost(message) {
 
-    axios.post("https://young-fortress-3393.herokuapp.com/message/?type=Message", JSON.stringify(message))
+    axios.post("https://young-fortress-3393.herokuapp.com/message/?type=Message", JSON.stringify(message), {
+        headers: {
+            // 'application/json' is the modern content-type for JSON, but some
+            // older servers may use 'text/json'.
+            // See: http://bit.ly/text-json
+            'content-type': 'application/x-www-form-urlencoded; charset=utf-8'
+            }
+        })
     .then((response) => {
       // console.log(response);
     }, (error) => {
