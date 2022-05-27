@@ -72,9 +72,9 @@ function doPost(message) {
 
     axios.post("https://young-fortress-3393.herokuapp.com/message/?type=Message", message)
     .then((response) => {
-      console.log(response);
+      // console.log(response);
     }, (error) => {
-      console.log(error);
+      // console.log(error);
     });
 
 }
