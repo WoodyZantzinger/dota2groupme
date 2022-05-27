@@ -70,7 +70,7 @@ request_call.then((response) => {
 
 function doPost(message) {
 
-    axios.post("https://young-fortress-3393.herokuapp.com/message/?type=Message", message)
+    axios.post("https://young-fortress-3393.herokuapp.com/message/?type=Message", JSON.stringify(message))
     .then((response) => {
       // console.log(response);
     }, (error) => {
