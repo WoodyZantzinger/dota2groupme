@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.27.2",
     "faye": "^1.2.4",
     "jimp": "^0.16.1",
     "mime": "^2.4.6",

@@ -1,37 +1,55 @@
 const WebSocket = require('ws')
 var faye = require('faye')
-var request = require('request'); // library for GET/POST etc
-const res = require('../local_variables.json') // bring in the local variables as a dict
-
 var ws = new faye.Client("https://push.groupme.com/faye");
-console.log('Starting bot!')
+const res = require('../local_variables.json')
+const url = require('node:url');
+const https = require('https')
+const axios = require('axios')
 
-/*
-	First, we need to use the GroupMe token to figure out the user_id of the 
-	associated account. We use the `request` library for this
-*/
-request({
-    url: "https://api.groupme.com/v3/users/me",
-    qs: { "access_token": res.GROUPME_AUTH }
-}, function(err, response, body) {
-    if (err) {
-        console.log(err);
-        return;
+// get user_id from token
+const requestUrl = url.parse(url.format({
+    protocol: 'https',
+    hostname: 'api.groupme.com',
+    pathname: '/v3/users/me',
+    query: {
+        access_token: res.GROUPME_AUTH
     }
-    console.log("Get response on USER_ID request: " + response.statusCode);
-    MY_USER_ID = JSON.parse(response['body'])['response']['user_id'];
+}));
 
+let request_call = new Promise((resolve, reject) => {
+    https.get({
+        hostname: requestUrl.hostname,
+        path: requestUrl.path,
+    }, (response) => {
+        let chunks_of_data = [];
 
-    /* 
-    	Now that we have the user ID, we can set up the websockets with the proper
-    	callback URL including that user ID.
-    */
-    ws.subscribe(`/user/${MY_USER_ID}`, (message) => {
+        response.on('data', (fragments) => {
+            chunks_of_data.push(fragments);
+        });
+
+        response.on('end', () => {
+            let response_body = Buffer.concat(chunks_of_data);
+
+            // promise resolved on success
+            resolve(response_body.toString());
+        });
+
+        response.on('error', (error) => {
+            // promise rejected on error
+            reject(error);
+        });
+    });
+});
+
+request_call.then((response) => {
+    user_id = JSON.parse(response).response.id;
+    ws.subscribe(`/user/${user_id}`, (message) => {
         console.log(message.subject)
         if (message.type === 'ping') {
             return
         }
-        forwardMessage(message.subject, res.token)
+        //checkMessages(message.subject, res.token)
+        doPost(message.subject);
     }).then(() => {
         console.log("Ready!")
     })
@@ -40,28 +58,23 @@ request({
         outgoing: function(message, callback) {
             if (message.channel !== '/meta/subscribe') return callback(message);
             message.ext = message.ext || {};
-            message.ext.access_token = res.token;
+            message.ext.access_token = res.GROUPME_AUTH;
             message.ext.timestamp = Math.floor(Date.now() / 1000)
             callback(message);
         }
     })
+}).catch((error) => {
+    console.log(error);
 });
 
-/* 
-	Here's the meat of the work. This forwards the message on to the Python service
-	to determine if responses need to be made. 
-*/
-function forwardMessage(message, token) {
-    if (message) {
-        if (message.text) {
-        	request.post({
-		  headers: {'content-type' : 'application/x-www-form-urlencoded'},
-		  url:     res.forward_url,
-		  body:    JSON.stringify(message)
-		}, function(error, response, body){
-		  console.log(body);
-		});
-            message.text = message.text.replace(/“|”/g, '"').replace(/‘|’/g, "'")
-        }
-    }
+
+function doPost(message) {
+
+    axios.post("https://young-fortress-3393.herokuapp.com/message/?type=Message", message)
+    .then((response) => {
+      console.log(response);
+    }, (error) => {
+      console.log(error);
+    });
+
 }
