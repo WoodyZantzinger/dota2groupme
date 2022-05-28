@@ -229,7 +229,8 @@ def message():
     msg = rawmessage.RawMessage(new_message)
     message_type = request.args.get('type')
     print("received message: ")
-    print(new_message)
+    # print(new_message)
+    print("\t<message body omitted >")
 
     logger.info("Msg [{id}]: {msg}".format(msg=msg.text, id=msg.sender_id))
     active_response_categories = get_response_categories(msg)
