@@ -54,7 +54,7 @@ def HostImage(url, local=False):
         return (JSON_response["payload"]["picture_url"])
     except urllib.error.HTTPError:
         print("There was some sort of error uploading the photo")
-        print(r.content)
+        # print(r.content) lmao xd
         return ""
 
 def return_emoticons(text):
