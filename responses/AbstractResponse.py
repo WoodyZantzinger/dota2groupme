@@ -55,17 +55,25 @@ class AbstractResponse(object):
             stored_list = stored_list[(-1 * limit):]
         self.set_response_storage(key, stored_list)
 
-    def get_response_storage(self, key):
+    def get_response_storage(self, key, other_class = None):
         if not self.clazzname:
             return None
+        if other_class == None:
+            ref = self.clazzname
+        else:
+            ref = other_class
         da = DataAccess.DataAccess()
-        return da.get_response_storage(self.clazzname, key)
+        return da.get_response_storage(ref, key)
 
-    def set_response_storage(self, key, value):
+    def set_response_storage(self, key, value, other_class = None):
         if not self.clazzname:
             return None
+        if other_class == None:
+            ref = self.clazzname
+        else:
+            ref = other_class
         da = DataAccess.DataAccess()
-        da.set_response_storage(self.clazzname, key, value)
+        da.set_response_storage(ref, key, value)
 
     @classmethod
     def is_relevant_msg(cls, msg):
