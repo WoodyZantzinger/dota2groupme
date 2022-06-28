@@ -24,7 +24,7 @@ class DiscordNow(AbstractResponse):
         out = ""
         msg = ""
         asyncio.set_event_loop(asyncio.new_event_loop())
-        intents = discord.Intents.default()
+        intents = discord.Intents.all()
         intents.members = True
         client = discord.Client(intents=intents)
 
