@@ -10,6 +10,7 @@ from pymongo.errors import ConnectionFailure
 
 import json
 from bson import ObjectId, json_util
+import certifi
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -26,7 +27,7 @@ class DataAccess():
         secrets = get_secrets()
         if DataAccess.__client is None:
             try:
-                DataAccess.__client = pymongo.MongoClient(secrets['SUNDATA_URL'])
+                DataAccess.__client = pymongo.MongoClient(secrets['SUNDATA_URL'], ssl_ca_certs=certifi.where())
             except ConnectionFailure as cf:
                 DataAccess.__client = None
         if DataAccess.__client:

@@ -1,5 +1,3 @@
-get_response_storage(self, "coins")
-
 # -*- coding: utf-8 -*
 import random
 import re
@@ -45,8 +43,8 @@ class NoFilter(ResponseCooldown):
             out = "You need " + str(NoFilter.COST) + " superhearts to do this"
         else:
 
-            coin_storage[sender_id][TOKEN_COUNT_KEY] =  - sending_cost
-            self.set_response_storage("coins", coin_storage)
+            coin_storage[sender_id][TOKEN_COUNT_KEY] = coin_storage[sender_id][TOKEN_COUNT_KEY] - NoFilter.COST
+            self.set_response_storage("coins", coin_storage, other_class="ResponseSuperheart")
 
 
             search_term = self.msg.text.partition(' ')[2].lower()
