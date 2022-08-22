@@ -30,7 +30,7 @@ class ResponseValorantLast(AbstractResponse):
         matches = json.loads(requests.get(request_url).content)
         last_match = matches['data'][0]
         this_user = [pl for pl in last_match['players']['all_players'] if pl['name']==username][0]
-        my_team = this_user['team']
+        my_team = this_user['team'].lower()
         k = this_user['stats']['kills']
         d = this_user['stats']['deaths']
         a = this_user['stats']['assists']
@@ -45,8 +45,8 @@ class ResponseValorantLast(AbstractResponse):
             if team != my_team and last_match['teams'][team]['has_won']:
                 win_loss = 'lost'
 
-        wins = last_match['teams'][my_team.lower()]["rounds_won"]
-        losses = last_match['teams'][my_team.lower()]["rounds_lost"]
+        wins = last_match['teams'][my_team]["rounds_won"]
+        losses = last_match['teams'][my_team]["rounds_lost"]
 
         res_str = ResponseValorantLast.match_performance_template.format(
             outcome=win_loss,
