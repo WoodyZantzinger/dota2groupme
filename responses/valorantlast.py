@@ -1,0 +1,97 @@
+# -*- coding: utf-8 -*
+import requests
+
+from data import DataAccess
+from .AbstractResponse import *
+import random
+
+
+class ResponseValorantLast(AbstractResponse):
+
+    match_performance_template = "You {outcome} as {agent}. You went {k}:{d}:{a}, and rounds went {wins}/{losses}."
+
+    RESPONSE_KEY = "#valorantlast"
+
+    LINK_TEMPLATE = r"https://api.henrikdev.xyz/valorant/v3/matches/{region}/{username}/{tag}"
+
+    def __init__(self, msg):
+        super(ResponseValorantLast, self).__init__(msg)
+
+    def _respond(self):
+
+        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.sender_id)
+        region = user['RIOT_REGION']
+        username = user['RIOT_USERNAME']
+        tag = user['RIOT_TAG']
+        request_url = ResponseValorantLast.LINK_TEMPLATE.format(region=region, username=username, tag=tag)
+
+        print("Got Account ID")
+        # Get a list of recent matches for the player
+        matches = json.loads(requests.get(request_url).content)
+        last_match = matches['data'][0]
+        this_user = [pl for pl in last_match['players']['all_players'] if pl['name']==username][0]
+        my_team = this_user['team']
+        k = this_user['stats']['kills']
+        d = this_user['stats']['deaths']
+        a = this_user['stats']['assists']
+        agent = this_user['character']
+
+        win_loss = 'tied'
+        for team in last_match['teams']:
+            if team == my_team and last_match['teams'][team]['has_won']:
+                win_loss = 'won'
+
+            if team != my_team and last_match['teams'][team]['has_won']:
+                win_loss = 'lost'
+
+        wins = last_match['teams'][my_team.lower()]["rounds_won"]
+        losses = last_match['teams'][my_team.lower()]["rounds_lost"]
+
+        res_str = ResponseValorantLast.match_performance_template.format(
+            outcome=win_loss,
+            agent=agent,
+            k=k, d=d, a=a,
+            wins=wins, losses=losses
+        )
+
+        return res_str
+        """
+        for x in match["result"]["players"]:
+            if x["account_id"] == user['DOTA_ID']:
+                out = ""
+                print("Got self.sender Data")
+
+                #Stats?
+                print(player_num)
+                msg = ResponseValorantLast.match_performance_template.format(hero=data.get_hero_name(x["hero_id"])["localized_name"],
+                                                            k=str(x["kills"]),
+                                                            d=str(x["deaths"]),
+                                                            a=str(x["assists"]),
+                                                            GPM=str(x["gold_per_min"]),
+                                                            level=str(x["level"])
+                                                            )
+                out += msg + "\n"
+
+                #Items?
+                finalItems = "Your items: "
+                for itemNum in range(0, 6):
+                    if x["item_" + str(itemNum)] != 0 and x["item_" + str(itemNum)] is not None:
+                        try:
+                            finalItems += str(data.get_item_name(x["item_" + str(itemNum)])["name"]) + ", "
+                        except:
+                            finalItems += "unknown item ({}), ".format(x["item_" + str(itemNum)])
+
+                out += finalItems + "\n"
+
+                #Win?
+                #@todo fix this to incorporate woody's bugfix
+                if player_num < 5 and match["result"]["radiant_win"]:
+                    out += "You Won! "
+                elif player_num > 4 and not match["result"]["radiant_win"]:
+                    out += "You Won! "
+                else:
+                    out += "You Lost.... Bitch "
+                out += str(match_id) + " " + dotabuff_link
+                return out
+            player_num = player_num + 1
+            """
