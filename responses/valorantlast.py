@@ -8,7 +8,7 @@ import random
 
 class ResponseValorantLast(AbstractResponse):
 
-    match_performance_template = "You {outcome} as {agent}. You went {k}:{d}:{a}, and rounds went {wins}/{losses}."
+    match_performance_template = "You {outcome} as {agent}. You went {k}:{d}:{a}, and rounds went {wins}/{losses}. Teammates:"
 
     RESPONSE_KEY = "#valorantlast"
 
@@ -35,6 +35,7 @@ class ResponseValorantLast(AbstractResponse):
         d = this_user['stats']['deaths']
         a = this_user['stats']['assists']
         agent = this_user['character']
+        teammates = [pl['name'] for pl in last_match['players'][my_team.lower()] if pl['name'] != username]
 
         win_loss = 'tied'
         for team in last_match['teams']:
@@ -53,6 +54,7 @@ class ResponseValorantLast(AbstractResponse):
             k=k, d=d, a=a,
             wins=wins, losses=losses
         )
+        res_str = res_str +"\n\t" + "\n\t".join(teammates)
 
         return res_str
         """
