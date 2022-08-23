@@ -8,7 +8,7 @@ import random
 
 class ResponseValorantLast(AbstractResponse):
 
-    match_performance_template = "You {outcome} as {agent}. You went {k}:{d}:{a}, and rounds went {wins}/{losses}. Teammates:"
+    match_performance_template = "You {outcome} as {agent} on {map}. You went {k}:{d}:{a}, and rounds went {wins}/{losses}. Teammates:"
 
     RESPONSE_KEY = "#valorantlast"
 
@@ -29,13 +29,14 @@ class ResponseValorantLast(AbstractResponse):
         # Get a list of recent matches for the player
         matches = json.loads(requests.get(request_url).content)
         last_match = matches['data'][0]
+        map = last_match['metadata']['map']
         this_user = [pl for pl in last_match['players']['all_players'] if pl['name']==username][0]
         my_team = this_user['team'].lower()
         k = this_user['stats']['kills']
         d = this_user['stats']['deaths']
         a = this_user['stats']['assists']
         agent = this_user['character']
-        teammates = [pl['name'] for pl in last_match['players'][my_team.lower()] if pl['name'] != username]
+        teammates = [pl['name'] + "#" + pl['tag'] for pl in last_match['players'][my_team.lower()] if pl['name'] != username]
 
         win_loss = 'tied'
         for team in last_match['teams']:
@@ -51,6 +52,7 @@ class ResponseValorantLast(AbstractResponse):
         res_str = ResponseValorantLast.match_performance_template.format(
             outcome=win_loss,
             agent=agent,
+            map=map,
             k=k, d=d, a=a,
             wins=wins, losses=losses
         )
