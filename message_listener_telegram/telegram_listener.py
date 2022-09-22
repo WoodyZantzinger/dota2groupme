@@ -1,5 +1,6 @@
 import logging
 
+from utils import BaseMessage
 from telegram import __version__ as TG_VER, ForceReply
 
 try:
@@ -15,6 +16,7 @@ if __version_info__ < (20, 0, 0, "alpha", 1):
     )
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+import time
 
 import sys
 sys.path.append("..")
@@ -26,50 +28,71 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+"""
+{
+  "attachments": [],
+  "avatar_url": "https://i.groupme.com/123456789",
+  "created_at": 1302623328,
+  "group_id": "1234567890",
+  "id": "11111",
+  "name": "MALDICIÓN",
+  "sender_id": "113",
+  "sender_type": "user",
+  "source_guid": "GUID",
+  "system": false,
+  "text": "#gif Sample Gif",
+  "user_id": "1112121"
+}
+"""
+def reformat_telegram_message(update: Update):
+    send_text = ""
+    if update.message.text:
+        send_text = update.message.text
+    if update.message.caption:
+        send_text = update.message.caption
 
-# Define a few command handlers. These usually take the two arguments update and
-# context.
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Send a message when the command /start is issued."""
-    user = update.effective_user
-    await update.message.reply_html(
-        rf"Hi {user.mention_html()}!",
-        reply_markup=ForceReply(selective=True),
-    )
+    reformat = {
+        "attachments": [],
+        "avatar_url": "",
+        "created_at": time.mktime(update.message.date.timetuple()),
+        "group_id": update.message.chat_id,
+        "id": -1,
+        "name": "",
+        "sender_id": update.message.from_user.id,
+        "source_guid": "GUID",
+        "system": False,
+        "text": send_text,
+        "user_id": update.message.from_user.id,
+        "from_service": BaseMessage.Services.TELEGRAM.value,
+    }
+    return reformat
 
-
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Send a message when the command /help is issued."""
-    await update.message.reply_text("Help!")
-
-
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print("echoing")
-    text = update.message.text + " you dumb idiot"
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=text)
-
-async def echoEveryhing(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    print("EE")
-    text = update.message.text
+async def command_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print("found command!")
+    text = update.message.text + " as a command"
     print(text)
-    await update.message.reply_text("You said: " + text)
 
+async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print("echoing")
+    json = reformat_telegram_message(update)
+    print(json)
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=json['text'])
 
 def main() -> None:
     """Run bot."""
     # Create the Application and pass it your bot's token.
     secrets = DataAccess.get_secrets()
-    TG_KEY = secrets["TELEGRAM_API_KEY"]
-    application = Application.builder().token(TG_KEY).build()
+    telegram_api_key = secrets["TELEGRAM_API_KEY"]
+    application = Application.builder().token(telegram_api_key).build()
 
     # on different commands - answer in Telegram
-    #application.add_handler(CommandHandler("start", start))
-    #application.add_handler(CommandHandler("help", help_command))
 
     # on non command i.e message - echo the message on Telegram
-    echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), echo)
-    application.add_handler(echo_handler)
-    application.add_handler(MessageHandler(filters.TEXT, echoEveryhing))
+    unknown_handler = MessageHandler(filters.COMMAND, command_callback)
+    application.add_handler(unknown_handler)
+
+    plaintext_handler = MessageHandler((filters.CAPTION | filters.ATTACHMENT | filters.TEXT) & (~filters.COMMAND), plaintext_callback)
+    application.add_handler(plaintext_handler)
 
     # Run the bot until the user presses Ctrl-C
     application.run_polling()
