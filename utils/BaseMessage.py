@@ -3,7 +3,7 @@ from enum import Enum
 from utils import get_groupme_messages
 from utils.rawmessage import RawMessage
 from utils.GroupMeMessage import HostImage
-
+from message_listener_telegram.telegram_listener import reformat_telegram_message
 
 class Services(Enum):
     GROUPME = ""
@@ -69,3 +69,8 @@ class TelegramMessage(BaseMessage):
 
     def is_quoted_message(self):
         return not self.raw_msg.reply_to_message
+
+    def get_quoted_message(self):
+        reply_json = self.raw_msg['message']['reply_to_message']
+        formatted_json = reformat_telegram_message(reply_json)
+        return TelegramMessage(formatted_json)

@@ -22,6 +22,7 @@ import json
 import sys
 sys.path.append("..")
 from data import DataAccess
+from utils import BaseMessage
 
 # Enable logging
 logging.basicConfig(
@@ -96,6 +97,7 @@ async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     print("echoing")
     json = reformat_telegram_message(update)
     print(json)
+    bm = BaseMessage.
     await context.bot.send_message(chat_id=update.effective_chat.id, text=json['text'])
 
 def main() -> None:
