@@ -9,23 +9,23 @@ class RawMessage(object):
 
         self.rawjson = rawjson
 
+
+        self.attachments = None
+        self.avatar_url = None
+        self.created_at = None
+        self.group_id = None
+        self.id = None
+        self.name = None
+        self.sender_id = None
+        self.sender_type = None
+        self.source_guid = None
+        self.system = None
+        self.text = None
+        self.user_id = None
+        self.from_service = ""  # @TODO CHANGE THIS TO NONE ALSO
+
         for item in self.rawjson.keys():
             setattr(self, item, self.rawjson[item])
-        """
-
-        self.attachments = self.rawjson['attachments']
-        self.avatar_url = self.rawjson['avatar_url']
-        self.created_at = self.rawjson['created_at']
-        self.group_id = self.rawjson['group_id']
-        self.id = self.rawjson['id']
-        self.name = self.rawjson['name']
-        self.sender_id = self.rawjson['sender_id']
-        self.sender_type = self.rawjson['sender_type']
-        self.source_guid = self.rawjson['source_guid']
-        self.system = self.rawjson['system']
-        self.text = self.rawjson['text']
-        self.user_id = self.rawjson['user_id']
-        """
         self.replace_emojis()
 
     def replace_emojis(self):

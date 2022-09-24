@@ -17,6 +17,7 @@ if __version_info__ < (20, 0, 0, "alpha", 1):
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 import time
+import json
 
 import sys
 sys.path.append("..")
@@ -44,6 +45,21 @@ logger = logging.getLogger(__name__)
   "user_id": "1112121"
 }
 """
+
+
+def serialize_update(obj):
+    try:
+        if (not obj) or (not hasattr(obj, "__slots__")):
+            return obj
+        else:
+            out = {}
+            for k in obj.__slots__:
+                out[k] = serialize_update(obj[k])
+            return out
+    except Exception as e:
+        print(obj)
+        raise e
+
 def reformat_telegram_message(update: Update):
     send_text = ""
     if update.message.text:
@@ -65,6 +81,10 @@ def reformat_telegram_message(update: Update):
         "user_id": update.message.from_user.id,
         "from_service": BaseMessage.Services.TELEGRAM.value,
     }
+
+    other_data = serialize_update(update)
+    reformat.update(other_data)
+
     return reformat
 
 async def command_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):

@@ -1,7 +1,7 @@
 from data import DataAccess
 import requests
 import json
-
+from utils import BaseMessage
 EXACT_MESSAGE_ENDPOINT = "https://api.groupme.com/v3/groups/{group_id}/messages/{msg_id}"
 LIST_OF_MESSAGES_ENDPOINT = "https://api.groupme.com/v3/groups/{group_id}/messages"
 
@@ -20,6 +20,7 @@ def get_exact_group_message(group_id, message_id):
 
     req = requests.get(url, params=values)
     response = json.loads(req.text)
+    response.from_service = BaseMessage.Services.GROUPME
     return response
 
 def get_list_of_messages_before(group_id, message_id, limit=1):
