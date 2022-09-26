@@ -48,14 +48,31 @@ logger = logging.getLogger(__name__)
 """
 
 
-def serialize_update(obj):
+def serialize_update(obj):  # this method can go straight to hell, I will never understand it again
+    try:
+        if type(obj) == list and obj:
+            out = []
+            for _ in obj:
+                upd = serialize_update(_)
+                if upd:
+                    out.append(upd)
+            return out
+    except:
+        pass
+
     try:
         if (not obj) or (not hasattr(obj, "__slots__")):
             return obj
         else:
             out = {}
-            for k in obj.__slots__:
-                out[k] = serialize_update(obj[k])
+            attr_names = [o for o in dir(obj) if not o.startswith("_")]
+            for k in attr_names:
+                attr = getattr(obj, k)
+                if callable(attr) or k.startswith("_"):
+                    continue
+                sud = serialize_update(attr)
+                if sud:
+                    out[k] = sud
             return out
     except Exception as e:
         print(obj)
@@ -96,8 +113,8 @@ async def command_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("echoing")
     json = reformat_telegram_message(update)
-    print(json)
-    bm = BaseMessage.
+    bm = BaseMessage.make_message(json)
+    bm.save_attachments_to_local()
     await context.bot.send_message(chat_id=update.effective_chat.id, text=json['text'])
 
 def main() -> None:
