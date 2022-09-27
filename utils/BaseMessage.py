@@ -2,12 +2,13 @@ import urllib
 import uuid
 from enum import Enum
 
-from telegram import PhotoSize
+from telegram import PhotoSize, Document
 
 from utils import get_groupme_messages
 from utils.rawmessage import RawMessage
 from utils.GroupMeMessage import HostImage
 from message_listener_telegram.telegram_listener import reformat_telegram_message
+from data import DataAccess
 
 class Services(Enum):
     GROUPME = ""
@@ -108,6 +109,9 @@ class GroupMeMessage(BaseMessage):
             local_fnames.append(save_fname)
         return local_fnames
 
+    def get_sender_uid(self):
+        return self.raw_msg['sender_id']
+
 
 class TelegramMessage(BaseMessage):
     def __init__(self, raw_msg: RawMessage):
@@ -124,7 +128,7 @@ class TelegramMessage(BaseMessage):
     def attach_image(self, image_uri):
         self.response = image_uri
 
-    def save_attachments_to_local(self):
+    async def save_attachments_to_local(self, bot=None):
         print("oh, hello there.")
         attachments = self.raw_msg['message']['effective_attachment']
         attached_items = []
@@ -134,26 +138,47 @@ class TelegramMessage(BaseMessage):
                 photo_set = [item for item in attachments if item['file_id'][0:15] == fid]
                 image_sizes = [item['file_size'] for item in photo_set]
                 largest_item = [item for item in photo_set if item['file_size'] == max(image_sizes)][0]
-                attached_items.append(largest_item)
+                ps = PhotoSize(
+                    largest_item['file_id'],
+                    largest_item['file_unique_id'],
+                    largest_item['width'],
+                    largest_item['height'],
+                    largest_item['file_size'],
+                )
+                attached_items.append(ps)
         else:
-            attached_items.append(attachments)
+            doc = Document(
+                file_id=attachments['file_id'],
+                file_unique_id=attachments["file_unique_id"],
+                thumb=None,
+                file_name=attachments["file_name"],
+                mime_type=attachments["mime_type"],
+                file_size=attachments["file_size"],
+                bot=bot
+            )
+            attached_items.append(doc)
 
+        out_fnames = []
         print(attached_items)
         for item in attached_items:
-            ps = PhotoSize(
-                item['file_id'],
-                item['file_unique_id'],
-                item['width'],
-                item['height'],
-                item['file_size'],
-            )
             save_name = ""
             try:
-                save_name = item['file_name']
+                save_name = item.file_name
             except:
-                save_name = uuid.uuid4() + ".png"
+                save_name = str(uuid.uuid4()) + ".png"
             # @TODO add a bot object to the photothing initialization so it can save?
-            ps.get_file().download(save_name)
+            print(save_name)
+            obj = await bot.get_file(file_id=item.file_id)
+            fname = await obj.download()
+            print(fname)
+            out_fnames.append(fname.name)
+        return out_fnames
 
-
-
+    def get_sender_uid(self):
+        # def telegram id
+        tid = self.raw_msg['sender_id']
+        # get user from database given tid
+        da = DataAccess.DataAccess()
+        user = da.get_user("TELEGRAM_ID", tid)
+        # get groupme id from user object?
+        return user["GROUPME_ID"]

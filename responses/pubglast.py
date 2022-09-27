@@ -17,7 +17,7 @@ class ResponsePUBGLast(AbstractResponse):
 
         template = "{name} did {damage} damage for {numKills} kills (placing {killRank} in kills) to finish {result} in a {gameType}. Squad:\n{squad}"
 
-        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.sender_id)
+        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.get_sender_uid())
         canonical_name = user['Name']
         PUBGname = user['PUBG_ID']
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*
 from .AbstractResponse import AbstractResponse
 from utils.emulate.emulate import *
+from utils import BaseMessage
 import random
 
 
@@ -20,9 +21,9 @@ class chitchat(AbstractResponse):
         return generate_response(message, 0)
 
     @classmethod
-    def is_relevant_msg(cls, msg):
+    def is_relevant_msg(cls, msg: BaseMessage):
         could_be_url = "http" in msg.text or "www" in msg.text or ".com" in msg.text
-        not_self = msg.sender_id != AbstractResponse.GroupMeIDs["sUN"]
+        not_self = msg.get_sender_uid() != AbstractResponse.GroupMeIDs["sUN"]
         booleans = not could_be_url and not_self
         #return random.random() < chitchat.RESPOND_THRESHOLD and booleans
 

@@ -114,7 +114,12 @@ async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     print("echoing")
     json = reformat_telegram_message(update)
     bm = BaseMessage.make_message(json)
-    bm.save_attachments_to_local()
+    # fnames = await bm.save_attachments_to_local(context.bot)
+    # bm.get_sender_uid()
+    if update.message.chat.type == "private":
+        out = "Your ID is: " + str(bm.raw_msg['sender_id'])
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=out)
+        return
     await context.bot.send_message(chat_id=update.effective_chat.id, text=json['text'])
 
 def main() -> None:

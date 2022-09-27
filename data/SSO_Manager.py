@@ -227,7 +227,7 @@ def has_all_requested_scopes(token, clazz):
 
 def get_SSO_data(clazz, msg):
     da = DataAccess.DataAccess()
-    user_groupme_id = msg.sender_id
+    user_groupme_id = msg.get_sender_uid()
     client_id, client_secret = DataAccess.get_secret_keys(clazz)
     token = da.get_current_token(clazz, user_groupme_id)
     if not token or not has_all_requested_scopes(token, clazz):

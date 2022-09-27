@@ -16,7 +16,7 @@ class ResponseQuote(ResponseCooldown):
         super(ResponseQuote, self).__init__(msg, self, 1)
         self.get_referenced_message()
 
-    def get_referenced_message(self):
+    def get_referenced_message(self): # @TODO rework this for new system
         if not hasattr(self.msg, "attachments"):
             return
 

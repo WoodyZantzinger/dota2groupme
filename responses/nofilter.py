@@ -36,7 +36,7 @@ class NoFilter(ResponseCooldown):
         out = ""
 
         #can they spend?
-        sender_id = self.msg.sender_id
+        sender_id = self.msg.get_sender_uid()
         coin_storage = self.get_response_storage("coins", "ResponseSuperheart")
 
         if sender_id not in coin_storage or coin_storage[sender_id][TOKEN_COUNT_KEY] < NoFilter.COST:
@@ -83,4 +83,4 @@ class NoFilter(ResponseCooldown):
                         out = HostImage(first_image_result.content_url)
                 else:
                     out = "Found nothing"
-        return out
+        return out # @TODO how to attach images to telegram?

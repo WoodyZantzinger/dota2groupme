@@ -18,14 +18,14 @@ class ResponseCooldown(AbstractResponse):
             return
         if not self.has_usage():
             self.set_usage(dict())
-            self.get_usage()[self.msg.sender_id] = []
+            self.get_usage()[self.msg.get_sender_uid()] = []
         else:
-            if not self.msg.sender_id in self.get_usage():
-                self.get_usage()[self.msg.sender_id] = []
+            if not self.msg.get_sender_uid() in self.get_usage():
+                self.get_usage()[self.msg.get_sender_uid()] = []
 
     def is_sender_off_cooldown(self):
         can_send = False
-        messages = self.get_usage()[self.msg.sender_id]
+        messages = self.get_usage()[self.msg.get_sender_uid()]
         if not len(messages):
             can_send = True
         else:
@@ -43,7 +43,7 @@ class ResponseCooldown(AbstractResponse):
             if elapsed_time > cooldown:
                 can_send = True
         if can_send:
-            self.get_usage()[self.msg.sender_id].append(cachedmessage.CachedMessage(self.msg.text))
+            self.get_usage()[self.msg.get_sender_uid()].append(cachedmessage.CachedMessage(self.msg.text))
         return can_send
 
     def note_response(self, response):
@@ -54,15 +54,15 @@ class ResponseCooldown(AbstractResponse):
             self.set_response_storage('usage_count', 1)
 
         try:
-            print(u"noting a response for name of {} and id = {}".format(self.msg.name, self.msg.sender_id))
+            print(u"noting a response for name of {} and id = {}".format(self.msg.name, self.msg.get_sender_uid()))
         except UnicodeEncodeError:
-            print(u"noting a response for some asshole with a fancy name and id = {}".format(self.msg.sender_id))
-        self.get_usage()[self.msg.sender_id][-1].response = response
+            print(u"noting a response for some asshole with a fancy name and id = {}".format(self.msg.get_sender_uid()))
+        self.get_usage()[self.msg.get_sender_uid()][-1].response = response
         # self.print_responses()
 
     def print_responses(self):
         print("past messages are:")
-        for _ in self.get_usage()[self.msg.sender_id]:
+        for _ in self.get_usage()[self.msg.get_sender_uid()]:
             print(_)
 
     def get_usage(self):

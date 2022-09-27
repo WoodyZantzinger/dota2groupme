@@ -16,5 +16,5 @@ class ResponseSausage(AbstractResponse):
 
     @classmethod
     def is_relevant_msg(cls, msg):
-        return JON['GROUPME_ID'] == msg.sender_id and 'sausage' in msg.text
+        return JON['GROUPME_ID'] == msg.get_sender_uid() and 'sausage' in msg.text
 

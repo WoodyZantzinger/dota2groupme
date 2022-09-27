@@ -82,7 +82,7 @@ class ResponseGif(ResponseCooldown):
                     if req_term == "#gifone":
                         max = 1
                     first_image_result = image_results.value[randrange(max)]
-                    out = HostImage(first_image_result.content_url)
+                    out = HostImage(first_image_result.content_url) # @TODO HOW DO YOU DO THIS FOR TG?
             else:
                 out = "Found nothing"
         return out

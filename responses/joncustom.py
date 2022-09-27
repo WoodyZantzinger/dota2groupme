@@ -16,5 +16,5 @@ class ResponseJonCustom(AbstractResponse):
 
     @classmethod
     def is_relevant_msg(cls, msg):
-        return (msg.sender_id == AbstractResponse.GroupMeIDs['Jonny G'])
+        return (msg.get_sender_uid() == AbstractResponse.GroupMeIDs['Jonny G'])
 

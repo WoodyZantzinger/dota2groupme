@@ -19,7 +19,7 @@ class ResponseSuperheart(ResponseQuote):
     def __init__(self, msg):
         super(ResponseSuperheart, self).__init__(msg)
 
-    def _respond(self):
+    def _respond(self): # @TODO reference new apis
         if not self.referenced_message:
             return self.make_leaderboard()
 
@@ -27,10 +27,10 @@ class ResponseSuperheart(ResponseQuote):
         if self.referenced_message.name == "sUN":
             msg_to_give_to = self.get_message_before_referenced_message()
 
-        recipient_id = msg_to_give_to.sender_id
+        recipient_id = msg_to_give_to.get_sender_uid()
         recipient_name = msg_to_give_to.name
 
-        sender_id = self.msg.sender_id
+        sender_id = self.msg.get_sender_uid()
         sender_name = self.msg.name
 
         if (recipient_id == sender_id):

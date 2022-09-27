@@ -32,7 +32,7 @@ class ResponseLast(AbstractResponse):
         secrets = DataAccess.get_secrets()
         api.set_api_key(secrets["DOTA_KEY"])
 
-        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.sender_id)
+        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.get_sender_uid())
         account_id = user['STEAM_ID']
 
         print("Got Account ID")

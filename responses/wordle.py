@@ -25,7 +25,7 @@ class ResponseWordle(ResponseCooldown):
             n_guesses = guesses.split('/')[0]
             success = int(n_guesses) in range(1, 6 + 1)
             if success:
-                sender_id = self.msg.sender_id
+                sender_id = self.msg.get_sender_uid()
                 results_log = self.get_response_storage(ResponseWordle.LOG_KEY_NAME)
                 results_log = results_log or dict()
                 if sender_id not in results_log:

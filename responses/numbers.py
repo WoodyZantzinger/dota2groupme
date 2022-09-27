@@ -19,7 +19,7 @@ class ResponseNumbers(AbstractResponse):
     @classmethod
     def is_relevant_msg(cls, msg):
         could_be_url = "http" in msg.text or "www" in msg.text or ".com" in msg.text
-        not_self = msg.sender_id != AbstractResponse.GroupMeIDs['sUN']
+        not_self = msg.get_sender_uid() != AbstractResponse.GroupMeIDs['sUN']
         n_nums = sum([_ in "1234567890" for _ in msg.text])
         enough_numbers = n_nums >= ResponseNumbers.NUMBERS_THRESHOLD
         booleans = not_self and enough_numbers and not could_be_url

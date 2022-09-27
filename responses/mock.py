@@ -105,7 +105,7 @@ class ResponseMock(ResponseCooldown):
         self.quoting_own_message = False
 
 
-    def get_referenced_text(self):
+    def get_referenced_text(self): # @TODO this needs to use new interfaces
         if not hasattr(self.msg, "attachments"):
             return
 

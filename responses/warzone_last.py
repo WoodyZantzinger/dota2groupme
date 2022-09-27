@@ -78,8 +78,8 @@ class WarzoneLast(AbstractResponse):
         super(WarzoneLast, self).__init__(msg, self)
 
     def _respond(self):
-        print(f"msg.senderID = {self.msg.sender_id}")
-        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.sender_id)
+        print(f"msg.senderID = {self.msg.get_sender_uid()}")
+        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.get_sender_uid())
         COD_client_login = DataAccess.get_secrets()["COD_USER"]
         COD_client_pass = DataAccess.get_secrets()["COD_PASS"]
         canonical_name = user['Name']

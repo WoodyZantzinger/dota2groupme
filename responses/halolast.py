@@ -19,7 +19,7 @@ class ResponseHaloLast(AbstractResponse):
 
     def _respond(self):
         out = ""
-        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.sender_id)
+        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.get_sender_uid())
         canonical_name = user['Name']
         xbox_live_name = user['XBOX_NAME']
 

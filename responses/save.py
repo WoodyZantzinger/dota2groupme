@@ -24,7 +24,7 @@ class ResponseSave(ResponseCooldown):
     def __init__(self, msg):
         super(ResponseSave, self).__init__(msg, self, ResponseSave.COOLDOWN)
 
-    def get_referenced_image_urls(self):
+    def get_referenced_image_urls(self): # @TODO rework this for new APIs
         if not hasattr(self.msg, "attachments"):
             return
 

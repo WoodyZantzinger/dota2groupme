@@ -19,7 +19,7 @@ class ResponseValorantLast(AbstractResponse):
 
     def _respond(self):
 
-        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.sender_id)
+        user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.get_sender_uid())
         region = user['RIOT_REGION']
         username = user['RIOT_USERNAME']
         tag = user['RIOT_TAG']

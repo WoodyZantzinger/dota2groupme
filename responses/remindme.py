@@ -55,7 +55,8 @@ class ResponseRemindMe(ResponseCooldown):
                                 "time": dt,
                                 "username": self.msg.name,
                                 "groupid": self.msg.group_id,
-                                "senderid": self.msg.sender_id,
+                                "senderid": self.msg.get_sender_uid(),
+                                "service": self.msg.raw_msg['from_service'] # @TODO check that this is actually the right service
                                 }
                     storage = self.get_response_storage('reminders')
                     if storage is None:
