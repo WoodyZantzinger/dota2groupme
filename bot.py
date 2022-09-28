@@ -231,7 +231,7 @@ def get_sender_service(msg):
         BaseMessage.Services.GROUPME.value: groupme_sender.GroupMeSender,
         BaseMessage.Services.TELEGRAM.value: telegram_sender.TelegramSender
     }
-    return sender_services[msg.from_service](msg)
+    return sender_services[msg.from_service](msg, debug=DEBUG)
 
 @app.route('/message/', methods=['POST'])
 def message():

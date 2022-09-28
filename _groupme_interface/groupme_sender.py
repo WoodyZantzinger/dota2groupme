@@ -51,11 +51,11 @@ class GroupMeSender(BaseSender):
         key = DataAccess.get_secrets()["GROUPME_AUTH"]
         url = 'https://api.groupme.com/v3/groups/{id}/messages?token={token}'.format(id=groupID, token=key)
 
-        values = GroupMeMessage.parse_message(self.source_msg, groupID)
+        values = GroupMeMessage.parse_message(obj, groupID)
 
         final_values = {"message": values}
 
-        if not self.DEBUG:
+        if not self.debug:
             r = requests.post(url, json=final_values)
             print(r.status_code, r.reason)
             return r.status_code
