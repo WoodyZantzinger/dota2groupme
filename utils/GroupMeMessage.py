@@ -35,27 +35,6 @@ emojis = {}
 for emoji in emojis_temp:
     emojis[emoji[2][1:-1]] = [emoji[0], emoji[1]]
 
-def HostImage(url, local=False):
-    GM_key = DataAccess.get_secrets()['GROUPME_AUTH']
-
-    if not local:
-        r = requests.get(url)
-        content = r.content
-    else:
-        with open(url, 'rb') as f:
-            content = f.read()
-    url = 'https://image.groupme.com/pictures'
-
-    header = {'X-Access-Token': GM_key, 'Content-Type': 'image/gif'}
-    try:
-        req = urllib.request.Request(url, content, header)
-        response = urllib.request.urlopen(req)
-        JSON_response = json.load(response)
-        return (JSON_response["payload"]["picture_url"])
-    except urllib.error.HTTPError:
-        print("There was some sort of error uploading the photo")
-        # print(r.content) lmao xd
-        return ""
 
 def return_emoticons(text):
     return_val = []

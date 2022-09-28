@@ -6,8 +6,7 @@ from telegram import PhotoSize, Document
 
 from utils import get_groupme_messages
 from utils.rawmessage import RawMessage
-from utils.GroupMeMessage import HostImage
-from message_listener_telegram.telegram_listener import reformat_telegram_message
+from _telegram_interface.telegram_listener import reformat_telegram_message
 from data import DataAccess
 
 class Services(Enum):
@@ -16,9 +15,10 @@ class Services(Enum):
 
 
 def make_message(raw_msg: RawMessage):
-    if raw_msg['from_service'] == Services.GROUPME.value:
+    from_service = raw_msg.from_service
+    if from_service == Services.GROUPME.value:
         return GroupMeMessage(raw_msg)
-    elif raw_msg['from_service'] == Services.TELEGRAM.value:
+    elif from_service == Services.TELEGRAM.value:
         tgm = TelegramMessage(raw_msg)
         return tgm
     else:
@@ -27,17 +27,15 @@ def make_message(raw_msg: RawMessage):
 
 class BaseMessage:
     def __init__(self, raw_msg: RawMessage):
-        self.raw_msg = raw_msg
         self.response = None
+        for k in raw_msg.__dict__:
+            setattr(self, k, getattr(raw_msg, k))
 
     def is_quoted_message(self):
         raise NotImplemented("Message class doesn't have implementation for is_quoted_message")
 
     def get_quoted_message(self):
         raise NotImplemented("Message class doesn't have implementation for get_quoted_message")
-
-    def attach_image(self, image_uri):
-        raise NotImplemented("Message class doesn't have implementation for attach_image")
 
     def save_attachments_to_local(self):
         raise NotImplemented("Message class doesn't have implementation for get_attached_image_urls")
@@ -68,8 +66,6 @@ class GroupMeMessage(BaseMessage):
                 msg = get_groupme_messages.get_exact_group_message(group_id, reply_id)
                 return make_message(RawMessage(msg['response']['message']))
 
-    def attach_image(self, image_uri):
-        self.response = HostImage(image_uri)
 
     def save_attachments_to_local(self):
         if not hasattr(self, "attachments"):
@@ -110,7 +106,7 @@ class GroupMeMessage(BaseMessage):
         return local_fnames
 
     def get_sender_uid(self):
-        return self.raw_msg['sender_id']
+        return self.sender_id
 
 
 class TelegramMessage(BaseMessage):
@@ -124,9 +120,6 @@ class TelegramMessage(BaseMessage):
         reply_json = self.raw_msg['message']['reply_to_message']
         formatted_json = reformat_telegram_message(reply_json)
         return TelegramMessage(formatted_json)
-
-    def attach_image(self, image_uri):
-        self.response = image_uri
 
     async def save_attachments_to_local(self, bot=None):
         print("oh, hello there.")

@@ -19,6 +19,9 @@ import pymongo
 import traceback
 import nltk
 import requests
+
+from _groupme_interface import groupme_sender
+from _telegram_interface import telegram_sender
 from responses import oAuth_util, CooldownResponse, remindme
 import pdb
 from data import DataAccess
@@ -29,7 +32,7 @@ from responses import *
 from responses import AbstractResponse
 from statistics import *
 from statistics import AbstractStatistics
-from utils import rawmessage
+from utils import rawmessage, BaseMessage
 from utils import GroupMeMessage
 
 DEBUG = True
@@ -193,7 +196,7 @@ sUN_user_id = DataAccess.DataAccess().get_user("Name", "sUN").values['GROUPME_ID
 
 
 def get_response_categories(msg):
-    if (msg.sender_id == sUN_user_id):
+    if (msg.get_sender_uid() == sUN_user_id):
         return None
     out = []
     #    for cls in AbstractResponse.AbstractResponse.__subclasses__():
@@ -223,19 +226,24 @@ def make_responses(categories, msg):
     return out
 
 
+def get_sender_service(msg):
+    sender_services = {
+        BaseMessage.Services.GROUPME.value: groupme_sender.GroupMeSender,
+        BaseMessage.Services.TELEGRAM.value: telegram_sender.TelegramSender
+    }
+    return sender_services[msg.from_service](msg)
+
 @app.route('/message/', methods=['POST'])
 def message():
     new_message = request.get_json(force=True)
-    msg = rawmessage.RawMessage(new_message)
-    message_type = request.args.get('type')
-    print("received message: ")
-    # print(new_message)
-    print("\t<message body omitted >")
+    msg = BaseMessage.make_message(rawmessage.RawMessage(new_message))
+    sender = get_sender_service(msg)
 
-    logger.info("Msg [{id}]: {msg}".format(msg=msg.text, id=msg.sender_id))
+    logger.info("Msg [{id}]: {msg}".format(msg=msg.text, id=msg.get_sender_uid()))
     active_response_categories = get_response_categories(msg)
-    if (message_type == "DM" or message_type == "Message") and (randrange(0, 100) > 92):
-        like_message(new_message["group_id"], new_message["id"])
+
+    #if (message_type == "DM" or message_type == "Message") and (randrange(0, 100) > 92):
+    #    like_message(new_message["group_id"], new_message["id"])
 
     if active_response_categories:
         output_messages = make_responses(active_response_categories, msg)
@@ -243,15 +251,13 @@ def message():
         # makes sure that the message from the bot arrives after the message from the user
         time.sleep(1)
         for output in output_messages:
-            if output:
-                if message_type == "DM":
-                    send_direct_message(output, new_message["sender_id"])
-                else:
-                    send_message(output, new_message["group_id"])
+            if output.obj:
+                output.execute(sender)
+                # send_message(output, new_message["group_id"])
         if output == None:
             return 'WARNING - Response triggered but not sent'
         else:
-            return 'OK - Response Sent: ' + output
+            return 'OK - Response Sent'
     else:
         return 'No Response'
 

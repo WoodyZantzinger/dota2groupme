@@ -8,6 +8,7 @@ import sys
 import difflib
 
 from data import DataAccess
+from utils import output_message
 
 
 class AbstractResponse(object):
@@ -35,7 +36,9 @@ class AbstractResponse(object):
     def respond(self):
         try:
             response = self._respond()
-            return response
+            if type(response) == output_message.OutputMessage:
+                return response
+            return output_message.OutputMessage(response, output_message.Services.TEXT)
         except:
             exception_string = traceback.format_exc()
             self.add_to_response_storage_list('exceptions', exception_string, 10)

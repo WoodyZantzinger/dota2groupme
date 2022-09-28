@@ -7,9 +7,8 @@ import urllib
 from data import DataAccess
 import json
 from responses.CooldownResponse import ResponseCooldown
-from utils import get_groupme_messages
+from utils import get_groupme_messages, output_message
 import tempfile
-from utils.GroupMeMessage import HostImage
 
 font_path = os.path.join('meme_resources', 'Fonts', 'Impact', 'impact.ttf')
 
@@ -135,9 +134,10 @@ class ResponseMock(ResponseCooldown):
         referenced_text = self.get_referenced_text()
         if referenced_text and not self.quoting_own_message:
             filename = make_spongebob_image(referenced_text)
-            hosted_image_path = HostImage(filename, local=True)
-            os.remove(filename)
-            return hosted_image_path
+            return output_message.OutputMessage(filename, output_message.Services.PHOTO_LOCAL)
+            # hosted_image_path = HostImage(filename, local=True)
+            # os.remove(filename)
+            # return hosted_image_path
         if self.quoting_own_message:
             print("Not responding because user is quoting their own message")
 

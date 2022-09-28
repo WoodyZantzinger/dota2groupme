@@ -11,7 +11,7 @@ from random import randrange
 from azure.cognitiveservices.search.imagesearch import ImageSearchClient
 from msrest.authentication import CognitiveServicesCredentials
 import urllib.request
-from utils.GroupMeMessage import HostImage
+from utils import output_message
 
 class NoFilter(ResponseCooldown):
 
@@ -80,7 +80,11 @@ class NoFilter(ResponseCooldown):
                         if req_term == "#nofiltertop":
                             max = 1
                         first_image_result = image_results.value[randrange(max)]
-                        out = HostImage(first_image_result.content_url)
+                        return output_message.OutputMessage(
+                            first_image_result.content_url,
+                            output_message.Services.PHOTO_URL
+                        )
+                        # out = HostImage(first_image_result.content_url)
                 else:
                     out = "Found nothing"
         return out # @TODO how to attach images to telegram?

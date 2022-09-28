@@ -10,8 +10,8 @@ import urllib
 from random import randrange
 from azure.cognitiveservices.search.imagesearch import ImageSearchClient
 from msrest.authentication import CognitiveServicesCredentials
+from utils import output_message
 import urllib.request
-from utils.GroupMeMessage import HostImage
 
 class ResponseGif(ResponseCooldown):
 
@@ -82,7 +82,9 @@ class ResponseGif(ResponseCooldown):
                     if req_term == "#gifone":
                         max = 1
                     first_image_result = image_results.value[randrange(max)]
-                    out = HostImage(first_image_result.content_url) # @TODO HOW DO YOU DO THIS FOR TG?
+                    image_url = first_image_result.content_url
+                    return output_message.OutputMessage(image_url, output_message.Services.PHOTO_URL)
+                    # out = HostImage(first_image_result.content_url)
             else:
                 out = "Found nothing"
         return out
