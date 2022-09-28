@@ -13,7 +13,6 @@ class TelegramSender(BaseSender):
 
     def send_text(self, obj):
         asyncio.run(self.bot.send_message(chat_id=self.base_message.group_id, text=obj))
-        raise NotImplemented("send_text not implemented for BaseSender object")
 
     def send_photo_local(self, obj):
         raise NotImplemented("send_photo_local not implemented for BaseSender object")

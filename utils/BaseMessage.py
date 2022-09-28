@@ -114,16 +114,16 @@ class TelegramMessage(BaseMessage):
         super().__init__(raw_msg)
 
     def is_quoted_message(self):
-        return not self.raw_msg.reply_to_message
+        return not self.reply_to_message
 
     def get_quoted_message(self):
-        reply_json = self.raw_msg['message']['reply_to_message']
+        reply_json = self.message['reply_to_message']
         formatted_json = reformat_telegram_message(reply_json)
         return TelegramMessage(formatted_json)
 
     async def save_attachments_to_local(self, bot=None):
         print("oh, hello there.")
-        attachments = self.raw_msg['message']['effective_attachment']
+        attachments = self.message['effective_attachment']
         attached_items = []
         if type(attachments) == list:
             file_ids = set([item['file_id'][0:15] for item in attachments])
@@ -169,7 +169,7 @@ class TelegramMessage(BaseMessage):
 
     def get_sender_uid(self):
         # def telegram id
-        tid = self.raw_msg['sender_id']
+        tid = self.sender_id
         # get user from database given tid
         da = DataAccess.DataAccess()
         user = da.get_user("TELEGRAM_ID", tid)
