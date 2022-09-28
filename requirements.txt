@@ -49,7 +49,7 @@ sniffio==1.2.0
 git+https://github.com/smiley/steamapi@eb1cf49ecabc2de892f6581168a84c07a19cb36f#egg=steamapi
 tqdm==4.57.0
 typing-extensions==3.7.4.3
-urllib3==1.26.3
+urllib3==1.26.5
 websocket-client==0.57.0
 Werkzeug==1.0.1
 yarl==1.6.3
