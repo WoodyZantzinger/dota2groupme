@@ -12,7 +12,7 @@ class TelegramSender(BaseSender):
         super().__init__(source_msg, bot, debug)
 
     def send_text(self, obj):
-        asyncio.run(self.bot.send_message(chat_id=self.base_message.group_id, text=obj))
+        asyncio.run(self.bot.send_message(chat_id=self.source_msg.group_id, text=obj))
 
     def send_photo_local(self, obj):
         raise NotImplemented("send_photo_local not implemented for BaseSender object")

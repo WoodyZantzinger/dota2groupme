@@ -226,7 +226,9 @@ def make_responses(categories, msg):
         out.append(cls(msg).respond())
     return out
 
+
 tg_bot = _bot.Bot(DataAccess.get_secrets()["TELEGRAM_API_KEY"])
+
 
 def get_sender_service(msg):
     sender_services = {
@@ -235,6 +237,7 @@ def get_sender_service(msg):
     }
     service, bot_obj = sender_services[msg.from_service]
     return service(msg, bot=bot_obj, debug=DEBUG)
+
 
 @app.route('/message/', methods=['POST'])
 def message():
@@ -245,7 +248,7 @@ def message():
     logger.info("Msg [{id}]: {msg}".format(msg=msg.text, id=msg.get_sender_uid()))
     active_response_categories = get_response_categories(msg)
 
-    #if (message_type == "DM" or message_type == "Message") and (randrange(0, 100) > 92):
+    # if (message_type == "DM" or message_type == "Message") and (randrange(0, 100) > 92):
     #    like_message(new_message["group_id"], new_message["id"])
 
     if active_response_categories:
@@ -457,7 +460,7 @@ def git_event():
 @app.route("/")
 def hello():
     return render_template('index.html')
-    #return "Hello world!"
+    # return "Hello world!"
 
 
 class User(UserMixin):
