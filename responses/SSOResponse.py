@@ -46,7 +46,7 @@ class SSO_Response(AbstractResponse):
             self.response = f"Please authenticate before using {self.clazzname}:\n{self.outcome.auth_url}"
         if self.outcome[0].outcome_type == SSO_Manager.SSO_Outcome_Type.REJECTED:
             self.response = f"Unknown failure in using {self.clazzname}"
-        return self.response
+        return super().respond(self.response)
 
     def make_auth_state(self):
         return self.clazzname + "|" + self.msg.sender_id
