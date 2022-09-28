@@ -19,6 +19,7 @@ import pymongo
 import traceback
 import nltk
 import requests
+from telegram import _bot
 
 from _groupme_interface import groupme_sender
 from _telegram_interface import telegram_sender
@@ -225,13 +226,15 @@ def make_responses(categories, msg):
         out.append(cls(msg).respond())
     return out
 
+tg_bot = _bot.Bot(DataAccess.get_secrets()["TELEGRAM_API_KEY"])
 
 def get_sender_service(msg):
     sender_services = {
-        BaseMessage.Services.GROUPME.value: groupme_sender.GroupMeSender,
-        BaseMessage.Services.TELEGRAM.value: telegram_sender.TelegramSender
+        BaseMessage.Services.GROUPME.value: (groupme_sender.GroupMeSender, None),
+        BaseMessage.Services.TELEGRAM.value: (telegram_sender.TelegramSender, tg_bot),
     }
-    return sender_services[msg.from_service](msg, debug=DEBUG)
+    service, bot_obj = sender_services[msg.from_service]
+    return service(msg, bot=bot_obj, debug=DEBUG)
 
 @app.route('/message/', methods=['POST'])
 def message():
