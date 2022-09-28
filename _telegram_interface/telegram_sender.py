@@ -8,8 +8,8 @@ from utils.BaseSender import BaseSender
 
 
 class TelegramSender(BaseSender):
-    def __init__(self, base_message, bot: Bot):
-        super().__init__(base_message, bot)
+    def __init__(self, source_msg, bot=None, debug=True):
+        super().__init__(source_msg, bot, debug)
 
     def send_text(self, obj):
         asyncio.run(self.bot.send_message(chat_id=self.base_message.group_id, text=obj))

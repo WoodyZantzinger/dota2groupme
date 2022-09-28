@@ -1,4 +1,7 @@
+import datetime
 import logging
+
+import requests
 
 from utils import BaseMessage
 from telegram import __version__ as TG_VER, ForceReply
@@ -71,6 +74,8 @@ def serialize_update(obj):  # this method can go straight to hell, I will never 
                 if callable(attr) or k.startswith("_"):
                     continue
                 sud = serialize_update(attr)
+                if type(sud) == datetime.datetime:
+                    sud = time.mktime(sud.timetuple())
                 if sud:
                     out[k] = sud
             return out
@@ -88,7 +93,7 @@ def reformat_telegram_message(update: Update):
     reformat = {
         "attachments": [],
         "avatar_url": "",
-        "created_at": time.mktime(update.message.date.timetuple()),
+        "created_at": int(time.mktime(update.message.date.timetuple())),
         "group_id": update.message.chat_id,
         "id": -1,
         "name": "",
@@ -113,14 +118,17 @@ async def command_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("echoing")
     json = reformat_telegram_message(update)
-    bm = BaseMessage.make_message(json)
+    #bm = BaseMessage.make_message(json)
     # fnames = await bm.save_attachments_to_local(context.bot)
     # bm.get_sender_uid()
     if update.message.chat.type == "private":
-        out = "Your ID is: " + str(bm.raw_msg['sender_id'])
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=out)
-        return
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=json['text'])
+        #out = "Your ID is: " + str(bm.raw_msg['sender_id'])
+        #await context.bot.send_message(chat_id=update.effective_chat.id, text=out)
+        #return
+        pass
+    r = requests.post("https://young-fortress-3393.herokuapp.com/message/?type={msg_type}".format(
+        msg_type="Message"), json=json)
+    # await context.bot.send_message(chat_id=update.effective_chat.id, text=json['text'])
 
 def main() -> None:
     """Run bot."""
