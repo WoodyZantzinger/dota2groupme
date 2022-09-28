@@ -81,7 +81,9 @@ class ResponseCooldown(AbstractResponse):
         if self.is_sender_off_cooldown():
             out = self._respond()
             self.note_response(out)
-            return out
+            if type(out) == output_message.OutputMessage:
+                return out
+            return output_message.OutputMessage(out, output_message.Services.TEXT)
         else:
             print("not responding to #{} because sender {} is on cooldown".format(self.clazzname, self.msg.name))
 
