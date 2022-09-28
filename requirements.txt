@@ -34,7 +34,7 @@ parsedatetime==2.6
 progressbar==2.5
 pubg_python==0.12.4
 pycparser==2.20
-PyJWT==2.0.1
+PyJWT==2.4.0
 pymongo==3.11.3
 python-telegram-bot==20.0a4
 git+https://github.com/mjdesrosiers/pypubg@4f4e8d1b2c8e0d2f88ccc712f2ffb6d811782c65#egg=pypubg
