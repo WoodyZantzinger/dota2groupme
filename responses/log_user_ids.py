@@ -15,7 +15,7 @@ class ResponseLogUserIDs(ResponseCooldown):
         super(ResponseLogUserIDs, self).__init__(msg, self, ResponseLogUserIDs.COOLDOWN)
 
     def _respond(self):
-        local_id = self.msg.user_id
+        local_id = str(self.msg.user_id)
         service = self.msg.from_service
         name = self.msg.name
 

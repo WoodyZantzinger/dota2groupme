@@ -207,8 +207,11 @@ def get_response_categories(msg):
     # if cls2 not in classes:
     # classes.append(cls2)
     for cls in RESPONSES_CACHE:
-        if cls.is_relevant_msg(msg):
-            out.append(cls)
+        try:
+            if cls.is_relevant_msg(msg):
+                out.append(cls)
+        except:
+            print("Relevant msg command failed for class = " + str(cls))
     if not out:
         return out
     critical_override_threshold = max([cls.OVERRIDE_PRIORITY for cls in out])
