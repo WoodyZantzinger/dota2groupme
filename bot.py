@@ -245,7 +245,7 @@ def message():
     msg = BaseMessage.make_message(rawmessage.RawMessage(new_message))
     sender = get_sender_service(msg)
 
-    logger.info("Msg [{id}]: {msg}".format(msg=msg.text, id=msg.get_sender_uid()))
+    logger.info("Msg: {msg}".format(msg=msg.text))
     active_response_categories = get_response_categories(msg)
 
     # if (message_type == "DM" or message_type == "Message") and (randrange(0, 100) > 92):
