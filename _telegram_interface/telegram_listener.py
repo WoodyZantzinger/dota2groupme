@@ -2,8 +2,12 @@ import datetime
 import logging
 
 import requests
+import os
 
-from utils import BaseMessage
+import sys
+sys.path.append("..")
+
+print(os.getcwd())
 from telegram import __version__ as TG_VER, ForceReply
 
 try:
@@ -22,8 +26,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 import time
 import json
 
-import sys
-sys.path.append("..")
+
 from data import DataAccess
 from utils import BaseMessage
 
@@ -126,7 +129,9 @@ async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
         #await context.bot.send_message(chat_id=update.effective_chat.id, text=out)
         #return
         pass
-    r = requests.post("https://young-fortress-3393.herokuapp.com/message/?type={msg_type}".format(
+    url_debug = "http://localhost:5000/message/?type={msg_type}"
+    url_live = "https://young-fortress-3393.herokuapp.com/message/?type={msg_type}"
+    r = requests.post(url_debug.format(
         msg_type="Message"), json=json)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text=json['text'])
 

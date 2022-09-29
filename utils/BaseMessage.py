@@ -174,7 +174,7 @@ class TelegramMessage(BaseMessage):
         da = DataAccess.DataAccess()
         user = da.get_user("TELEGRAM_ID", tid)
         # get groupme id from user object?
-        if user and "GROUPME_ID" in user:
+        if user and "GROUPME_ID" in user.values:
             return user['GROUPME_ID']
         else:
             return None

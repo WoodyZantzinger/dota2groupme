@@ -20,20 +20,20 @@ GroupToBot["11861464"] = "3498b59720bc9473c86f631600"  # Test group
 GroupToBot["32229954"] = "bd982e70861fa051c78e389565"  # PUBG
 
 # read the file to memory
-with open(emoji_data_file) as f:
-    emojis_temp = json.load(f)
+#with open(emoji_data_file) as f:
+#    emojis_temp = json.load(f)
 
 # parse the strings to integers
-for emoji in emojis_temp:
-    emoji[0] = int(emoji[0])
-    emoji[1] = int(emoji[1])
+#for emoji in emojis_temp:
+#    emoji[0] = int(emoji[0])
+#    emoji[1] = int(emoji[1])#
 
 # reformat the dict to be what is expected by later code
 # name : [idx0, idx1]
 
-emojis = {}
-for emoji in emojis_temp:
-    emojis[emoji[2][1:-1]] = [emoji[0], emoji[1]]
+#emojis = {}
+#for emoji in emojis_temp:
+#    emojis[emoji[2][1:-1]] = [emoji[0], emoji[1]]
 
 
 def return_emoticons(text):
