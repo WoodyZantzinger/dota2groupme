@@ -198,7 +198,7 @@ sUN_user_id = DataAccess.DataAccess().get_user("Name", "sUN").values['GROUPME_ID
 
 def get_response_categories(msg):
     sender_uid = msg.get_sender_uid()
-    if sender_uid and (msg.get_sender_uid() == sUN_user_id):
+    if (msg.get_sender_uid() == sUN_user_id):
         return None
     out = []
     #    for cls in AbstractResponse.AbstractResponse.__subclasses__():
