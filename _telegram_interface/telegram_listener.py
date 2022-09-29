@@ -96,7 +96,7 @@ def reformat_telegram_message(update: Update):
         "created_at": int(time.mktime(update.message.date.timetuple())),
         "group_id": update.message.chat_id,
         "id": -1,
-        "name": "",
+        "name": update.message.from_user.name,
         "sender_id": update.message.from_user.id,
         "source_guid": "GUID",
         "system": False,

@@ -36,9 +36,7 @@ class AbstractResponse(object):
     def respond(self):
         try:
             response = self._respond()
-            if type(response) == output_message.OutputMessage:
-                return response
-            return output_message.OutputMessage(response, output_message.Services.TEXT)
+            return response
         except:
             exception_string = traceback.format_exc()
             self.add_to_response_storage_list('exceptions', exception_string, 10)

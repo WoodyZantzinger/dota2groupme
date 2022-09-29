@@ -33,7 +33,7 @@ from responses import *
 from responses import AbstractResponse
 from statistics import *
 from statistics import AbstractStatistics
-from utils import rawmessage, BaseMessage
+from utils import rawmessage, BaseMessage, output_message
 from utils import GroupMeMessage
 
 DEBUG = True
@@ -256,7 +256,11 @@ def message():
         # sleep for a second before sending message
         # makes sure that the message from the bot arrives after the message from the user
         time.sleep(1)
+
         for output in output_messages:
+            if type(output) != output_message.OutputMessage:
+                output = output_message.OutputMessage(output, output_message.Services.TEXT)
+
             if output.obj:
                 output.execute(sender)
                 # send_message(output, new_message["group_id"])
