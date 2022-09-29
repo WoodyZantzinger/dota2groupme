@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+import asyncio
 import logging
 import traceback
 
@@ -148,7 +149,10 @@ class ResponseSave(ResponseCooldown):
             file.Upload()
 
     def _respond(self):
-        image_attachments = self.get_referenced_image_urls()
+        image_attachments = []
+        image_attachments = asyncio.new_event_loop().run_until_complete(
+            self.msg.save_attachments_to_local()
+        )
         filenames = self.save_images_to_local(image_attachments)
         self.upload_files_to_pydrive(filenames)
         return f"Uploaded {len(filenames)} to Groupmemes"
