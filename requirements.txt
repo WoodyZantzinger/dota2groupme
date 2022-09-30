@@ -23,7 +23,7 @@ httpx==0.23.0
 isodate==0.6.0
 itsdangerous==1.1.0
 Jinja2==2.11.3
-joblib==1.0.1
+joblib==1.2.0
 MarkupSafe==1.1.1
 msrest==0.6.21
 msrestazure==0.6.4
