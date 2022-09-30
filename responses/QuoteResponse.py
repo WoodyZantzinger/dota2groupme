@@ -17,28 +17,34 @@ class ResponseQuote(ResponseCooldown):
         self.get_referenced_message()
 
     def get_referenced_message(self): # @TODO rework this for new system
-        if not hasattr(self.msg, "attachments"):
-            return
+        if self.msg.is_quoted_message():
+            return self.msg.get_quoted_message()
+        else:
+            return None
 
-        attachments = self.msg.attachments
-
-        found_quoted_message = False
-        for attachment in attachments:
-            if "reply_id" in attachment and attachment['type'] == "reply":
-                found_quoted_message = True
-                break
-
-        if not found_quoted_message:
-            return
-
-        reply_id = attachment['reply_id']
-        group_id = self.msg.group_id
-
-        msg = get_groupme_messages.get_exact_group_message(group_id, reply_id)
-        self.referenced_message = RawMessage(msg['response']['message'])
-        self.group_id = group_id
+        # if not hasattr(self.msg, "attachments"):
+        #     return
+        #
+        # attachments = self.msg.attachments
+        #
+        # found_quoted_message = False
+        # for attachment in attachments:
+        #     if "reply_id" in attachment and attachment['type'] == "reply":
+        #         found_quoted_message = True
+        #         break
+        #
+        # if not found_quoted_message:
+        #     return
+        #
+        # reply_id = attachment['reply_id']
+        # group_id = self.msg.group_id
+        #
+        # msg = get_groupme_messages.get_exact_group_message(group_id, reply_id)
+        # self.referenced_message = RawMessage(msg['response']['message'])
+        # self.group_id = group_id
 
     def get_message_before_referenced_message(self):
+        self.get_referenced_
         message_before = get_groupme_messages.get_list_of_messages_before(self.group_id, self.referenced_message.id)
         return RawMessage(message_before['response']['messages'][0])
 

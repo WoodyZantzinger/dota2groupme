@@ -8,10 +8,12 @@ class Services(IntEnum):
     VIDEO_LOCAL=3
 
 
+
 class OutputMessage:
-    def __init__(self, obj, obj_type=None):
+    def __init__(self, obj, obj_type=None, reply_to=None):
         self.obj = obj
         self.obj_type = obj_type
+        self.reply_to = reply_to
 
     def execute(self, sender):
         func_lookup = {
@@ -23,6 +25,6 @@ class OutputMessage:
 
         func = func_lookup[self.obj_type]
         if not sender.debug:
-            func(self.obj)
+            func(self)
         else:
-            print(self.obj)
+            print(self)

@@ -4,28 +4,30 @@ import time
 
 from data import DataAccess
 from responses.QuoteResponse import ResponseQuote
+from utils import output_message
 
 TOKEN_LOOKUP_KEY = "last_free_token_time"
 TOKEN_COUNT_KEY = "token_count"
 TOKEN_USER_NAME = "name"
 
 DATABASE_ACCESS = DataAccess.DataAccess()
+sUN_UID = DATABASE_ACCESS.get_user("Name", "sUN")['GROUPME_ID']
+
 
 class ResponseSuperheart(ResponseQuote):
-
     RESPONSE_KEY = "#superheart"
-
 
     def __init__(self, msg):
         super(ResponseSuperheart, self).__init__(msg)
 
-    def _respond(self): # @TODO reference new apis
-        if not self.referenced_message:
+    def _respond(self):  # @TODO reference new apis
+        msg_to_give_to = self.msg.get_quoted_message()
+
+        if not msg_to_give_to:
             return self.make_leaderboard()
 
-        msg_to_give_to = self.referenced_message
-        if self.referenced_message.name == "sUN":
-            msg_to_give_to = self.get_message_before_referenced_message()
+        if msg_to_give_to.get_sender_uid == sUN_UID:
+            msg_to_give_to = msg_to_give_to.get_quoted_message()
 
         recipient_id = msg_to_give_to.get_sender_uid()
         recipient_name = msg_to_give_to.name
@@ -41,8 +43,8 @@ class ResponseSuperheart(ResponseQuote):
             coin_storage = dict()
 
         # check if giver can give:
-            # first, are users in coin storage?
-            # set up user if not already
+        # first, are users in coin storage?
+        # set up user if not already
 
         for id in [sender_id, recipient_id]:
             if id not in coin_storage:
@@ -83,7 +85,6 @@ class ResponseSuperheart(ResponseQuote):
 
         if not can_send_token:
             return f"{sender_name} cannot send tokens now."
-            return
 
         # adjust senders counts
         sender_tokens = coin_storage[sender_id][TOKEN_COUNT_KEY] - sending_cost
@@ -96,7 +97,12 @@ class ResponseSuperheart(ResponseQuote):
 
         self.set_response_storage("coins", coin_storage)
 
-        return f"Transferred from {sender_name}[{sender_tokens}/-{sending_cost}] to {recipient_name}[{recipient_tokens}/+1]"
+        return output_message.OutputMessage(
+            obj = f"Transferred from {sender_name}[{sender_tokens}/-{sending_cost}] to {recipient_name}[{recipient_tokens}/+1]",
+            obj_type=output_message.Services.TEXT,
+            reply_to=msg_to_give_to.id,
+        )
+        # return f"Transferred from {sender_name}[{sender_tokens}/-{sending_cost}] to {recipient_name}[{recipient_tokens}/+1]"
 
     def make_leaderboard(self):
         coin_storage = self.get_response_storage("coins")
