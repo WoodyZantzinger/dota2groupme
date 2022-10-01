@@ -114,7 +114,7 @@ class TelegramMessage(BaseMessage):
         super().__init__(raw_msg)
 
     def is_quoted_message(self):
-        return not self.reply_to_message
+        return "reply_to_message" in self.message
 
     def get_quoted_message(self):
         reply_json = self.message['reply_to_message']
