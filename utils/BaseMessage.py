@@ -2,7 +2,7 @@ import urllib
 import uuid
 from enum import Enum
 
-from telegram import PhotoSize, Document
+from telegram import PhotoSize, Document, _bot
 
 from utils import get_groupme_messages
 from utils.rawmessage import RawMessage
@@ -34,8 +34,11 @@ class BaseMessage:
     def is_quoted_message(self):
         raise NotImplemented("Message class doesn't have implementation for is_quoted_message")
 
-    def get_quoted_message(self):
-        raise NotImplemented("Message class doesn't have implementation for get_quoted_message")
+    def get_quoted_message_text(self):
+        raise NotImplemented("Message class doesn't have implementation for get_quoted_message_text")
+
+    def get_quoted_message_sender_uid(self):
+        raise NotImplemented("Message class doesn't have implementation for get_quoted_message_sender_uid")
 
     def save_attachments_to_local(self):
         raise NotImplemented("Message class doesn't have implementation for get_attached_image_urls")
@@ -66,6 +69,29 @@ class GroupMeMessage(BaseMessage):
                 msg = get_groupme_messages.get_exact_group_message(group_id, reply_id)
                 return make_message(RawMessage(msg['response']['message']))
 
+    def get_quoted_message_text(self):
+        for attachment in self.attachments:
+            if "reply_id" in attachment and attachment['type'] == "reply":
+                reply_id = attachment['reply_id']
+                group_id = self.msg.group_id
+                msg = get_groupme_messages.get_exact_group_message(group_id, reply_id)
+                return RawMessage(msg['response']['message']).text
+
+    def get_quoted_message_sender_uid(self):
+        for attachment in self.attachments:
+            if "reply_id" in attachment and attachment['type'] == "reply":
+                reply_id = attachment['reply_id']
+                group_id = self.msg.group_id
+                msg = get_groupme_messages.get_exact_group_message(group_id, reply_id)
+                return RawMessage(msg['response']['message']).sender_id
+
+    def get_quoted_message_id(self):
+        for attachment in self.attachments:
+            if "reply_id" in attachment and attachment['type'] == "reply":
+                reply_id = attachment['reply_id']
+                group_id = self.msg.group_id
+                msg = get_groupme_messages.get_exact_group_message(group_id, reply_id)
+                return RawMessage(msg['response']['message']).id
 
     def save_attachments_to_local(self):
         if not hasattr(self, "attachments"):
@@ -112,6 +138,7 @@ class GroupMeMessage(BaseMessage):
 class TelegramMessage(BaseMessage):
     def __init__(self, raw_msg: RawMessage):
         super().__init__(raw_msg)
+        self.tg_bot = _bot.Bot(DataAccess.get_secrets()["TELEGRAM_API_KEY"])
 
     def is_quoted_message(self):
         return "reply_to_message" in self.message
@@ -121,9 +148,25 @@ class TelegramMessage(BaseMessage):
         formatted_json = reformat_telegram_message(reply_json)
         return TelegramMessage(formatted_json)
 
-    async def save_attachments_to_local(self, bot=None):
+    def get_quoted_message_text(self):
+        return self.message['reply_to_message']['text']
+
+    def get_quoted_message_sender_uid(self):
+        tid = self.message['reply_to_message']['from_user']['id']
+        da = DataAccess.DataAccess()
+        user = da.get_user("TELEGRAM_ID", tid)
+        # get groupme id from user object?
+        if user and "GROUPME_ID" in user.values:
+            return user['GROUPME_ID']
+        else:
+            return None
+
+    def get_quoted_message_id(self):
+        return self.message['reply_to_message']['id']
+
+    async def save_attachments_to_local(self):
         print("oh, hello there.")
-        attachments = self.message['effective_attachment']
+        attachments = self.effective_message['reply_to_message']['effective_attachment']
         attached_items = []
         if type(attachments) == list:
             file_ids = set([item['file_id'][0:15] for item in attachments])
@@ -147,7 +190,7 @@ class TelegramMessage(BaseMessage):
                 file_name=attachments["file_name"],
                 mime_type=attachments["mime_type"],
                 file_size=attachments["file_size"],
-                bot=bot
+                bot=self.tg_bot
             )
             attached_items.append(doc)
 
@@ -161,7 +204,7 @@ class TelegramMessage(BaseMessage):
                 save_name = str(uuid.uuid4()) + ".png"
             # @TODO add a bot object to the photothing initialization so it can save?
             print(save_name)
-            obj = await bot.get_file(file_id=item.file_id)
+            obj = await self.tg_bot.get_file(file_id=item.file_id)
             fname = await obj.download()
             print(fname)
             out_fnames.append(fname.name)

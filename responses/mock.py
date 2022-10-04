@@ -7,6 +7,7 @@ import urllib
 from data import DataAccess
 import json
 from responses.CooldownResponse import ResponseCooldown
+from responses.QuoteResponse import ResponseQuote
 from utils import get_groupme_messages, output_message
 import tempfile
 
@@ -94,44 +95,18 @@ def make_spongebob_image(message_to_mock):
     return path
 
 
-class ResponseMock(ResponseCooldown):
+class ResponseMock(ResponseQuote):
     COOLDOWN = 2 * 60 * 60
     RESPONSE_KEY = "#mock"
     SUN_UPLOADS_FOLDER_ID = ''
 
     def __init__(self, msg):
-        super(ResponseMock, self).__init__(msg, self, ResponseMock.COOLDOWN)
+        super(ResponseMock, self).__init__(msg, ResponseMock.COOLDOWN)
         self.quoting_own_message = False
 
 
-    def get_referenced_text(self): # @TODO this needs to use new interfaces
-        if not hasattr(self.msg, "attachments"):
-            return
-
-        attachments = self.msg.attachments
-
-        found_quoted_message = False
-        for attachment in attachments:
-            if "reply_id" in attachment and attachment['type'] == "reply":
-                found_quoted_message = True
-                break
-
-        if not found_quoted_message:
-            return
-
-        reply_id = attachment['reply_id']
-        group_id = self.msg.group_id
-
-        msg = get_groupme_messages.get_exact_group_message(group_id, reply_id)
-        msg = msg['response']['message']
-
-        if msg['sender_id'] == self.msg.sender_id:
-            self.quoting_own_message = True
-
-        return msg['text']
-
     def _respond(self):
-        referenced_text = self.get_referenced_text()
+        referenced_text = self.get_referenced_message_text()
         if referenced_text and not self.quoting_own_message:
             filename = make_spongebob_image(referenced_text)
             return output_message.OutputMessage(filename, output_message.Services.PHOTO_LOCAL)

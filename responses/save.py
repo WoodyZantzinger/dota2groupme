@@ -153,7 +153,7 @@ class ResponseSave(ResponseCooldown):
         image_attachments = asyncio.new_event_loop().run_until_complete(
             self.msg.save_attachments_to_local()
         )
-        filenames = self.save_images_to_local(image_attachments)
+        filenames = image_attachments # self.save_images_to_local(image_attachments)
         self.upload_files_to_pydrive(filenames)
         return f"Uploaded {len(filenames)} to Groupmemes"
 

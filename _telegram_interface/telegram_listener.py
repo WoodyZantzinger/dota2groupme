@@ -88,10 +88,13 @@ def serialize_update(obj):  # this method can go straight to hell, I will never 
 
 def reformat_telegram_message(update: Update):
     send_text = ""
-    if update.message.text:
+    if update.message and update.message.text:
         send_text = update.message.text
-    if update.message.caption:
+    elif update.message and update.message.caption:
         send_text = update.message.caption
+    if not update.message:
+        print(update)
+
 
     reformat = {
         "attachments": [],
@@ -119,7 +122,10 @@ async def command_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(text)
 
 async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print("echoing" + update.message.text)
+    if update.message and update.message.text:
+        print("echoing > " + update.message.text)
+    else:
+        print("echoing <blank>")
     json = reformat_telegram_message(update)
     #bm = BaseMessage.make_message(json)
     # fnames = await bm.save_attachments_to_local(context.bot)

@@ -21,19 +21,22 @@ class ResponseSuperheart(ResponseQuote):
         super(ResponseSuperheart, self).__init__(msg)
 
     def _respond(self):  # @TODO reference new apis
-        msg_to_give_to = self.msg.get_quoted_message()
+        msg_to_give_to_uid = self.get_referenced_message_uid()
+        msg_to_give_to_id = self.get_referenced_message_id()
 
-        if not msg_to_give_to:
+        if not msg_to_give_to_uid:
             return self.make_leaderboard()
 
-        if msg_to_give_to.get_sender_uid == sUN_UID:
-            msg_to_give_to = msg_to_give_to.get_quoted_message()
+        if False and msg_to_give_to_uid == sUN_UID:
+            return "sUN doesn't need your superhearts"
 
-        recipient_id = msg_to_give_to.get_sender_uid()
-        recipient_name = msg_to_give_to.name
+        recipient_db = DATABASE_ACCESS.get_user("GROUPME_ID", msg_to_give_to_uid)
+
+        recipient_id = msg_to_give_to_uid
+        recipient_name = DATABASE_ACCESS.get_user("GROUPME_ID", msg_to_give_to_uid)['Name']
 
         sender_id = self.msg.get_sender_uid()
-        sender_name = self.msg.name
+        sender_name = DATABASE_ACCESS.get_user("GROUPME_ID", sender_id)['Name']
 
         if (recipient_id == sender_id):
             return "Cannot superheart own message."
@@ -100,7 +103,7 @@ class ResponseSuperheart(ResponseQuote):
         return output_message.OutputMessage(
             obj = f"Transferred from {sender_name}[{sender_tokens}/-{sending_cost}] to {recipient_name}[{recipient_tokens}/+1]",
             obj_type=output_message.Services.TEXT,
-            reply_to=msg_to_give_to.id,
+            reply_to=msg_to_give_to_id,
         )
         # return f"Transferred from {sender_name}[{sender_tokens}/-{sending_cost}] to {recipient_name}[{recipient_tokens}/+1]"
 

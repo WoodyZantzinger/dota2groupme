@@ -12,15 +12,17 @@ class ResponseQuote(ResponseCooldown):
     referenced_message = None
     group_id = None
 
-    def __init__(self, msg):
-        super(ResponseQuote, self).__init__(msg, self, 1)
-        self.get_referenced_message()
+    def __init__(self, msg, cooldown=1):
+        super(ResponseQuote, self).__init__(msg, self, cooldown)
 
-    def get_referenced_message(self): # @TODO rework this for new system
-        if self.msg.is_quoted_message():
-            return self.msg.get_quoted_message()
-        else:
-            return None
+    def get_referenced_message_text(self): # @TODO rework this for new system
+        return self.msg.get_quoted_message_text()
+
+    def get_referenced_message_uid(self):  # @TODO rework this for new system
+        return self.msg.get_quoted_message_sender_uid()
+
+    def get_referenced_message_id(self):  # @TODO rework this for new system
+        return self.msg.get_quoted_message_id()
 
         # if not hasattr(self.msg, "attachments"):
         #     return
@@ -44,7 +46,6 @@ class ResponseQuote(ResponseCooldown):
         # self.group_id = group_id
 
     def get_message_before_referenced_message(self):
-        self.get_referenced_
         message_before = get_groupme_messages.get_list_of_messages_before(self.group_id, self.referenced_message.id)
         return RawMessage(message_before['response']['messages'][0])
 
