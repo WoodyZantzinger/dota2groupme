@@ -15,20 +15,25 @@ class ResponseLogUserIDs(ResponseCooldown):
         super(ResponseLogUserIDs, self).__init__(msg, self, ResponseLogUserIDs.COOLDOWN)
 
     def _respond(self):
-        local_id = str(self.msg.user_id)
-        service = self.msg.from_service
-        name = self.msg.name
+        try:
+            local_id = str(self.msg.user_id)
+            service = self.msg.from_service
+            name = self.msg.name
 
-
-        results_log = self.get_response_storage(ResponseLogUserIDs.LOG_KEY_NAME)
-        results_log = results_log or dict()
-        if service not in results_log:
-            print("adding new user to results log")
-            results_log[service] = {}
-        results_log[service][local_id] = name
-        self.set_response_storage(ResponseLogUserIDs.LOG_KEY_NAME, results_log)
+            results_log = self.get_response_storage(ResponseLogUserIDs.LOG_KEY_NAME)
+            results_log = results_log or dict()
+            if service not in results_log:
+                print("adding new user to results log")
+                results_log[service] = {}
+            results_log[service][local_id] = name
+            self.set_response_storage(ResponseLogUserIDs.LOG_KEY_NAME, results_log)
+        except Exception as e:
+            print("In RLUIDs: " + str(e))
+        return None
 
 
     @classmethod
     def is_relevant_msg(cls, msg):
+        print("\t USER ID LOG > " + msg.text)
+        print("\t USER ID LOG > " + msg.local_id)
         return True
