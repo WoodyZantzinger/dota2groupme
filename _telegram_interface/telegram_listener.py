@@ -121,12 +121,15 @@ async def command_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text + " as a command"
     print(text)
 
+
+import pprint
 async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message and update.message.text:
         print("echoing > " + update.message.text)
     else:
         print("echoing <blank>")
     json = reformat_telegram_message(update)
+    pprint.pprint(json)
     #bm = BaseMessage.make_message(json)
     # fnames = await bm.save_attachments_to_local(context.bot)
     # bm.get_sender_uid()

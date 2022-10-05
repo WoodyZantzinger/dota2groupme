@@ -49,8 +49,8 @@ class ResponseGif(ResponseCooldown):
         EST_9AM = 6 + 5  # 0 indexed hours (9 AM = 8), and 5 hour UTC offset
         EST_5PM = 7 + 12 + 5
         is_during_workday = EST_9AM < hour < EST_5PM
-        print("hour is: {}".format(hour))
-        print("is it a weekday? {}".format(is_weekday))
+        # print("hour is: {}".format(hour))
+        # print("is it a weekday? {}".format(is_weekday))
         url_to_format = ResponseGif.url
         if (is_weekday and is_during_workday):
             print("PG-ifying the gif response")
@@ -90,16 +90,16 @@ class ResponseGif(ResponseCooldown):
         return out
 
     def remove_banned_words(self, search_term):
-        print(f"Original search term = {search_term}")
+        # print(f"Original search term = {search_term}")
         banned_words = self.get_response_storage('banned_words')
-        print(banned_words)
+        # print(banned_words)
         if banned_words:
             things = None
             with open(os.path.join("utils", "things.txt")) as f:
                 things = [line.rstrip('\n') for line in f]
             for bad_word in banned_words:
                 search_term = re.sub(bad_word, random.choice(things), search_term)
-        print(f"Modified search term = {search_term}")
+        # print(f"Modified search term = {search_term}")
         return search_term
 
     def remove_banned_websites(self, image_results):
