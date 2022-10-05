@@ -34,9 +34,8 @@ class ResponseLogUserIDs(ResponseCooldown):
 
     @classmethod
     def is_relevant_msg(cls, msg):
-        print(vars(msg))
         print("\t USER ID LOG > " + msg.text)
-        print("\t USER ID LOG > " + msg.sender_id)
-        print("\t USER ID LOG > " + msg.user_id)
+        print("\t USER ID LOG > " + str(msg.sender_id))
+        print("\t USER ID LOG > " + str(msg.user_id))
 
         return True
