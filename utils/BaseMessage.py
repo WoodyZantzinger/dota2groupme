@@ -244,7 +244,7 @@ class TelegramMessage(BaseMessage):
                 file_unique_id=attachments["file_unique_id"],
                 thumb=None,
                 # file_name=attachments["file_name"],
-                mime_type=attachments["mime_type"],
+                # mime_type=attachments["mime_type"],
                 file_size=attachments["file_size"],
                 bot=self.tg_bot
             )
