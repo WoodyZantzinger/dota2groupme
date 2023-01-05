@@ -129,7 +129,7 @@ async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     else:
         print("echoing <blank>")
     json = reformat_telegram_message(update)
-    pprint.pprint(json)
+    # pprint.pprint(json)
     #bm = BaseMessage.make_message(json)
     # fnames = await bm.save_attachments_to_local(context.bot)
     # bm.get_sender_uid()
@@ -140,7 +140,8 @@ async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
         pass
     url_debug = "http://localhost:5000/message/?type={msg_type}"
     url_live = "https://young-fortress-3393.herokuapp.com/message/?type={msg_type}"
-    r = requests.post(url_debug.format(
+    url = url_live
+    r = requests.post(url.format(
         msg_type="Message"), json=json)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text=json['text'])
 

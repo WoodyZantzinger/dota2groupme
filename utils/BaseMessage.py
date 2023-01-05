@@ -46,6 +46,9 @@ class BaseMessage:
     def get_sender_uid(self):
         raise NotImplemented("Message class doesn't have implementation for get_sender_uid")
 
+    def update_nick(self):
+        raise NotImplemented("Message class doesn't have implementation for update_nick")
+
 
 class GroupMeMessage(BaseMessage):
     def __init__(self, raw_msg: RawMessage):
