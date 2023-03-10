@@ -1,5 +1,6 @@
 import json
 import sys
+import time
 import urllib
 
 import requests
@@ -41,6 +42,7 @@ class GroupMeSender(BaseSender):
         super().__init__(source_msg, bot, debug)
 
     def send_text(self, obj):
+        time.sleep(1)
         try:
             print(u"Sending: '{}".format(obj))
         except Exception as e:
@@ -63,8 +65,10 @@ class GroupMeSender(BaseSender):
             return 'Win'
 
     def send_photo_url(self, obj):
+        time.sleep(1)
         self.send_text(obj)
 
     def send_photo_local(self, obj):
+        time.sleep(1)
         hosted_str = HostImage(obj)
         self.send_text(hosted_str)

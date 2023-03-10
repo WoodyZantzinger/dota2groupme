@@ -34,8 +34,10 @@ class AbstractResponse(object):
         self.msg = msg
 
     def respond(self):
+        response = None
         try:
             response = self._respond()
+            print(response)
             return response
         except:
             exception_string = traceback.format_exc()

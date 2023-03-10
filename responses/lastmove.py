@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+from data.SSO_Manager import SSO_Outcome_Type
 from .AbstractResponse import *
 from .CooldownResponse import *
 from .SSOResponse import *
@@ -33,6 +34,8 @@ class Strava_Last(SSO_Response):
 
     def _respond(self):
         # should already have data???
+        if self.outcome.outcome_type == SSO_Outcome_Type.NO_TOKEN:
+            return self.outcome.auth_url
         if self.outcome.data[0]:
             data = self.outcome[0].data
             miles = data[0]["distance"] / 1609.34

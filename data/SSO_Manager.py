@@ -209,7 +209,7 @@ def get_first_token(clazz, id, code):
     token = json.loads(response.content.decode('utf-8'))
     # check if token has ['scope'] key
     #print(f"GFT::\nToken is {token}")
-    if not token['scope']:
+    if 'scope' not in token or not token['scope']:
         token['scope'] = " ".join(type(clazz).REQUEST_SCOPES)
     if has_all_requested_scopes(token, clazz):
         DataAccess.DataAccess().store_token(clazz, id, token)
@@ -220,6 +220,8 @@ def has_all_requested_scopes(token, clazz):
         return False
     # token['scope'] should be something like "granted-scope-1 granted-scope 2" etc
     # so we can just...
+    if 'scope' not in token:
+        return False
     for scope in type(clazz).REQUEST_SCOPES:
         if scope not in token['scope']:
             return False
