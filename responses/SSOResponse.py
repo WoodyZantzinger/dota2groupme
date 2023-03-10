@@ -49,7 +49,7 @@ class SSO_Response(AbstractResponse):
         return self.response
 
     def make_auth_state(self):
-        return self.clazzname + "|" + self.msg.sender_id
+        return self.clazzname + "|" + str(self.msg.sender_id)
         pass
 
     def id_key_name(self):
