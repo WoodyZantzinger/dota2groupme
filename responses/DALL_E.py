@@ -21,7 +21,7 @@ class DallE(ResponseCooldown):
         response = openai.Image.create(
             prompt=self.msg.text.partition(' ')[2],
             n=1,
-            size="1024x1024"
+            size="512x512"
         )
 
-        return response['data'][0]['url']
+        return output_message.OutputMessage(response['data'][0]['url'], output_message.Services.PHOTO_URL)
