@@ -43,13 +43,16 @@ class Strava_Last(SSO_Response):
             data = self.outcome[0].data
             miles = data[0]["distance"] / 1609.34
             id = data[0]["id"]
-            time = data[0]["elapsed_time"] / 60 / miles
+            duration = data[0]["elapsed_time"]
+            minutes = int(duration / 60)
+            seconds = int(duration % 60)
+            time = duration / 60 / miles
             location = data[0]["location_city"]
             if not location:
                 location = "<Unknown location>"
             move_type = data[0]["type"]
             date = dateutil.parser.parse(data[0]["start_date_local"]).date()
-            self.response = str(date) + ": You went " + "{0:.2f}".format(miles) + " miles at a " + "{0:.2f}".format(time) + "minute/mile pace in " + location + " (" + move_type + ")"
+            self.response = str(date) + ": You went " + "{0:.2f}".format(miles) + " miles at a " + "{0:.2f}".format(time) + f"min/mile pace ({minutes}m {seconds}s) in " + location + " (" + move_type + ")"
             self.response = self.response + '\n' + r"https://www.strava.com/activities/" + str(id)
         super(Strava_Last, self)._respond()
         return self.response
