@@ -266,6 +266,7 @@ def message():
 
             if output.obj:
                 output.execute(sender)
+                print(output.obj)
                 # send_message(output, new_message["group_id"])
         if output == None:
             return 'WARNING - Response triggered but not sent'

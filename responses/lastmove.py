@@ -34,9 +34,12 @@ class Strava_Last(SSO_Response):
 
     def _respond(self):
         # should already have data???
-        if self.outcome.outcome_type == SSO_Outcome_Type.NO_TOKEN:
-            return self.outcome.auth_url
-        if self.outcome.data[0]:
+        try:
+            if self.outcome.outcome_type == SSO_Outcome_Type.NO_TOKEN:
+                return self.outcome.auth_url
+        except:
+            pass
+        if self.outcome[0].data:
             data = self.outcome[0].data
             miles = data[0]["distance"] / 1609.34
             time = data[0]["elapsed_time"] / 60 / miles
