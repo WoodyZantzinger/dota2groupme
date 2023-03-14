@@ -328,6 +328,7 @@ def oauth_callback():
     parts = state.split("|")
     source_clazz_name = parts[0]
     sender_id = parts[1]
+    print(f"Found sender_id = {sender_id}")
     matched_clazz = None
     for clazz in RESPONSES_CACHE:
         if clazz.__name__ == source_clazz_name:
