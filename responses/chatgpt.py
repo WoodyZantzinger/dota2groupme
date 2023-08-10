@@ -21,7 +21,7 @@ class ResponseChat(ResponseCooldown):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "system", "content": "You are an assistant who provides short, concise answers short enough to fit in a text message"},
                 {"role": "user", "content": self.msg.text.partition(' ')[2]}
             ]
         )
