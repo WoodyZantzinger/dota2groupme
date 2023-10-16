@@ -22,7 +22,7 @@ class TelegramSender(BaseSender):
         )
     def send_photo_url(self, obj):
         asyncio.new_event_loop().run_until_complete(
-            self.bot.sendDocument(chat_id=self.source_msg.group_id, document=obj.obj, reply_to_message_id=obj.reply_to, has_spoiler=obj.spoiler)
+            self.bot.send_animation(chat_id=self.source_msg.group_id, animation=obj.obj, reply_to_message_id=obj.reply_to, has_spoiler=obj.spoiler)
         )
     def send_video_local(self, obj):
         raise NotImplemented("send_video_local not implemented for BaseSender object")
