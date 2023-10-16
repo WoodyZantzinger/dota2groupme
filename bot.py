@@ -334,7 +334,7 @@ def oauth_callback():
         if clazz.__name__ == source_clazz_name:
             matched_clazz = clazz
     dummy_msg = rawmessage.RawMessage({"sender_id": sender_id, 'text': ''})
-    dummy_msg = BaseMessage.make_message(dummy_msg) # ????
+    dummy_msg = BaseMessage.make_message(dummy_msg) # ????4
     clazz_obj = matched_clazz(dummy_msg)
     matched_clazz.exchange_code_for_first_key(code, clazz_obj, sender_id)
     return f"Success, you can now use {matched_clazz.RESPONSE_KEY}"

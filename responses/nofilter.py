@@ -82,7 +82,8 @@ class NoFilter(ResponseCooldown):
                         first_image_result = image_results.value[randrange(max)]
                         return output_message.OutputMessage(
                             first_image_result.content_url,
-                            output_message.Services.PHOTO_URL
+                            output_message.Services.PHOTO_URL,
+                            spoiler=True
                         )
                         # out = HostImage(first_image_result.content_url)
                 else:

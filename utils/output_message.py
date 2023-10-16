@@ -10,10 +10,11 @@ class Services(IntEnum):
 
 
 class OutputMessage:
-    def __init__(self, obj, obj_type=None, reply_to=None):
+    def __init__(self, obj, obj_type=None, reply_to=None, spoiler=False):
         self.obj = obj
         self.obj_type = obj_type
         self.reply_to = reply_to
+        self.spoiler = spoiler
 
     def execute(self, sender):
         func_lookup = {
