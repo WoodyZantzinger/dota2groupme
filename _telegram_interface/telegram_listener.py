@@ -144,8 +144,7 @@ async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     print(type(json_content))
     #print(json_content)
     import json
-    json_str = json.dumps(str(json_content))
-    print(json_str)
+    json_content = str(json_content)
     r = requests.post(url.format(
         msg_type="Message"), json=json_content)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text=json['text'])
