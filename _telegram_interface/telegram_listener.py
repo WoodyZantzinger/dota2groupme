@@ -144,7 +144,7 @@ async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     print(type(json_content))
     #print(json_content)
     import json
-    json_str = json.dumps(json_content)
+    json_str = json.dumps(str(json_content))
     print(json_str)
     r = requests.post(url.format(
         msg_type="Message"), json=json_content)
