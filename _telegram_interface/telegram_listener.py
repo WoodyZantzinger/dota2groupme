@@ -86,6 +86,19 @@ def serialize_update(obj):  # this method can go straight to hell, I will never 
         print(obj)
         raise e
 
+def delete_keys_from_dict(dict_del, lst_keys):
+    """
+    Delete the keys present in lst_keys from the dictionary.
+    Loops recursively over nested dictionaries.
+    """
+    dict_foo = dict_del.copy()  #Used as iterator to avoid the 'DictionaryHasChanged' error
+    for field in dict_foo.keys():
+        if field in lst_keys:
+            del dict_del[field]
+        if type(dict_foo[field]) == dict:
+            delete_keys_from_dict(dict_del[field], lst_keys)
+    return dict_del
+
 def reformat_telegram_message(update: Update):
     send_text = ""
     if update.message and update.message.text:
@@ -112,6 +125,8 @@ def reformat_telegram_message(update: Update):
     }
 
     other_data = serialize_update(update)
+
+    other_data = delete_keys_from_dict(other_data, ['entities'])
 
     sorry = str(other_data)
     sorry = sorry.replace('\'', '\"')
