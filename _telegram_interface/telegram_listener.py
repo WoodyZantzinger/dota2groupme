@@ -112,8 +112,11 @@ def reformat_telegram_message(update: Update):
     }
 
     other_data = serialize_update(update)
-    print(other_data)
-    reformat.update(other_data)
+
+    sorry = str(other_data)
+    sorry = json.loads(sorry)
+    reformat.update(sorry)
+
     json.dumps(reformat)
 
     return reformat
