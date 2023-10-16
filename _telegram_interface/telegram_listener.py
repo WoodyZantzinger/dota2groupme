@@ -111,8 +111,10 @@ def reformat_telegram_message(update: Update):
         "from_service": BaseMessage.Services.TELEGRAM.value,
     }
 
+    json.dumps(reformat)
     other_data = serialize_update(update)
     reformat.update(other_data)
+    json.dumps(reformat)
 
     return reformat
 
@@ -144,7 +146,8 @@ async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     print(type(json_content))
     #print(json_content)
     import json
-    json_content = str(json_content)
+    json_str = json.dumps(json_content)
+    print(json_str)
     r = requests.post(url.format(
         msg_type="Message"), json=json_content)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text=json['text'])
