@@ -114,7 +114,9 @@ def reformat_telegram_message(update: Update):
     other_data = serialize_update(update)
 
     sorry = str(other_data)
+    sorry = sorry.replace('\'', '\"')
     sorry = sorry.replace("True", "true")
+    sorry = sorry.replace("False", "false")
     print(sorry)
     sorry = json.loads(sorry)
     reformat.update(sorry)
