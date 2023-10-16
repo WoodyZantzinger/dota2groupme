@@ -141,6 +141,8 @@ async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     url_debug = "http://localhost:5000/message/?type={msg_type}"
     url_live = "https://young-fortress-3393.herokuapp.com/message/?type={msg_type}"
     url = url_live
+    print(type(json))
+    print(json)
     r = requests.post(url.format(
         msg_type="Message"), json=json)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text=json['text'])
