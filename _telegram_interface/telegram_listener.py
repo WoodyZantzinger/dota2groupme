@@ -111,8 +111,8 @@ def reformat_telegram_message(update: Update):
         "from_service": BaseMessage.Services.TELEGRAM.value,
     }
 
-    json.dumps(reformat)
     other_data = serialize_update(update)
+    print(other_data)
     reformat.update(other_data)
     json.dumps(reformat)
 
