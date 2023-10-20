@@ -234,12 +234,15 @@ def make_responses(categories, msg):
 tg_bot = _bot.Bot(DataAccess.get_secrets()["TELEGRAM_API_KEY"])
 
 
-def get_sender_service(msg):
+def get_sender_service(msg, override=None):
     sender_services = {
         BaseMessage.Services.GROUPME.value: (groupme_sender.GroupMeSender, None),
         BaseMessage.Services.TELEGRAM.value: (telegram_sender.TelegramSender, tg_bot),
     }
-    service, bot_obj = sender_services[msg.from_service]
+    if override:
+        service, bot_obj = sender_services[override]
+    else:
+        service, bot_obj = sender_services[msg.from_service]
     return service(msg, bot=bot_obj, debug=DEBUG)
 
 
@@ -428,7 +431,11 @@ def remindme_callback():
                 triggered_messages.append(reminder)
 
         users = DataAccess.DataAccess().get_users()
-        people = {user.values['Name']: user.values['GROUPME_ID'] for user in users}
+        people = {}
+        for user in users:
+            if 'GROUPME_ID' in user.values and 'Name' in user.values:
+                people[user.values['Name']] = user.values["GROUPME_ID"]
+        # people = {user.values['Name']: user.values['GROUPME_ID'] for user in users}
         out = []
         for item in triggered_messages:
             for name in people:
@@ -437,7 +444,7 @@ def remindme_callback():
                         msg = item["message"].encode('ascii', errors='ignore')
                         send_group = item["groupid"]
                         text = "Hey, {}: {}".format(name, msg)
-                        out.append((text, send_group))
+                        out.append((text, send_group, item["time"]))
                         break
                 except Exception as e:
                     traceback.print_exc()
@@ -446,10 +453,16 @@ def remindme_callback():
             reminders.remove(item)
         rm.set_response_storage("reminders", reminders)
         pass
+
+        msg =  BaseMessage.make_message()
+
+        sender = get_sender_service(BaseMessage.Services.TELEGRAM)
+
         for msg in out:
+            output = output_message.OutputMessage(text, output_message.Services.TEXT)
             text = msg[0]
             group = msg[1]
-            send_message(text, groupID=group)
+            #send_message(text, groupID=group)
         return out.__str__()
     except Exception as e:
         (e)

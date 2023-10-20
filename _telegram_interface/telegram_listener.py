@@ -126,7 +126,7 @@ def reformat_telegram_message(update: Update):
 
     other_data = serialize_update(update)
 
-    other_data = delete_keys_from_dict(other_data, ['entities'])
+    other_data = delete_keys_from_dict(other_data, ["entities", "api_kwargs"])
 
     sorry = str(other_data)
     sorry = sorry.replace('\'', '\"')
