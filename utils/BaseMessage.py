@@ -143,9 +143,10 @@ class TelegramMessage(BaseMessage):
     def __init__(self, raw_msg: RawMessage):
         super().__init__(raw_msg)
         self.effective_message = None
-        self.tg_bot = _bot.Bot(DataAccess.get_secrets()["TELEGRAM_API_KEY"])
         print("Created a `TelegramMessage`: ")
         print(jsonpickle.encode(self))
+        self.tg_bot = _bot.Bot(DataAccess.get_secrets()["TELEGRAM_API_KEY"])
+
 
     def is_quoted_message(self):
         return "reply_to_message" in self.message
