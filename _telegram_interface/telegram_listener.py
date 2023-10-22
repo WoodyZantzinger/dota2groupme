@@ -1,6 +1,7 @@
 import datetime
 import logging
 
+import jsonpickle as jsonpickle
 import requests
 import os
 
@@ -124,17 +125,20 @@ def reformat_telegram_message(update: Update):
         "from_service": BaseMessage.Services.TELEGRAM.value,
     }
 
-    other_data = serialize_update(update)
+    full_message_serialized = jsonpickle.encode(update)
+    addon_json = json.loads(full_message_serialized)
+    #other_data = serialize_update(update)
 
-    other_data = delete_keys_from_dict(other_data, ["entities", "api_kwargs"])
+    #other_data = delete_keys_from_dict(other_data, ["entities", "api_kwargs"])
 
-    sorry = str(other_data)
-    sorry = sorry.replace('\'', '\"')
-    sorry = sorry.replace("True", "true")
-    sorry = sorry.replace("False", "false")
-    print(sorry)
-    sorry = json.loads(sorry)
-    reformat.update(sorry)
+    #sorry = str(other_data)
+    #sorry = sorry.replace('\'', '\"')
+    #sorry = sorry.replace("True", "true")
+    #sorry = sorry.replace("False", "false")
+    #print(sorry)
+    #sorry = json.loads(sorry)
+
+    reformat.update(addon_json)
 
     json.dumps(reformat)
 

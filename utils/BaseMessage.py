@@ -141,7 +141,10 @@ class GroupMeMessage(BaseMessage):
 class TelegramMessage(BaseMessage):
     def __init__(self, raw_msg: RawMessage):
         super().__init__(raw_msg)
+        self.effective_message = None
         self.tg_bot = _bot.Bot(DataAccess.get_secrets()["TELEGRAM_API_KEY"])
+        print("Created a `TelegramMessage`: ")
+        print(self)
 
     def is_quoted_message(self):
         return "reply_to_message" in self.message
@@ -210,7 +213,6 @@ class TelegramMessage(BaseMessage):
         pass
 
     async def save_attachments_to_local(self):
-        print("oh, hello there.")
         attachments = self.effective_message['reply_to_message']['effective_attachment']
         attached_items = []
         # types = {
