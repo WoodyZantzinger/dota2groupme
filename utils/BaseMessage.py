@@ -2,6 +2,7 @@ import urllib
 import uuid
 from enum import Enum
 
+import jsonpickle
 from telegram import PhotoSize, Document, _bot
 
 from utils import get_groupme_messages
@@ -144,7 +145,7 @@ class TelegramMessage(BaseMessage):
         self.effective_message = None
         self.tg_bot = _bot.Bot(DataAccess.get_secrets()["TELEGRAM_API_KEY"])
         print("Created a `TelegramMessage`: ")
-        print(self)
+        print(jsonpickle.encode(self))
 
     def is_quoted_message(self):
         return "reply_to_message" in self.message
