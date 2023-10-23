@@ -236,7 +236,7 @@ class TelegramMessage(BaseMessage):
         for key in fnames:
             obj = getattr(self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message, key)
             print(obj)
-            if type(obj) == list:
+            if type(obj) == list or type(obj) == tuple:
                 obj = sorted(obj, key=lambda x: x.file_size, reverse=True)[0]
             print(obj)
             attached_items.append(obj)
