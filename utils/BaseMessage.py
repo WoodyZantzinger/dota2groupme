@@ -158,10 +158,10 @@ class TelegramMessage(BaseMessage):
         return TelegramMessage(formatted_json)
 
     def get_quoted_message_text(self):
-        return self.message['reply_to_message']['text']
+        return self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message.text
 
     def get_quoted_message_sender_uid(self):
-        tid = self.message['reply_to_message']['from_user']['id']
+        tid = self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message.from_user.id
         da = DataAccess.DataAccess()
         user = da.get_user("TELEGRAM_ID", tid)
         # get groupme id from user object?
@@ -171,7 +171,7 @@ class TelegramMessage(BaseMessage):
             return None
 
     def get_quoted_message_id(self):
-        return self.message['reply_to_message']['id']
+        return self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message.id
 
     @staticmethod
     async def save_photos(obj):
