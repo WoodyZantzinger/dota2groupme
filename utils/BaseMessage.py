@@ -280,7 +280,7 @@ class TelegramMessage(BaseMessage):
             # # @TODO add a bot object to the photothing initialization so it can save?
             # print(save_name)
             obj = await self.tg_bot.get_file(file_id=item.file_id)
-            fname = await obj.download()
+            fname = await obj.download_to_drive()
             print(fname)
             out_fnames.append(fname.name)
         return out_fnames
