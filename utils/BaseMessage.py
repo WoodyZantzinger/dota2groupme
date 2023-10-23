@@ -31,6 +31,8 @@ class BaseMessage:
         self.response = None
         for k in raw_msg.__dict__:
             print(f"{k} ==> {getattr(raw_msg, k)}")
+            val = getattr(raw_msg, k)
+            val = jsonpickle.decode(val)
             setattr(self, k, getattr(raw_msg, k))
 
     def is_quoted_message(self):
