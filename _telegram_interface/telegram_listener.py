@@ -109,40 +109,24 @@ def reformat_telegram_message(update: Update):
     if not update.message:
         print(update)
 
-    try:
-        reformat = {
-            "attachments": [],
-            "avatar_url": "",
-            "created_at": int(time.mktime(update.message.date.timetuple())),
-            "group_id": update.message.chat_id,
-            "id": update.message.message_id,
-            "name": update.message.from_user.name,
-            "sender_id": update.message.from_user.id,
-            "source_guid": "GUID",
-            "system": False,
-            "text": send_text,
-            "user_id": update.message.from_user.id,
-            "from_service": BaseMessage.Services.TELEGRAM.value,
-        }
-    except Exception as e:
-        pass
+    reformat = {
+        "attachments": [],
+        "avatar_url": "",
+        "created_at": int(time.mktime(update.message.date.timetuple())),
+        "group_id": update.message.chat_id,
+        "id": update.message.message_id,
+        "name": update.message.from_user.name,
+        "sender_id": update.message.from_user.id,
+        "source_guid": "GUID",
+        "system": False,
+        "text": send_text,
+        "user_id": update.message.from_user.id,
+        "from_service": BaseMessage.Services.TELEGRAM.value,
+    }
 
     full_message_serialized = jsonpickle.encode(update)
-    addon_json = json.loads(full_message_serialized)
-    #other_data = serialize_update(update)
 
-    #other_data = delete_keys_from_dict(other_data, ["entities", "api_kwargs"])
-
-    #sorry = str(other_data)
-    #sorry = sorry.replace('\'', '\"')
-    #sorry = sorry.replace("True", "true")
-    #sorry = sorry.replace("False", "false")
-    #print(sorry)
-    #sorry = json.loads(sorry)
-
-    reformat.update(addon_json)
-
-    json.dumps(reformat)
+    reformat["TELEGRAM_SERIALIZED_MESSAGE"] = full_message_serialized
 
     return reformat
 

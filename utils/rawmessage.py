@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import jsonpickle
+
 from utils import GroupMeMessage
 
 
@@ -25,7 +27,11 @@ class RawMessage(object):
         self.from_service = ""  # @TODO CHANGE THIS TO NONE ALSO
 
         for item in self.rawjson.keys():
-            setattr(self, item, self.rawjson[item])
+            if (item == "TELEGRAM_SERIALIZED_MESSAGE"):
+                value = jsonpickle.decode(self.rawjson[item])
+                setattr(self, item, value)
+            else:
+                setattr(self, item, self.rawjson[item])
         self.replace_emojis()
 
     def replace_emojis(self):
