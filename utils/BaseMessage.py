@@ -234,8 +234,8 @@ class TelegramMessage(BaseMessage):
                 fnames.append(types[key](self))
 
         for key in fnames:
-            print(self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message.key)
-            attached_items.append(getattr(self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message, key))
+            obj = getattr(self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message, key)
+            attached_items.append(obj)
 
         """
         if type(attachments) == list:
