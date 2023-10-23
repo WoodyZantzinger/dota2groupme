@@ -272,6 +272,8 @@ class TelegramMessage(BaseMessage):
 
         print(attached_items)
         for item in attached_items:
+            if (item == None):
+                pass
             # save_name = ""
             # try:
             #     save_name = item.file_name
