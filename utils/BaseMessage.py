@@ -218,7 +218,7 @@ class TelegramMessage(BaseMessage):
     async def save_attachments_to_local(self):
         print("serialized message was: ")
         print(dir(self))
-        print(self.TELEGRAM_SERIALIZED_MESSAGE)
+        print(self.TELEGRAM_SERIALIZED_MESSAGE.message)
         attachments = self.effective_message['reply_to_message']['effective_attachment']
         attached_items = []
         # types = {
