@@ -231,7 +231,7 @@ class TelegramMessage(BaseMessage):
         fnames = []
         for key in types:
             if hasattr(self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message, key):
-                fnames.append(types[key](self))
+                fnames.append(key)
 
         for key in fnames:
             obj = getattr(self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message, key)
