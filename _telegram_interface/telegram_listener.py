@@ -109,21 +109,23 @@ def reformat_telegram_message(update: Update):
     if not update.message:
         print(update)
 
-
-    reformat = {
-        "attachments": [],
-        "avatar_url": "",
-        "created_at": int(time.mktime(update.message.date.timetuple())),
-        "group_id": update.message.chat_id,
-        "id": update.message.message_id,
-        "name": update.message.from_user.name,
-        "sender_id": update.message.from_user.id,
-        "source_guid": "GUID",
-        "system": False,
-        "text": send_text,
-        "user_id": update.message.from_user.id,
-        "from_service": BaseMessage.Services.TELEGRAM.value,
-    }
+    try:
+        reformat = {
+            "attachments": [],
+            "avatar_url": "",
+            "created_at": int(time.mktime(update.message.date.timetuple())),
+            "group_id": update.message.chat_id,
+            "id": update.message.message_id,
+            "name": update.message.from_user.name,
+            "sender_id": update.message.from_user.id,
+            "source_guid": "GUID",
+            "system": False,
+            "text": send_text,
+            "user_id": update.message.from_user.id,
+            "from_service": BaseMessage.Services.TELEGRAM.value,
+        }
+    except Exception as e:
+        pass
 
     full_message_serialized = jsonpickle.encode(update)
     addon_json = json.loads(full_message_serialized)
