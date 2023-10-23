@@ -235,8 +235,9 @@ class TelegramMessage(BaseMessage):
 
         for key in fnames:
             print(self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message.key)
+            attached_items.append(self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message.key)
 
-
+        """
         if type(attachments) == list:
             file_ids = set([item['file_id'][0:15] for item in attachments])
             for fid in file_ids:
@@ -262,8 +263,9 @@ class TelegramMessage(BaseMessage):
                 bot=self.tg_bot
             )
             attached_items.append(doc)
-
+        """
         out_fnames = []
+
         print(attached_items)
         for item in attached_items:
             # save_name = ""
