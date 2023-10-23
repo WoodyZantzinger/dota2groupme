@@ -218,21 +218,21 @@ class TelegramMessage(BaseMessage):
     async def save_attachments_to_local(self):
         print("serialized message was: ")
         print(dir(self))
-        print(self.TELEGRAM_SERIALIZED_MESSAGE.message)
+        print(self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message)
         attachments = self.effective_message['reply_to_message']['effective_attachment']
         attached_items = []
-        # types = {
-        #     'photo': TelegramMessage.save_photos,
-        #     'video': TelegramMessage.save_video,
-        #     'video_note': TelegramMessage.save_video,
-        #     'voice': TelegramMessage.save_audio,
-        #     'audio': TelegramMessage.save_audio,
-        # }
-        #
-        # fnames = []
-        # for key in types:
-        #     if key in self.effective_message['reply_to_message']:
-        #         fnames.append(types[key](self))
+        types = {
+            'photo': TelegramMessage.save_photos,
+            'video': TelegramMessage.save_video,
+            'video_note': TelegramMessage.save_video,
+            'voice': TelegramMessage.save_audio,
+            'audio': TelegramMessage.save_audio,
+        }
+
+        fnames = []
+        for key in types:
+            if hasattr(self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message, key)
+                fnames.append(types[key](self))
 
 
         if type(attachments) == list:
