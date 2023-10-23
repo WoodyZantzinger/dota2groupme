@@ -230,7 +230,7 @@ class TelegramMessage(BaseMessage):
 
         fnames = []
         for key in types:
-            if hasattr(self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message, key)
+            if hasattr(self.TELEGRAM_SERIALIZED_MESSAGE.message.reply_to_message, key):
                 fnames.append(types[key](self))
 
         for key in fnames:
