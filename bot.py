@@ -504,7 +504,6 @@ def user_loader(username):
 
 @login_manager.request_loader
 def request_loader(req):
-    print("RLLLL")
     da = DataAccess.DataAccess()
     admins = da.get_admins()
     username = req.form.get('username')
