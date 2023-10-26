@@ -1,5 +1,4 @@
 import random
-import os
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
@@ -20,9 +19,9 @@ def get_random_picture_url(drive):
         return None
 
     random_picture = random.choice(picture_files)
-    return random_picture['downloadUrl']
+    return random_picture['webContentLink']
 
-def main():
+def _respond():
     # Authenticate with Google Drive
     drive = authenticate_google_drive()
 
@@ -30,10 +29,7 @@ def main():
     random_picture_url = get_random_picture_url(drive)
 
     if random_picture_url:
-        # You can now post the random picture URL to your desired platform
-        print(f"Random Picture URL: {random_picture_url}")
+        # Return the response containing the random picture URL
+        return f"Random Picture URL: {random_picture_url}"
     else:
-        print("No pictures found in the specified folder.")
-
-if __name__ == '__main__':
-    main()
+        return "No pictures found in the specified folder."
