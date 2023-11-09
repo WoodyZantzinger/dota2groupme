@@ -125,6 +125,18 @@ def like_message(convoID, messageID):
     print(r.status_code, r.reason)
     return r.status_code
 
+@app.errorhandler(Exception)
+def all_exception_handler(error):
+    exc = traceback.format_exc()
+    now = str(datetime.datetime.now())
+    error_log_data = {'stack_trace': exc, 'date': now}
+    da = DataAccess.DataAccess()
+    exceptions = da.get_document_item('Exceptions', 0)
+    exceptions = json.loads(exceptions)
+    exceptions['Exceptions'].append(error_log_data)
+    exceptions = json.dumps(exceptions)
+    da.set_document_item('Exceptions', 0, exceptions)
+    return "Exception Logged!"
 
 @app.route('/statistics')
 def do_last_day_message_statistics():
@@ -562,6 +574,21 @@ def database_update():
     success = da.set_document_item(collection_name, doc_idx, newjson)
     print(f"update success = {success}")
     return str(success)
+
+@flask_login.login_required
+@app.route('/exceptions')
+def show_exceptions():
+    da = DataAccess.DataAccess()
+    exceptions = da.get_document_item('Exceptions', 0)
+    exceptions = json.loads(exceptions)
+    exception_list = exceptions['Exceptions']
+    exceptions = [(item['date'], item['stack_trace']) for item in exception_list]
+    sorted_exceptions = sorted(exceptions, key = lambda item:item[0])
+    out = "<style>div {border-style: dotted; width: max-content;} p {font-family: Arial;}</style>"
+    templ = "<p>{date}</p><div><pre>{trace}</pre></div><br><br>"
+    for date, stack_trace in sorted_exceptions:
+        out = out + templ.format(date=date, trace=stack_trace)
+    return out
 
 
 @app.route('/database_management')
