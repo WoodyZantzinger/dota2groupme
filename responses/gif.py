@@ -71,8 +71,8 @@ class ResponseGif(ResponseCooldown):
                 print(request_url)
                 out = response.json()["data"]["image_url"]
                 return output_message.OutputMessage(out, output_message.Services.PHOTO_URL)
-            except Exception:
-                out = "Something went wrong"
+            except Exception as e:
+                raise e
 
         if SERVICE_TO_USE == GifService.AZURE:
             #use Azure
