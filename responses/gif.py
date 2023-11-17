@@ -12,6 +12,13 @@ from azure.cognitiveservices.search.imagesearch import ImageSearchClient
 from msrest.authentication import CognitiveServicesCredentials
 from utils import output_message
 import urllib.request
+from enum import Enum
+
+class GifService(Enum):
+    GIPHY = 1
+    AZURE = 2
+
+SERVICE_TO_USE = GifService.GIPHY
 
 class ResponseGif(ResponseCooldown):
 
@@ -56,17 +63,18 @@ class ResponseGif(ResponseCooldown):
             print("PG-ifying the gif response")
             url_to_format = ResponseGif.url_9to5
 
-        if search_term == "":
+        if SERVICE_TO_USE == GifService.GIPHY:
             #use Giphy
             request_url = url_to_format.format(term=search_term, key=giphy_key)
             response = requests.get(request_url)
             try:
                 print(request_url)
                 out = response.json()["data"]["image_url"]
+                return output_message.OutputMessage(out, output_message.Services.PHOTO_URL)
             except Exception:
                 out = "Something went wrong"
 
-        else:
+        if SERVICE_TO_USE == GifService.AZURE:
             #use Azure
             search_term = search_term.encode("utf-8")
             client = ImageSearchClient(endpoint="https://api.cognitive.microsoft.com", credentials=CognitiveServicesCredentials(azure_key))
