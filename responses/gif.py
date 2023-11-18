@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*
 import random
 import re
+from urllib import parse, request
 
 from .AbstractResponse import *
 from .CooldownResponse import *
@@ -28,8 +29,7 @@ class ResponseGif(ResponseCooldown):
 
     COOLDOWN = 1 * 60 * 60 * 3 / 2
 
-    url = 'http://api.giphy.com/v1/gifs/random?api_key={key}&tag={term}&rating=pg'
-    url_9to5 = 'http://api.giphy.com/v1/gifs/random?api_key={key}&tag={term}&rating=g'
+    url = "http://api.giphy.com/v1/gifs/random"
 
     def __init__(self, msg):
         super(ResponseGif, self).__init__(msg, self, ResponseGif.COOLDOWN)
@@ -58,19 +58,27 @@ class ResponseGif(ResponseCooldown):
         is_during_workday = EST_9AM < hour < EST_5PM
         # print("hour is: {}".format(hour))
         # print("is it a weekday? {}".format(is_weekday))
-        url_to_format = ResponseGif.url
+
+        rating = "pg"
         if (is_weekday and is_during_workday):
             print("PG-ifying the gif response")
-            url_to_format = ResponseGif.url_9to5
+            rating = "g"
 
         if SERVICE_TO_USE == GifService.GIPHY:
             #use Giphy
-            request_url = url_to_format.format(term=search_term, key=giphy_key)
-            response = requests.get(request_url)
+            params = parse.urlencode({
+                "q": search_term,
+                "api_key": giphy_key,
+                "rating": rating
+            })
+
+
             try:
-                print(request_url)
-                out = response.json()["data"]["image_url"]
-                return output_message.OutputMessage(out, output_message.Services.PHOTO_URL)
+                with request.urlopen("".join((ResponseGif.url, "?", params))) as response:
+                    data = json.loads(response.read())
+
+                url = data["data"]["images"]["original"]["url"]
+                return output_message.OutputMessage(url, output_message.Services.PHOTO_URL)
             except Exception as e:
                 raise e
 
