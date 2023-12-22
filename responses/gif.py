@@ -67,7 +67,7 @@ class ResponseGif(ResponseCooldown):
         if SERVICE_TO_USE == GifService.GIPHY:
             #use Giphy
             params = parse.urlencode({
-                "q": search_term,
+                "tag": search_term,
                 "api_key": giphy_key,
                 "rating": rating
             })
