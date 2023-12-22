@@ -12,6 +12,9 @@ from azure.cognitiveservices.search.imagesearch import ImageSearchClient
 from msrest.authentication import CognitiveServicesCredentials
 import urllib.request
 from utils import output_message
+from .gif import GifService
+
+SERVICE_TO_USE = GifService.GIPHY
 
 class NoFilter(ResponseCooldown):
 
@@ -54,7 +57,7 @@ class NoFilter(ResponseCooldown):
 
             url_to_format = NoFilter.url
 
-            if search_term == "":
+            if search_term == GifService.GIPHY:
                 #use Giphy
                 request_url = url_to_format.format(term=search_term, key=giphy_key)
                 response = requests.get(request_url)
