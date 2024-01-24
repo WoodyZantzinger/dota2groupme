@@ -20,12 +20,12 @@ class GifService(Enum):
     GIPHY = 1
     AZURE = 2
 
-SERVICE_TO_USE = GifService.GIPHY
+
 
 class ResponseGif(ResponseCooldown):
 
     message = "#gif"
-
+    SERVICE_TO_USE = GifService.GIPHY
     RESPONSE_KEY = "#gif"
 
     COOLDOWN = 1 * 60 * 60 * 3 / 2
@@ -65,7 +65,7 @@ class ResponseGif(ResponseCooldown):
             print("PG-ifying the gif response")
             rating = "g"
 
-        if SERVICE_TO_USE == GifService.GIPHY:
+        if self.SERVICE_TO_USE == GifService.GIPHY:
             #use Giphy
             params = parse.urlencode({
                 "api_key": giphy_key,
@@ -76,7 +76,7 @@ class ResponseGif(ResponseCooldown):
 
 
             try:
-                response = requests.get(url)
+                response = requests.get(self.url, params=params)
                 data = response.json()
 
                 if response.status_code == 200 and data["data"]:
@@ -86,7 +86,7 @@ class ResponseGif(ResponseCooldown):
             except Exception as e:
                 raise e
 
-        if SERVICE_TO_USE == GifService.AZURE:
+        if self.SERVICE_TO_USE == GifService.AZURE:
             #use Azure
             search_term = search_term.encode("utf-8")
             client = ImageSearchClient(endpoint="https://api.cognitive.microsoft.com", credentials=CognitiveServicesCredentials(azure_key))
