@@ -14,6 +14,7 @@ from msrest.authentication import CognitiveServicesCredentials
 from utils import output_message
 import urllib.request
 from enum import Enum
+import random
 
 class GifService(Enum):
     GIPHY = 1
@@ -29,7 +30,7 @@ class ResponseGif(ResponseCooldown):
 
     COOLDOWN = 1 * 60 * 60 * 3 / 2
 
-    url = "http://api.giphy.com/v1/gifs/random"
+    url = "https://api.giphy.com/v1/gifs/search"
 
     def __init__(self, msg):
         super(ResponseGif, self).__init__(msg, self, ResponseGif.COOLDOWN)
@@ -68,16 +69,20 @@ class ResponseGif(ResponseCooldown):
             #use Giphy
             params = parse.urlencode({
                 "api_key": giphy_key,
-                "rating": rating
+                "rating": rating,
+                "q": search_term,
+                "limit":50
             })
 
 
             try:
-                with request.urlopen("".join((ResponseGif.url, "?", params))) as response:
-                    data = json.loads(response.read())
+                response = requests.get(url)
+                data = response.json()
 
-                url = data["data"]["images"]["original"]["url"]
-                return output_message.OutputMessage(url, output_message.Services.PHOTO_URL)
+                if response.status_code == 200 and data["data"]:
+                    chosen_gif = random.choice(data["data"])
+                    gif_url = chosen_gif["images"]["original"]["url"]
+                    return output_message.OutputMessage(gif_url, output_message.Services.PHOTO_URL)                    
             except Exception as e:
                 raise e
 
