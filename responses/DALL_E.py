@@ -19,6 +19,7 @@ class DallE(ResponseCooldown):
 
         openai.api_key = DataAccess.get_secrets()['OPENAI_KEY']
         response = openai.Image.create(
+            model="dall-e-3",
             prompt=self.msg.text.partition(' ')[2],
             n=1,
             size="512x512"
