@@ -22,7 +22,8 @@ class DallE(ResponseCooldown):
             model="dall-e-3",
             prompt=self.msg.text.partition(' ')[2],
             n=1,
-            size="512x512"
+            size="1024x1024",
+            quality="standard"
         )
 
         return output_message.OutputMessage(response['data'][0]['url'], output_message.Services.PHOTO_URL)
