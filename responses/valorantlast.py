@@ -12,18 +12,18 @@ class ResponseValorantLast(AbstractResponse):
 
     RESPONSE_KEY = "#valorantlast"
 
-    LINK_TEMPLATE = r"https://api.henrikdev.xyz/valorant/v3/matches/{region}/{username}/{tag}"
+    LINK_TEMPLATE = r"https://api.henrikdev.xyz/valorant/v3/matches/{region}/{username}/{tag}?api_key={api_key}"
 
     def __init__(self, msg):
         super(ResponseValorantLast, self).__init__(msg)
 
     def _respond(self):
-
+        valorant_key = DataAccess.get_secrets()["VALORANT_API_KEY"]
         user = DataAccess.DataAccess().get_user("GROUPME_ID", self.msg.get_sender_uid())
         region = user['RIOT_REGION']
         username = user['RIOT_USERNAME']
         tag = user['RIOT_TAG']
-        request_url = ResponseValorantLast.LINK_TEMPLATE.format(region=region, username=username, tag=tag)
+        request_url = ResponseValorantLast.LINK_TEMPLATE.format(region=region, username=username, tag=tag, api_key=valorant_key)
 
         print("Got Account ID")
         # Get a list of recent matches for the player
