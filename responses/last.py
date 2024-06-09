@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*
+import requests
+
 from data import DataAccess
 from .AbstractResponse import *
 from dota2py import api
@@ -40,16 +42,25 @@ class ResponseLast(AbstractResponse):
         matches = api.get_match_history(account_id=account_id)["result"]["matches"]
 
         #Get the full details for a match
-        match = api.get_match_details(matches[0]["match_id"])
+        # match = api.get_match_details(matches[0]["match_id"])
+        URL = r"https://api.steampowered.com/IDOTA2Match_570/GetMatchHistoryBySequenceNum/v1"
 
-        match_id = match['result']['match_id']
+        params = {
+            "key": secrets["DOTA_KEY"],
+            "start_at_match_seq_num": matches[0]['match_seq_num'],
+            "matches_requested": 1
+        }
+
+        response = requests.get(URL, params=params)
+        match = json.loads(response.content)['result']['matches'][0]
+        match_id = matches[0]["match_id"]
 
         dotabuff_link = ResponseLast.DOTABUFF_LINK_TEMPLATE.format(id=match_id)
 
         print("Got Match Details")
         player_num = 0
 
-        for x in match["result"]["players"]:
+        for x in match["players"]:
             if x["account_id"] == user['DOTA_ID']:
                 out = ""
                 print("Got self.sender Data")
@@ -78,9 +89,9 @@ class ResponseLast(AbstractResponse):
 
                 #Win?
                 #@todo fix this to incorporate woody's bugfix
-                if player_num < 5 and match["result"]["radiant_win"]:
+                if player_num < 5 and match["radiant_win"]:
                     out += "You Won! "
-                elif player_num > 4 and not match["result"]["radiant_win"]:
+                elif player_num > 4 and not match["radiant_win"]:
                     out += "You Won! "
                 else:
                     out += "You Lost.... Bitch "
