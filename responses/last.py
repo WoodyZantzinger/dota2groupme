@@ -85,6 +85,7 @@ class ResponseLast(AbstractResponse):
                         except:
                             finalItems += "unknown item ({}), ".format(x["item_" + str(itemNum)])
                 out += finalItems + "\n"
+
                 backpackItems = "Backpack: "
                 for itemNum in range(0, 3):
                     if x["backpack_" + str(itemNum)] != 0 and x["backpack_" + str(itemNum)] is not None:
@@ -93,6 +94,7 @@ class ResponseLast(AbstractResponse):
                         except:
                             backpackItems += "unknown item ({}), ".format(x["backpack_" + str(itemNum)])
                 out += backpackItems + "\n"
+
                 neutralItem = "Neutral Item: "
                 if x["item_neutral"] != 0 and x["item_neutral"] is not None:
                     try:
