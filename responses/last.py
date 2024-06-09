@@ -84,8 +84,35 @@ class ResponseLast(AbstractResponse):
                             finalItems += str(data.get_item_name(x["item_" + str(itemNum)])["name"]) + ", "
                         except:
                             finalItems += "unknown item ({}), ".format(x["item_" + str(itemNum)])
-
                 out += finalItems + "\n"
+                backpackItems = "Backpack: "
+                for itemNum in range(0, 3):
+                    if x["backpack_" + str(itemNum)] != 0 and x["backpack_" + str(itemNum)] is not None:
+                        try:
+                            backpackItems += str(data.get_item_name(x["backpack_" + str(itemNum)])["name"]) + ", "
+                        except:
+                            backpackItems += "unknown item ({}), ".format(x["backpack_" + str(itemNum)])
+                out += backpackItems + "\n"
+                neutralItem = "Neutral Item: "
+                if x["item_neutral"] != 0 and x["item_neutral"] is not None:
+                    try:
+                        neutralItem += str(data.get_item_name(x["item_neutral"])["name"]) + ", "
+                    except:
+                        neutralItem += "unknown item ({}), ".format(x["item_neutral"])
+                out += neutralItem + "\n"
+
+                emojis = {
+                    0: '❌',
+                    1: '✅'
+                }
+
+                buffs = "Aghs {0} | Shard {1} | Moonshard {2}".format(
+                    emojis[x["aghanims_scepter"]],
+                    emojis[x["aghanims_shard"]],
+                    emojis[x["moonshard"]],
+                )
+
+                out += buffs + "\n"
 
                 #Win?
                 #@todo fix this to incorporate woody's bugfix
