@@ -1,4 +1,5 @@
 import pprint
+import signal
 import urllib
 import time
 import sys
@@ -653,6 +654,13 @@ if __name__ == "__main__":
 
     load_responses()
     nltk.data.path.append(os.getcwd())
+
+    def shutdown_handler(signum, frame):
+        print("Received SIGTERM, shutting down...")
+        # Perform any cleanup tasks here
+        sys.exit(0)
+
+    signal.signal(signal.SIGTERM, shutdown_handler)
 
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=DEBUG)
