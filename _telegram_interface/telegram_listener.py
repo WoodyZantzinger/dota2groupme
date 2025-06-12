@@ -1,11 +1,14 @@
+import asyncio
 import datetime
 import logging
+import signal
 
 import jsonpickle as jsonpickle
 import requests
 import os
 
 import sys
+
 sys.path.append("..")
 
 print(os.getcwd())
@@ -26,7 +29,6 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 import time
 import json
-
 
 from data import DataAccess
 from utils import BaseMessage
@@ -87,6 +89,7 @@ def serialize_update(obj):  # this method can go straight to hell, I will never 
         print(obj)
         raise e
 
+
 def delete_keys_from_dict(dict_del, lst_keys):
     """
     Delete the keys present in lst_keys from the dictionary.
@@ -99,6 +102,7 @@ def delete_keys_from_dict(dict_del, lst_keys):
         if type(dict_foo[field]) == dict:
             delete_keys_from_dict(dict_del[field], lst_keys)
     return dict_del
+
 
 def reformat_telegram_message(update: Update):
     send_text = ""
@@ -130,6 +134,7 @@ def reformat_telegram_message(update: Update):
 
     return reformat
 
+
 async def command_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("found command!")
     text = update.message.text + " as a command"
@@ -137,6 +142,8 @@ async def command_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 import pprint
+
+
 async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message and update.message.text:
         print("echoing > " + update.message.text)
@@ -164,7 +171,8 @@ async def plaintext_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
         msg_type="Message"), json=json_content)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text=json['text'])
 
-def main() -> None:
+
+async def run_tg_bot() -> None:
     """Run bot."""
     # Create the Application and pass it your bot's token.
     secrets = DataAccess.get_secrets()
@@ -174,15 +182,45 @@ def main() -> None:
     # on different commands - answer in Telegram
 
     # on non command i.e message - echo the message on Telegram
+
     unknown_handler = MessageHandler(filters.COMMAND, command_callback)
     application.add_handler(unknown_handler)
 
-    plaintext_handler = MessageHandler((filters.CAPTION | filters.ATTACHMENT | filters.TEXT) & (~filters.COMMAND), plaintext_callback)
+    plaintext_handler = MessageHandler((filters.CAPTION | filters.ATTACHMENT | filters.TEXT) & (~filters.COMMAND),
+                                       plaintext_callback)
     application.add_handler(plaintext_handler)
 
-    # Run the bot until the user presses Ctrl-C
-    application.run_polling()
+    await application.initialize()
+    await application.start()
+    await application.updater.start_polling()
+    try:
+        while application.running:
+            await asyncio.sleep(5)
+        print("App stopped running for some other reason, shutting down...")
+    except asyncio.CancelledError:
+        print("PTB got cancelled, stopping...")
+        await application.stop()
+    finally:
+        await application.updater.stop()
+        await application.shutdown()
+
+
+async def shutdown(tasks):
+    print("Received SIGTERM, cancelling tasks...")
+    for task in tasks:
+        task.cancel()
+
+
+async def main():
+    tasks = [
+        asyncio.create_task(run_tg_bot()),
+    ]
+    if os.name != 'nt':
+        asyncio.get_event_loop() \
+            .add_signal_handler(signal.SIGTERM,
+                                lambda: asyncio.create_task(shutdown(tasks)))
+    await asyncio.gather(*tasks)
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
